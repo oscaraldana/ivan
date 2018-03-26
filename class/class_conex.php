@@ -5,7 +5,7 @@
  * @author Jose Ignasio Gutierrez y Oscar Aldana 
  * @date   25 de Junio de 2009
  */
-class conex {
+class class_conex {
 
     const SEGUNDOS_CONSULTA_LENTA_HW = 5;
     const SEGUNDOS_CONSULTA_LENTA_REP = 15;
@@ -101,8 +101,8 @@ class conex {
         $strCmd = 'host=' . $this->host . ' port=' . $this->port .
             ' dbname=' . $this->dbname . ' user=' . $this->user .
             ' password=' . $this->passwd;
-       
-        if (!$this->linkConnect = mysqli_connect($strCmd, PGSQL_CONNECT_FORCE_NEW)) {            
+       $enlace = mysqli_connect("127.0.0.1", "mi_usuario", "mi_contraseña", "mi_bd");
+        if (!$this->linkConnect = mysqli_connect($this->host, $this->user, $this->passwd, $this->dbname)) {            
             
             if ( !$exit ) {                
                 $this->errorMsg = 'Error en la conexi�n';
@@ -132,9 +132,9 @@ class conex {
         }
         
         if($this->consultaPreparada){
-            $this->PrepareQuery("inserttblbit", "Insert into tblbit (tipeve_cod,tbl_cod,bit_ser,bit_sen,usr_cod,bit_id) values ($1,$2,$3,$4,$5,$6)");    
-            $this->PrepareQuery("inserttblresusr", "INSERT into tblresusr ( res_cod, usr_cod ) VALUES ($1,$2)");                
-            $this->PrepareQuery("insertobs", "INSERT INTO tblobsres (res_cod,tipdet_cod_obs,obsres_obs,tipdet_cod_est,usr_cod,detres_cod) VALUES ($1,$2,$3,$4,$5,$6)");                    
+            //$this->PrepareQuery("inserttblbit", "Insert into tblbit (tipeve_cod,tbl_cod,bit_ser,bit_sen,usr_cod,bit_id) values ($1,$2,$3,$4,$5,$6)");    
+            //$this->PrepareQuery("inserttblresusr", "INSERT into tblresusr ( res_cod, usr_cod ) VALUES ($1,$2)");                
+            //$this->PrepareQuery("insertobs", "INSERT INTO tblobsres (res_cod,tipdet_cod_obs,obsres_obs,tipdet_cod_est,usr_cod,detres_cod) VALUES ($1,$2,$3,$4,$5,$6)");                    
         }
           
     }
