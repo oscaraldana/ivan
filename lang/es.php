@@ -7,11 +7,12 @@
  */
 
 $lang = array(
-    
+        /* Login */
 	"client_login_tittle" => "Iniciar Sesion en modulo de clientes",
-	"logo" => "Multilingual system",
-	"cambiar_idioma" => "Language",
-	"cambiar" => "Change",
+	"login_user" => "Usuario",
+	"login_passwd" => "Contraseña",
+	"login_entrar" => "Ingresar",
+        "login_registro" => "Registrarse",
     
     
 	"opcion_1" => "Select",

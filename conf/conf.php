@@ -9,7 +9,7 @@
 require_once '../autoload/clases.php';
 
 define("USER_DB", "root");
-define("PASWD_DB", "root");
+define("PASWD_DB", "");
 define("HOST_DB", "localhost");
 define("PORT_DB", "3306");
 define("NAME_DB", "wolves");
