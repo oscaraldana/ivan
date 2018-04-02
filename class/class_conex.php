@@ -1,10 +1,6 @@
 <?php
 
-/**
- * Clase para la conexion a la base de datos
- * @author Jose Ignasio Gutierrez y Oscar Aldana 
- * @date   25 de Junio de 2009
- */
+
 class class_conex {
 
     const SEGUNDOS_CONSULTA_LENTA_HW = 5;
@@ -101,7 +97,7 @@ class class_conex {
         $strCmd = 'host=' . $this->host . ' port=' . $this->port .
             ' dbname=' . $this->dbname . ' user=' . $this->user .
             ' password=' . $this->passwd;
-       $enlace = mysqli_connect("127.0.0.1", "mi_usuario", "mi_contraseña", "mi_bd");
+      
         if (!$this->linkConnect = mysqli_connect($this->host, $this->user, $this->passwd, $this->dbname)) {            
             
             if ( !$exit ) {                
@@ -188,17 +184,13 @@ class class_conex {
             }
         }
 		
-        $datosCliente = "";
+        /*$datosCliente = "";
 
-        $cabecera = "";
-        if( $this->noloadbalance ) {
-            $cabecera = "/*NO LOAD BALANCE*/ ";
-        }
-
+        
         $datosCliente = $this->datosCliente();
         
         $sqlQuery = "{$cabecera}$sqlQuery $datosCliente"; // Va aqui si esta comendato NO LOAD
-
+        */
 		
 //		if( $this->enModificacion ) {
 //			// todas las consultas de ahi en adelante deben enviarse con NO LOAD BALANCE
@@ -222,7 +214,9 @@ class class_conex {
 //		DebugBack::debugError("Iniciando consulta: ".$sqlQuery."\n", 'log', false, 3);
 		
         $tInicio = time();
+        echo $sqlQuery;
         $this->resLastQuery = mysqli_query($this->linkConnect, $sqlQuery);
+        var_export($this->resLastQuery);
         $php_error = error_get_last();
         if( !is_resource($this->linkConnect) && !is_null($php_error) ) {
             $php_error = implode(",", $php_error)."\n";
@@ -252,7 +246,7 @@ class class_conex {
 //            {
 //                DebugBack::debugError("CONSULTA MOD: $sqlQuery", 'log', true, 3);
 //            }
-            $this->recordCount = mysq_num_rows($this->resLastQuery);
+            $this->recordCount = mysqli_num_rows($this->resLastQuery);
             $this->EOF = ($this->recordCount <= 0);
         }
 
@@ -409,6 +403,7 @@ class class_conex {
     public function Fields_old($nameRow) {
         if ($this->iterador < $this->RecordCount()) {
             $row = mysqli_fetch_array($this->resLastQuery, $this->iterador);
+            
             if (!isset($row[$nameRow])) {
                 $row[$nameRow] = null;
             }

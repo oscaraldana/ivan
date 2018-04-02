@@ -15,11 +15,11 @@
 abstract class Model implements ModelProperties {
 
 	private $action;
-	private $registerBit = true;
+	private $registerBit = false;
 	private $lastDbErrorMsg = "";
 
 	public function __construct() {
-		$this->registerBit = true;
+		$this->registerBit = false;
 	}
 
 	public static function getClassName() {
@@ -273,7 +273,7 @@ abstract class Model implements ModelProperties {
 			}
 			return array("priKey" => $priKey, "msj" => $msj);
 		} catch (Exception $e) {
-			//echo 'Excepción capturada: ',  $e->getMessage();
+			//echo 'Excepciï¿½n capturada: ',  $e->getMessage();
 			return;
 		}
 		logScripts($processId, __CLASS__ . "::" . __METHOD__, $timeIni, microtime(true), "FIN", '', '1');

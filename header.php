@@ -4,9 +4,6 @@ if(!file_exists("css/style.css")){
     $root = "../";
 }
 
-echo "<pre>".__FILE__;
-
-echo "</pre>";
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
@@ -37,50 +34,30 @@ echo "</pre>";
         <!-- Logo --> <a class="headerLogo smoothScroll" href="#"> <img src="images/wolf_.jpg" width="60px" >
         </a> </header>
       <!-- Sidebar -->
-      <div class="sidebar">
+       <div class="sidebar">
         <nav class="mainMenu">
           <ul class="menu">
+            
+            <?php
+            
+            if ( isset($menu) && !empty($menu) ){
+                echo $menu;
+            }
+            else { ?>
+            
             <li> <a class="smoothScroll" href="#timeline-part" title="What Is Wolves?">
                     <i class="step icon-question size-24"></i><span class="text">What is Wolves?</span>
                 </a> 
             </li>
-            <li> <a class="smoothScroll" href="javascript:;" title="What Is Wolves?">
-                    <i class="step icon-identification size-24"></i><span class="text">What is Wolves?</span>
+            <li> <a class="smoothScroll" href="module/client/" title="">
+                    <i class="step icon-identification size-24"></i><span class="text">Modulo de clientes</span>
                 </a> 
             </li>
-                  
-                  
-            <!-- <li> <a class="smoothScroll" href="#stastistical-part" title="Services"><i
-
-                  class="icon-reciept-1 size-24"></i><span class="text">Services</span></a>
-            </li>
-            <li> <a class="smoothScroll" href="#testimonials-part" title="Testimonial"><i
-
-                  class="step icon-thumbs-up size-24"></i><span class="text">Testimonial</span></a>
-            </li>
-            <li> <a class="smoothScroll" href="#featured-part" title="Top Featured"><i
-
-                  class="step icon-bulleted-list size-24"></i><span class="text">Top
-                  Featured</span></a> </li>
-            <li> <a class="smoothScroll" href="#pricing-part" title="Pricing"><i
-
-                  class="step icon-cogs size-24"></i><span class="text">Pricing</span></a>
-            </li>
-            <li> <a class="smoothScroll" href="#membership-part" title="Get a home"><i
-
-                  class="step icon-door-key size-24"></i><span class="text">Get
-                  a home</span></a> </li>
-            <li> <a class="smoothScroll" href="#tips-part" title="Important Tips"><i
-
-                  class="step icon-light-bulb size-24"></i><span class="text">Important
-                  Tips</span></a> </li>
-            <li> <a class="smoothScroll" href="#events-part" title="Upcoming Events"><i
-
-                  class="step icon-calendar-1 size-24 size"></i><span class="text">Upcoming
-                  Events</span></a> </li>
-            -->
             <li> <a class="smoothScroll" href="#contact-form" title="Contact Form"><i class="step icon-envelope-1 size-24"></i><span class="text">Contact</span></a>
-            </li>
+            </li>      
+            <?php } ?>
+                  
+            
           </ul>
         </nav>
         <nav class="backToTop">
