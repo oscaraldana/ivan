@@ -103,10 +103,11 @@ function miperfil(){
                             if ( result.respuesta ) {
                                 
                                 $("#modal-title").html("Editar Mi Perfil");
+                                $('#form_modal').attr('onsubmit', 'editarPerfil(); return false;');
                                 $("#modal-body").html("<label for='nombre'>Nombre: </label><input type='text' value='"+result.datos.nombre+"' class='form-control' placeholder='Nombre' name='nombre' id='nombre' required>"+
                                                       "<label for='correo'>Correo: </label><input type='text' value='"+result.datos.correo+"' class='form-control' placeholder='Correo' name='mail' id='nombre' required>"+
-                                                      "<label for='usuario'>Usuario: </label><input type='text' value='"+result.datos.login+"' class='form-control' placeholder='Usuario' name='usuario' id='usuario' required>"+
-                                                      "<label for='referido'>Referido: </label><input type='text' value='"+result.datos.referido+"' class='form-control' placeholder='Referido Por' name='referido' id='referido' required>"
+                                                      "<label for='usuario'>Usuario: </label><input type='text' readonly value='"+result.datos.login+"' class='form-control' placeholder='Usuario' name='usuario' id='usuario' required>"+
+                                                      "<label for='referido'>Referido: </label><input type='text' readonly value='"+result.datos.referido+"' class='form-control' placeholder='Referido Por' name='referido' id='referido' required>"
 
                                                      );
                                 $("#modal-footer").html('<input type="submit" class="btn btn-info" style="font-size: 10px;" value="Guardar"><button type="button" class="btn btn-default" data-dismiss="modal" style="font-size: 10px;">Cancelar</button>');           
@@ -154,6 +155,31 @@ function aceptarRegistro(){
     
     
 }
+
+function editarPerfil(){
+    
+    var parametros = {
+        "editarPerfil" : true,
+        "datosForm" : $("#form_modal").serialize()
+    };
+    $.ajax({
+                data:  parametros,
+                url:   'controller.php',
+                type:  'post',
+                
+                success:  function (response) {
+                        var result = JSON.parse(response);
+                        if ( result.respuesta ) {
+                            $("#modalClient").modal('hide');
+                            alert(result.msg);
+
+                        } else {
+                            alert(result.msg);
+                        }
+                }
+    });
+}
+
 
 function modalInfo(id){
     
@@ -282,9 +308,6 @@ function aceptarCompra(id){
                         data:  parametros,
                         url:   'controller.php',
                         type:  'post',
-                        beforeSend: function () {
-                                $("#homeContent").html("Procesando, espere por favor...");
-                        },
                         success:  function (response) {
                                 var result = JSON.parse(response);
                                 if ( result.respuesta ) {

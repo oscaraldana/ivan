@@ -330,7 +330,7 @@
 
     <!-- Modal content-->
     <div class="modal-content" style="background-color: #262b2d;">
-        <form  id="form_modal" name="form_modal">
+        <form  id="form_modal" name="form_modal" onsubmit="return false;">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title" name="modal-title" id="modal-title">Modal Header</h4>

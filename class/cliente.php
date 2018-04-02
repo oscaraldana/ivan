@@ -51,7 +51,7 @@ class cliente {
                 $sql = "insert into cliente (nombre, login, contrasena, correo, estado, referido) values ('".$datosForm["nombre"]."', '".$datosForm["usuario"]."', '".md5($datosForm["clave1"])."', '".$datosForm["mail"]."', 1, ".$ref.")";
                 $result = mysqli_query($conex->getLinkConnect(), $sql);
                 if ( !$result ) {
-                    echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible registrar en este momento.$sql" ] );
+                    echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible registrar en este momento." ] );
                 } else {
                     echo json_encode( ["respuesta" => true, "msg" => "Usuario registrado exitosamente." ] );
                 }
@@ -88,7 +88,97 @@ class cliente {
     
     
     public function aceptarCompra ($param) {
-        var_export($param);
+        
+        $conex = WolfConex::conex();
+        
+        $referencia = "";
+        $tipop = "";
+        
+        if ( !empty($param["transBit"]) ) {
+            $referencia = $param["transBit"];
+            $tipo = "BITCOIN";
+        } else {
+            $referencia = $param["transBan"];
+            $tipo = "BANCO";
+        }
+        
+        $sql = "insert into paquetes_cliente ( paquete_id, cliente_id, estado, referencia_pago, tipo_pago ) values ( ".$param["paquete"].", ".$_SESSION["clientId"].", 0, '$referencia', '$tipo' )";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible registrar tu solicitud en este momento." ] );
+        } else {
+            echo json_encode( ["respuesta" => true, "msg" => "Tu solicitud se ha registrado, vamos a verificar la veracidad de tu compra." ] );
+        }
+        
     }
+    
+    
+    
+    public function editarPerfil ($datosForm) {
+        
+        $conex = WolfConex::conex();
+        
+        $sql = "update cliente set nombre = '".$datosForm["nombre"]."', correo = '".$datosForm["mail"]."' where cliente_id = ".$_SESSION["clientId"];
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible actualizar tu perfil en este momento." ] );
+        } else {
+            $_SESSION["clientNombre"] = $datosForm["nombre"];
+            echo json_encode( ["respuesta" => true, "msg" => "Perfil actualizado exitosamente." ] );
+        }
+
+    }
+    
+    
+    public function consultarPaquetes () {
+     
+        $conex = WolfConex::conex();
+        
+        $res = [];
+        
+        $sql = "select * from paquetes";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            return false;
+        } else {
+            if ( !mysqli_num_rows($result) > 0 ){
+                return false;
+            } else {
+                while ($fila = mysqli_fetch_array($result)) {
+                    $res[] = $fila;
+                }
+                return $res;
+            }
+        }
+        
+    }
+    
+    
+    public function consultarPaquetesCliente () {
+     
+        $conex = WolfConex::conex();
+        
+        $res = [];
+        
+        $sql = "select paquetes_cliente.fecha_registro, paquetes.nombre as paquete, paquetes.valor as valor, paquetes_cliente.estado as estado, tipo_pago "
+                . " from paquetes_cliente "
+                . " inner join paquetes on paquetes.paquete_id = paquetes_cliente.paquete_id"
+                . " where paquetes_cliente.cliente_id = ".$_SESSION["clientId"];
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            return false;
+        } else {
+            if ( !mysqli_num_rows($result) > 0 ){
+                return false;
+            } else {
+                while ($fila = mysqli_fetch_array($result)) {
+                    $res[] = $fila;
+                }
+                return $res;
+            }
+        }
+        
+    }
+    
     
 }

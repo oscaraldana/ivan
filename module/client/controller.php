@@ -53,3 +53,12 @@ if ( isset($_POST["aceptarCompra"]) && $_POST["aceptarCompra"] ){
     $cliente->aceptarCompra($_POST);
     
 }
+
+if ( isset($_POST["editarPerfil"]) && $_POST["editarPerfil"] ){
+    
+    $datosForm = [];
+    parse_str($_POST["datosForm"], $datosForm);
+    $cliente = new cliente();
+    $cliente->editarPerfil($datosForm);
+    
+}

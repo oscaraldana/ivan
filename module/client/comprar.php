@@ -11,20 +11,34 @@
           </div>
         </div>
 <div class="row">
-    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-        
-        <div class="info-box dark-bg" style="text-align: center;">
-            <img src="img/modulos/principiante.jpg" height="100px" onclick="modalInfo(1)" style="cursor: pointer">
-        <div class="count" onclick="modalInfo(1)" style="cursor: pointer; font-size: 25px;">PRINCIPIANTE</div>
-        <div class="title">Rentabilidad 17%</div>
-        <br>
-        <div class="btn btn-info  btn-sm" style="cursor: pointer; font-weight: 25px;" onclick="comprarPaquete(1)"><b>COMPRAR</b></div>
-      </div>
-
-    </div>
-    <!--/.col-->
-
     
+    
+    <?php
+        
+        $cliente = new cliente();
+        $paquetes = $cliente->consultarPaquetes();
+        
+        if (is_array($paquetes) ) {
+            foreach ( $paquetes as $paq ){ ?>
+    
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+        
+                    <div class="info-box dark-bg" style="text-align: center;">
+                        <img src="img/modulos/<?= $paq["imagen"] ?>" height="100px" onclick="modalInfo(<?= $paq["paquete_id"] ?>)" style="cursor: pointer">
+                    <div class="count" onclick="modalInfo(<?= $paq["paquete_id"] ?>)" style="cursor: pointer; font-size: 25px;"><?= $paq["nombre"] ?></div>
+                    <div class="title"><?= $paq["descripcion"] ?></div>
+                    <br>
+                    <div class="btn btn-info  btn-sm" style="cursor: pointer; font-weight: 25px;" onclick="comprarPaquete(<?= $paq["paquete_id"] ?>)"><b>COMPRAR</b></div>
+                  </div>
+
+                </div>
+    
+            <?php    
+            }
+        }
+    ?>
+    
+    <!--
     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
       <div class="info-box dark-bg" style="text-align: center;">
           <img src="img/modulos/aprendiz.jpg" height="100px" onclick="modalInfo(2)" style="cursor: pointer">
@@ -35,7 +49,7 @@
       </div>
     </div>
     
-    <!--/.col-->
+    
 
     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
       <div class="info-box dark-bg" style="text-align: center;">
@@ -45,9 +59,9 @@
         <br>
         <div class="btn btn-info  btn-sm" style="cursor: pointer; font-weight: 25px;" onclick="comprarPaquete(3)"><b>COMPRAR</b></div>
       </div>
-      <!--/.info-box-->
+      
     </div>
-    <!--/.col-->
+    
 
     
     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
@@ -59,8 +73,8 @@
         <div class="btn btn-info  btn-sm" style="cursor: pointer; font-weight: 25px;" onclick="comprarPaquete(4)"><b>COMPRAR</b></div>
       </div>
     </div>
+    -->
     
-    <!--/.col-->
 
   </div>
 

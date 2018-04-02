@@ -1,5 +1,8 @@
 
 <?php
+
+$menu = true;
+
 include 'header.php';
 ?>
 
