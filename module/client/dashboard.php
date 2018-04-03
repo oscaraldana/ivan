@@ -201,48 +201,41 @@
           </div>
         </div>
 
+        <?php
+        
+        $cliente = new cliente();
+        
+        $cliente->consultarGanancias();
+        
+        ?>
+          
         <div class="row">
-          <!--<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-            <div class="info-box blue-bg">
-              <i class="fa fa-cloud-download"></i>
-              <div class="count">6.674</div>
-              <div class="title">Download</div>
-            </div>
-            
-          </div> -->
-          <!--/.col-->
-
-          <!--
+         
           <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-            <div class="info-box brown-bg">
-              <i class="fa fa-shopping-cart"></i>
-              <div class="count">7.538</div>
-              <div class="title">Purchased</div>
+            <div class="info-box dark-bg">
+              <i class="fa fa-dollar"></i>
+              <div class="count">4.362</div>
+              <div class="title">Mis Ganancias Inversion</div>
             </div>
           </div>
-          -->
-          <!--/.col-->
 
           <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
             <div class="info-box dark-bg">
               <i class="fa fa-dollar"></i>
               <div class="count">4.362</div>
-              <div class="title">Mis Ganancias</div>
+              <div class="title">Mis Ganancias Referidos</div>
             </div>
-            <!--/.info-box-->
           </div>
-          <!--/.col-->
 
-          <!--
+
           <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-            <div class="info-box green-bg">
-              <i class="fa fa-cubes"></i>
-              <div class="count">1.426</div>
-              <div class="title">Stock</div>
+            <div class="info-box dark-bg">
+              <i class="fa fa-dollar"></i>
+              <div class="count">4.362</div>
+              <div class="title">Total Mis Ganancias</div>
             </div>
           </div>
-          -->
-          <!--/.col-->
+
 
         </div>
         <!--/.row-->

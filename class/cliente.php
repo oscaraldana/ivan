@@ -181,4 +181,86 @@ class cliente {
     }
     
     
+    
+    public function consultarGanancias() {
+        $conex = WolfConex::conex();
+        
+        $res = [];
+        
+        $sql = "select * 
+                    from paquetes_cliente 
+                    inner join paquetes on paquetes.paquete_id = paquetes_cliente.paquete_id 
+                    where paquetes_cliente.cliente_id = ".$_SESSION["clientId"]." and paquetes_cliente.estado = 1";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            return false;
+        } else {
+            if ( !mysqli_num_rows($result) > 0 ){
+                return false;
+            } else {
+                while ($fila = mysqli_fetch_array($result)) {
+                    $res[] = $fila;
+                }
+                
+                //var_export($res);
+                foreach ($res as $paq){
+                    
+                    $actualDate = date('Y-m-d'); // ." -> ".$paq["inicia"]." -> ".$paq["finaliza"];
+                    echo $actualDate." -> ".$paq["inicia"]." -> ".$paq["finaliza"]; // echos today! 
+                    $initDate = date('Y-m-d', strtotime($paq["inicia"]));
+                    $finishDate = date('Y-m-d', strtotime($paq["finaliza"]));
+
+                    if ($actualDate >= $initDate && $actualDate <= $finishDate){
+                        echo "<hr>";
+                        $fechaInicio=strtotime($paq["inicia"]);
+                        $fechaFin=strtotime(date('Y-m-d'));
+                        for($i=$fechaInicio; $i<=$fechaFin; $i+=86400){
+                            echo "<br>".date("d-m-Y", $i);
+                        }
+                        
+                        /*$fechainicial = new DateTime($paq["inicia"]);
+                        $fechafinal = new DateTime($this->primerDiaMes());
+
+                        $diferencia = $fechainicial->diff($fechafinal);
+
+                        // El método diff nos devuelve un objeto del tipo DateInterval,
+                        // que almacena la información sobre la diferencia de tiempo 
+                        // entre fechas (años, meses, días, etc.).
+
+                        $meses = ( $diferencia->y * 12 ) + $diferencia->m;
+                        
+                        $diasMeses = 0;
+                        if ( $meses > 0 ){
+                            $diasMeses = $meses * 20;
+                        }
+                        
+                        echo $mesAntes = $this->unMesAntes()."<br>";*/
+                        
+                      echo "is between -> $meses -> $diasMeses<br>";
+                    }
+                    else
+                    {
+                    echo "NO GO!<br>";  
+                    }
+                    
+                    $valorDia = $paq["valor"] * ( $paq["rentabilidad"] / 100 );
+                    echo $valorDia."<br>";
+                }
+                
+            }
+        }
+    }
+    
+    
+    public function primerDiaMes() {
+      $month = date('m');
+      $year = date('Y');
+      return date('Y-m-d', mktime(0,0,0, $month, 1, $year));
+  }
+    public function unMesAntes() {
+      $month = date('m');
+      $year = date('Y');
+      $day = date('d');
+      return date('Y-m-d', mktime(0,0,0, $month-1, $day, $year));
+  }
 }
