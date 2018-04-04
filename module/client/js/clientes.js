@@ -19,7 +19,7 @@ function login() {
                     if ( result.respuesta ) {
                         self.location.reload();
                     } else {
-                        alert("Acceso denegado.");
+                        swal("Acceso denegado.");
                     }
                 }
         });
@@ -114,7 +114,7 @@ function miperfil(){
                                 $("#modalClient").modal();
                                 
                             } else {
-                                alert(result.msg);
+                                swal(result.msg);
                             }
                     }
         });
@@ -125,7 +125,7 @@ function miperfil(){
 function aceptarRegistro(){
     
     if ( $("#clave1").val() != $("#clave2").val() ) {
-        alert("Las contraseñas ingresadas no coinciden");
+        swal("Las contraseñas ingresadas no coinciden");
     } else {
         
         var parametros = {
@@ -143,10 +143,10 @@ function aceptarRegistro(){
                             var result = JSON.parse(response);
                             if ( result.respuesta ) {
                                 $("#modalBuy").modal('hide');
-                                alert(result.msg);
+                                swal(result.msg);
                                 
                             } else {
-                                alert(result.msg);
+                                swal(result.msg);
                             }
                     }
         });
@@ -171,10 +171,10 @@ function editarPerfil(){
                         var result = JSON.parse(response);
                         if ( result.respuesta ) {
                             $("#modalClient").modal('hide');
-                            alert(result.msg);
+                            swal(result.msg);
 
                         } else {
-                            alert(result.msg);
+                            swal(result.msg);
                         }
                 }
     });
@@ -312,16 +312,152 @@ function aceptarCompra(id){
                                 var result = JSON.parse(response);
                                 if ( result.respuesta ) {
                                     $("#modalBuy").modal('hide');
-                                    alert(result.msg);
+                                    swal(result.msg);
 
                                 } else {
-                                    alert(result.msg);
+                                    swal(result.msg);
                                 }
                         }
             });
         } else {
-            alert("Por favor digite el comprobante de su transaccion.");
+            swal("Por favor digite el comprobante de su transaccion.");
         }
     
 }
 
+function solicitarRetiro(){
+    
+    swal({
+        title: "Confirmar Solicitud!",
+        text: "Confirma que desea solicitar el retiro de tus ganancias?",
+        buttons: true,
+        dangerMode: false,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+          confirmarRetiro();
+        }
+      });
+    
+}
+
+function confirmarRetiro(){
+    
+    var parametros = {
+        "retirar" : true
+    };
+    $.ajax({
+                data:  parametros,
+                url:   'controller.php',
+                type:  'post',
+                
+                success:  function (response) {
+                        var result = JSON.parse(response);
+                        if ( result.respuesta ) {
+                            $("#modalClient").modal('hide');
+                            swal(result.msg);
+
+                        } else {
+                            swal(result.msg);
+                        }
+                }
+    });
+    
+}
+
+
+
+function formularioCuentasBancarias(){
+    
+    $("#modal-title").html("Registro Cuenta Transaccional");
+    $('#form_modal').attr('onsubmit', 'editarPerfil(); return false;');
+    $("#modal-body").html('<ul class="nav nav-tabs"><li class="active"><a data-toggle="tab" href="#home">' +
+                                      '<i class="fa fa-bitcoin"></i> Cuenta Bitcoin</a></li><li><a data-toggle="tab" href="#menu1"><i class="fa fa-university"></i> Cuenta Bancaria</a></li>'+
+                                      '</ul>'+
+                                      '<div class="tab-content"><div id="home" class="tab-pane fade in active"><p> '+
+                                      '<br>'+
+                                      'Digite el ID o direccion de Bitcoin, si desea que sus ganancias se reflejen por medio de esta forma de pago.'+
+                                      "<br><br><label for='direccionBitcoin'>Direccion Bitcoin: </label><input type='text' value='' class='form-control' placeholder='Direccion Bitcoin' name='direccionBitcoin' id='direccionBitcoin'>"+
+                                      '</p></div>'+
+                                      
+                                      '<div id="menu1" class="tab-pane fade">'+
+                                      '<br>'+
+                                      'Digite la informaci&oacute;n de su cuenta Bancaria'+
+                                      "<br><br><label for='banco'>Banco: <select class='form-control' id = 'nombreBanco' id = 'nombreBanco'>" +
+                                        '<option value="">--</option><option value="BANCO AV VILLAS">BANCO AV VILLAS</option><option value="BANCO BBVA COLOMBIA S.A.">BANCO BBVA COLOMBIA S.A.</option><option value="BANCO COLPATRIA">BANCO COLPATRIA</option><option value="BANCO DAVIVIENDA">BANCO DAVIVIENDA</option><option value="BANCO DE BOGOTA">BANCO DE BOGOTA</option><option value="BANCO DE OCCIDENTE">BANCO DE OCCIDENTE</option><option value="BANCO GNB SUDAMERIS">BANCO GNB SUDAMERIS</option><option value="BANCO POPULAR">BANCO POPULAR</option><option value="BANCOLOMBIA">BANCOLOMBIA</option><option value="CITIBANK ">CITIBANK </option><option value="BANCO CORPBANCA - HELM BANK S.A.">BANCO CORPBANCA - HELM BANK S.A.</option> </select>  ' +
+                                        "</label>"+
+                                        "<label for='tipocuenta'>Tipo de Cuenta: <select class='form-control' id = 'tipoCuenta' id = 'tipoCuenta'>" +
+                                        '<option value="">--</option><option value="AHORROS">AHORROS</option><option value="CORRIENTE">CORRIENTE</option> </select>  ' +
+                                        "</label>"+
+                                      "<label for='nocuenta'>N&uacute;mero de Cuenta: </label><input type='text' value='' class='form-control' placeholder='Numero Cuenta' name='nocuenta' id='nocuenta'>"+
+                                      "<label for='anombre'>Nombre Titular: </label><input type='text' value='' class='form-control' placeholder='Nombre Titular' name='anombre' id='anombre'>"+
+                                      '</div>'+
+                                      '</div>    </div></div>' 
+                          
+                         );
+    $("#modal-footer").html('<input type="button" class="btn btn-info" style="font-size: 10px;" value="Guardar" onclick="validarCuentasBancarias()"><button type="button" class="btn btn-default" data-dismiss="modal" style="font-size: 10px;">Cancelar</button>');           
+    $("#modalCuenta").modal();
+    
+}
+
+function validarCuentasBancarias(){
+    
+    var cuentaBitcoin = $("#direccionBitcoin").val().trim();
+    var banco = $("#nombreBanco").val().trim();
+    var tipoCuenta = $("#tipoCuenta").val().trim();
+    var numeroCuenta = $("#nocuenta").val().trim();
+    var aNombre = $("#anombre").val().trim();
+    
+    if ( cuentaBitcoin === '' && banco === '' && tipoCuenta === '' && numeroCuenta === '' && aNombre === '' ){
+        swal("Por favor registre su cuenta transaccional antes de continuar.");
+    } else {
+        if ( banco !== '' || tipoCuenta !== '' || numeroCuenta !== '' || aNombre !== '' ){
+            
+            if ( banco === '' ){
+                swal("Para registrar la cuenta bancaria, debera seleccionar el banco.");
+                return;
+            }
+            if ( tipoCuenta === '' ){
+                swal("Para registrar la cuenta bancaria, debera seleccionar el tipo de cuenta.");
+                return;
+            }
+            if ( numeroCuenta === '' ){
+                swal("Para registrar la cuenta bancaria, debera ingresar el numero de cuenta.");
+                return;
+            }
+            if ( aNombre === '' ){
+                swal("Para registrar la cuenta bancaria, debera ingresar el nombre del titular de la cuenta.");
+                return;
+            }
+        }
+        
+        var parametros = {
+            "crearCuentaBancaria" : true,
+            "cuentaBitcoin" : cuentaBitcoin,
+            "banco" : banco,
+            "tipoCuenta" : tipoCuenta,
+            "numeroCuenta" : numeroCuenta,
+            "aNombre" : aNombre
+        };
+        $.ajax({
+                    data:  parametros,
+                    url:   'controller.php',
+                    type:  'post',
+
+                    success:  function (response) {
+                            var result = JSON.parse(response);
+                            if ( result.respuesta ) {
+                                $("#modalCuenta").modal('hide');
+                                swal(result.msg);
+
+                            } else {
+                                swal(result.msg);
+                            }
+                    }
+        });
+            
+        
+    
+    }
+        
+}

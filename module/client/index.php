@@ -88,6 +88,7 @@ include_once '../../header_only.php';
 <script src="js/clientes.js"></script>
 <script src="js/jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/sweetalert.min.js"></script>
 
 <?php } else {
 

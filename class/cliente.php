@@ -4,10 +4,16 @@ class cliente {
 
     public $gananciasInversion;
     public $gananciasReferidos;
+    public $gananciasTotales;
+    public $gananciasPorPaquete;
+    public $dispoParaRetiro;
     
     function __construct(){
         $this->gananciasInversion = 0;
         $this->gananciasReferidos = 0;
+        $this->gananciasTotales = 0;
+        $this->gananciasPorPaquete = [];
+        $this->dispoParaRetiro = 0;
     }
     
     public function loguearse($data){
@@ -212,7 +218,7 @@ class cliente {
                 
                 //var_export($res);
                 $dias = 0;
-                foreach ($res as $paq){
+                foreach ($res as $k => $paq){
                     
                     $actualDate = date('Y-m-d'); // ." -> ".$paq["inicia"]." -> ".$paq["finaliza"];
                     //echo $actualDate." -> ".$paq["inicia"]." -> ".$paq["finaliza"]; // echos today! 
@@ -228,24 +234,14 @@ class cliente {
                             if( $m != date("m", $i) ){
                                 $m = date("m", $i);
                                 $d=0;
-                                //echo "<br>";
                             }
                             
                             if( date("N", $i) < 6 ) {
                                 $d++;
-
                                 if($d<=20){
                                     $dias++;
-                                    //echo "<br><b>".date("d-m-Y", $i)." -> ".date("N", $i)."</b>";
                                 }
-                                else {
-                                    //echo "<br>".date("d-m-Y", $i)." -> ".date("N", $i);
-                                }
-                            } else {
-                                //echo "<br>".date("d-m-Y", $i)." -> ".date("N", $i);
                             }
-                            
-                            
                         }
                         
                       //echo "is between -> $meses -> $diasMeses<br>";
@@ -253,12 +249,95 @@ class cliente {
                     
                     $valorDia = ($paq["valor"] * ( $paq["rentabilidad"] / 100 ) ) / 20;
                     $this->gananciasInversion += ($valorDia * $dias);
+                    
+                    $this->gananciasPorPaquete[$k] = $paq;
+                    $this->gananciasPorPaquete[$k]["ganancia"] = ($valorDia * $dias);
                 }
                 
             }
         }
+        
+        $this->gananciasTotales = $this->gananciasInversion + $this->gananciasReferidos;
+        
     }
     
+    
+    public function consultarDatosParaRetiro() {
+        
+        $this->consultarGanancias();
+        
+        foreach ( $this->gananciasPorPaquete as $ganPaq ) {
+            
+            if ( $ganPaq["ganancia"] >= $ganPaq["retiro_minimo"] ) {
+                $this->dispoParaRetiro += $ganPaq["ganancia"];
+            }
+            
+        }
+        
+    }
+    
+    
+    public function procesarRetiro(){
+        
+        $conex = WolfConex::conex();
+        
+        $referencia = "";
+        $tipop = "";
+        
+        if ( !empty($param["transBit"]) ) {
+            $referencia = $param["transBit"];
+            $tipo = "BITCOIN";
+        } else {
+            $referencia = $param["transBan"];
+            $tipo = "BANCO";
+        }
+        
+        $sql = "insert into paquetes_cliente ( paquete_id, cliente_id, estado, referencia_pago, tipo_pago ) values ( ".$param["paquete"].", ".$_SESSION["clientId"].", 0, '$referencia', '$tipo' )";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible registrar tu solicitud en este momento." ] );
+        } else {
+            echo json_encode( ["respuesta" => true, "msg" => "Tu solicitud se ha registrado, vamos a verificar la veracidad de tu compra." ] );
+        }
+        
+    }
+    
+
+    public function consultarMisCuentas(){
+        $conex = WolfConex::conex();
+        
+        $res = [];
+        
+        $sql = "select * from cuenta_cliente where cliente_id = ".$_SESSION["clientId"];
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            return false;
+        } else {
+            if ( !mysqli_num_rows($result) > 0 ){
+                return false;
+            } else {
+                while ($fila = mysqli_fetch_array($result)) {
+                    $res[] = $fila;
+                }
+                return $res;
+            }
+        }
+    }
+
+
+    public function guardarCuentaBancaria( $dataForm ){
+        
+        $conex = WolfConex::conex();
+        
+        $sql = "insert into cuenta_cliente ( cliente_id, banco, cuenta, titular, tipo, bitcoin ) values ( ".$_SESSION["clientId"].", '".$dataForm["banco"]."', '".$dataForm["numeroCuenta"]."',  '".$dataForm["aNombre"]."',  '".$dataForm["tipoCuenta"]."',  '".$dataForm["cuentaBitcoin"]."' )";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible registrar tu solicitud en este momento." ] );
+        } else {
+            echo json_encode( ["respuesta" => true, "msg" => "Tu solicitud se ha registrado exitosamente." ] );
+        }
+    }
+
     
     public function primerDiaMes() {
       $month = date('m');

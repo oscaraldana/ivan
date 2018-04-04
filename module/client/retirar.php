@@ -1,3 +1,25 @@
+<?php
+
+    $cliente = new cliente();
+    $cliente->consultarDatosParaRetiro();
+    
+    $comision = 5;
+    
+    $vlrComision = 0;
+    $vlrRetirar = 0;
+    
+    if ( $cliente->dispoParaRetiro > 0 ){
+        $vlrComision = $cliente->dispoParaRetiro * ( $comision / 100 );
+        $vlrRetirar = $cliente->dispoParaRetiro - $vlrComision;
+        
+        //echo '<input type="hidden" name="ipr_" id="ipr_" value="'. serialize($cliente->gananciasPorPaquete).'">';
+    }
+
+    $disabled = "";
+    if ( $vlrRetirar <= 0 ){
+        $disabled = " disabled ";
+    }
+?>
 
 <div class="panel panel-default">
     <div class="panel-heading" style="text-align: center;">Solicitar Retiro</div>
@@ -5,24 +27,24 @@
         <table class="table table-hover">
             <tr>
                 <th scope="row">Diponible para retirar:</th>
-                <td>$ 0.0</td>
+                <td>$ <?php echo $cliente->dispoParaRetiro; ?></td>
               </tr>
               <tr>
                 <th scope="row">Comision de retiro:</th>
-                <td>$ 0.0</td>
+                <td>$ <?php echo $vlrComision; ?></td>
               </tr>
               <tr>
                 <th scope="row">Total a Retirar:</th>
-                <td>$ 0.0</td>
+                <td>$ <?php echo $vlrRetirar; ?></td>
               </tr>
               <tr>
                 <th scope="row">Metodo de pago:</th>
-                <td><select><option>BITCOIN</option><option>CUENTA BANCARIA</option></select></td>
+                <td><select name="metodoPagoRetiro" id="metodoPagoRetiro"><option value="1">BITCOIN</option><option value="2">CUENTA BANCARIA</option></select></td>
               </tr>
 
         </table>
         <div style="text-align: center;">
-            <button class="btn btn-outline-info" style="cursor: no-drop;">Solicitar Retiro</button>
+            <button class="btn btn-info" style="cursor: no-drop;" <?= $disabled ?> onclick="solicitarRetiro();">Solicitar Retiro</button>
         </div>
     </div>
 </div>

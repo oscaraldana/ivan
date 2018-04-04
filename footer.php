@@ -18,6 +18,7 @@ if(!file_exists("css/style.css")){
     <script type="text/javascript" src="<?= $root ?>js/jquery.stellar.js"></script>
     <script type="text/javascript" src="<?= $root ?>js/module.js"></script>
     <script type="text/javascript" src="<?= $root ?>js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>js/sweetalert.min.js"></script>
     <script src="<?= $root ?>js/wow.min.js"></script>
     <script>
 		new WOW().init();

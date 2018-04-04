@@ -62,3 +62,19 @@ if ( isset($_POST["editarPerfil"]) && $_POST["editarPerfil"] ){
     $cliente->editarPerfil($datosForm);
     
 }
+
+if ( isset($_POST["retirar"]) && $_POST["retirar"] ){
+    
+    $cliente = new cliente();
+    
+    $cliente->procesarRetiro();
+    
+}
+
+
+if ( isset($_POST["crearCuentaBancaria"]) && $_POST["crearCuentaBancaria"] ) {
+    
+    $cliente = new cliente();
+    $cliente->guardarCuentaBancaria($_POST);
+    
+}
