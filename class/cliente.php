@@ -1,6 +1,14 @@
 <?php
 
 class cliente {
+
+    public $gananciasInversion;
+    public $gananciasReferidos;
+    
+    function __construct(){
+        $this->gananciasInversion = 0;
+        $this->gananciasReferidos = 0;
+    }
     
     public function loguearse($data){
         
@@ -203,48 +211,48 @@ class cliente {
                 }
                 
                 //var_export($res);
+                $dias = 0;
                 foreach ($res as $paq){
                     
                     $actualDate = date('Y-m-d'); // ." -> ".$paq["inicia"]." -> ".$paq["finaliza"];
-                    echo $actualDate." -> ".$paq["inicia"]." -> ".$paq["finaliza"]; // echos today! 
+                    //echo $actualDate." -> ".$paq["inicia"]." -> ".$paq["finaliza"]; // echos today! 
                     $initDate = date('Y-m-d', strtotime($paq["inicia"]));
                     $finishDate = date('Y-m-d', strtotime($paq["finaliza"]));
 
                     if ($actualDate >= $initDate && $actualDate <= $finishDate){
-                        echo "<hr>";
+                        //echo "<hr>";
                         $fechaInicio=strtotime($paq["inicia"]);
                         $fechaFin=strtotime(date('Y-m-d'));
+                        $m = ""; $d = 0;
                         for($i=$fechaInicio; $i<=$fechaFin; $i+=86400){
-                            echo "<br>".date("d-m-Y", $i);
+                            if( $m != date("m", $i) ){
+                                $m = date("m", $i);
+                                $d=0;
+                                //echo "<br>";
+                            }
+                            
+                            if( date("N", $i) < 6 ) {
+                                $d++;
+
+                                if($d<=20){
+                                    $dias++;
+                                    //echo "<br><b>".date("d-m-Y", $i)." -> ".date("N", $i)."</b>";
+                                }
+                                else {
+                                    //echo "<br>".date("d-m-Y", $i)." -> ".date("N", $i);
+                                }
+                            } else {
+                                //echo "<br>".date("d-m-Y", $i)." -> ".date("N", $i);
+                            }
+                            
+                            
                         }
                         
-                        /*$fechainicial = new DateTime($paq["inicia"]);
-                        $fechafinal = new DateTime($this->primerDiaMes());
-
-                        $diferencia = $fechainicial->diff($fechafinal);
-
-                        // El método diff nos devuelve un objeto del tipo DateInterval,
-                        // que almacena la información sobre la diferencia de tiempo 
-                        // entre fechas (años, meses, días, etc.).
-
-                        $meses = ( $diferencia->y * 12 ) + $diferencia->m;
-                        
-                        $diasMeses = 0;
-                        if ( $meses > 0 ){
-                            $diasMeses = $meses * 20;
-                        }
-                        
-                        echo $mesAntes = $this->unMesAntes()."<br>";*/
-                        
-                      echo "is between -> $meses -> $diasMeses<br>";
-                    }
-                    else
-                    {
-                    echo "NO GO!<br>";  
+                      //echo "is between -> $meses -> $diasMeses<br>";
                     }
                     
-                    $valorDia = $paq["valor"] * ( $paq["rentabilidad"] / 100 );
-                    echo $valorDia."<br>";
+                    $valorDia = ($paq["valor"] * ( $paq["rentabilidad"] / 100 ) ) / 20;
+                    $this->gananciasInversion += ($valorDia * $dias);
                 }
                 
             }

@@ -214,16 +214,16 @@
           <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
             <div class="info-box dark-bg">
               <i class="fa fa-dollar"></i>
-              <div class="count">4.362</div>
-              <div class="title">Mis Ganancias Inversion</div>
+              <div class="count"><?php echo $cliente->gananciasInversion; ?></div>
+              <div class="title">Mis Ganancias Por Inversion</div>
             </div>
           </div>
 
           <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
             <div class="info-box dark-bg">
               <i class="fa fa-dollar"></i>
-              <div class="count">4.362</div>
-              <div class="title">Mis Ganancias Referidos</div>
+              <div class="count"><?php echo $cliente->gananciasReferidos; ?></div>
+              <div class="title">Mis Ganancias Por Referidos</div>
             </div>
           </div>
 
@@ -231,7 +231,7 @@
           <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
             <div class="info-box dark-bg">
               <i class="fa fa-dollar"></i>
-              <div class="count">4.362</div>
+              <div class="count"><?php echo ($cliente->gananciasInversion + $cliente->gananciasReferidos); ?></div>
               <div class="title">Total Mis Ganancias</div>
             </div>
           </div>
@@ -241,57 +241,7 @@
         <!--/.row-->
 
 
-        <div class="row">
-          <div class="col-lg-9 col-md-12">
-
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h2><i class="fa fa-map-marker red"></i><strong>Countries</strong></h2>
-                <div class="panel-actions">
-                  <a href="javascript:;" class="btn-setting"><i class="fa fa-rotate-right"></i></a>
-                  <a href="javascript:;" class="btn-minimize"><i class="fa fa-chevron-up"></i></a>
-                  <a href="javascript:;" class="btn-close"><i class="fa fa-times"></i></a>
-                </div>
-              </div>
-              <div class="panel-body-map">
-                <div id="map" style="height:380px;"></div>
-              </div>
-
-            </div>
-          </div>
-          <div class="col-md-3">
-            <!-- List starts -->
-            <ul class="today-datas">
-              <!-- List #1 -->
-              <li>
-                <!-- Graph -->
-                <div><span id="todayspark1" class="spark"></span></div>
-                <!-- Text -->
-                <div class="datas-text">11,500 visitors/day</div>
-              </li>
-              <li>
-                <div><span id="todayspark2" class="spark"></span></div>
-                <div class="datas-text">15,000 Pageviews</div>
-              </li>
-              <li>
-                <div><span id="todayspark3" class="spark"></span></div>
-                <div class="datas-text">30.55% Bounce Rate</div>
-              </li>
-              <li>
-                <div><span id="todayspark4" class="spark"></span></div>
-                <div class="datas-text">$16,00 Revenue/Day</div>
-              </li>
-              <li>
-                <div><span id="todayspark5" class="spark"></span></div>
-                <div class="datas-text">12,000000 visitors every Month</div>
-              </li>
-            </ul>
-          </div>
-
-
-        </div>
-
-
+        
        
 
 
