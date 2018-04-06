@@ -2,17 +2,14 @@
 
     $cliente = new cliente();
     $cliente->consultarDatosParaRetiro();
-    
-    $comision = 5;
+    $cuentas = $cliente->consultarMisCuentas();
     
     $vlrComision = 0;
     $vlrRetirar = 0;
     
     if ( $cliente->dispoParaRetiro > 0 ){
-        $vlrComision = $cliente->dispoParaRetiro * ( $comision / 100 );
+        $vlrComision = $cliente->dispoParaRetiro * ( COMISION_RETIRO / 100 );
         $vlrRetirar = $cliente->dispoParaRetiro - $vlrComision;
-        
-        //echo '<input type="hidden" name="ipr_" id="ipr_" value="'. serialize($cliente->gananciasPorPaquete).'">';
     }
 
     $disabled = "";
@@ -22,7 +19,7 @@
 ?>
 
 <div class="panel panel-default">
-    <div class="panel-heading" style="text-align: center;">Solicitar Retiro</div>
+    <div class="panel-heading" style="text-align: center;"><b>SOLICITAR RETIRO</b></div>
     <div class="panel-content">
         <table class="table table-hover">
             <tr>
@@ -39,19 +36,38 @@
               </tr>
               <tr>
                 <th scope="row">Metodo de pago:</th>
-                <td><select name="metodoPagoRetiro" id="metodoPagoRetiro"><option value="1">BITCOIN</option><option value="2">CUENTA BANCARIA</option></select></td>
+                <td>
+                    <?php if ( !$cuentas ) { 
+                        echo "<p class='text-danger'><b>?</b></p>";
+                    } else { ?>
+                    <select name="metodoPagoRetiro" id="metodoPagoRetiro" class="form-control"><option value="">Seleccione Metodo de Pago</option>
+                        <?php 
+                        if ( isset($cuentas[0]["banco"]) && !empty($cuentas[0]["banco"]) ){
+                            echo '<option value="2">'.$cuentas[0]["banco"].' ***'.substr($cuentas[0]["cuenta"], -3).'</option>';
+                        }
+                        if ( isset($cuentas[0]["bitcoin"]) && !empty($cuentas[0]["bitcoin"]) ){
+                            echo '<option value="1">BITCOIN ***'.substr($cuentas[0]["bitcoin"], -3).'</option>';
+                        }
+                        ?>
+                    </select>
+                    <?php } ?>
+                </td>
               </tr>
 
         </table>
         <div style="text-align: center;">
+            <?php if ( !$cuentas ) { 
+                echo "<p class='text-danger'>No existe configurada ninguna cuenta transaccional para procesar la solicitud de retiro.</p>";
+            } else if ( $cliente->tieneR() ) { ?>
             <button class="btn btn-info" style="cursor: no-drop;" <?= $disabled ?> onclick="solicitarRetiro();">Solicitar Retiro</button>
+            <?php } ?>
         </div>
     </div>
 </div>
 
 
 <div class="panel panel-default">
-    <div class="panel-heading" style="text-align: center;">Historial de Retiros</div>
+    <div class="panel-heading" style="text-align: center;"><b>HISTORIAL DE RETIROS</b></div>
     <div class="panel-content">
       
         <table class="table table-hover">

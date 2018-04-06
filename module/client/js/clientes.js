@@ -137,7 +137,7 @@ function aceptarRegistro(){
                     url:   'controller.php',
                     type:  'post',
                     beforeSend: function () {
-                            $("#homeContent").html("Procesando, espere por favor...");
+                            //$("#homeContent").html("Procesando, espere por favor...");
                     },
                     success:  function (response) {
                             var result = JSON.parse(response);
@@ -327,6 +327,9 @@ function aceptarCompra(id){
 
 function solicitarRetiro(){
     
+    var formaPago = $("#metodoPagoRetiro").val();
+    
+    if ( formaPago !== "" && formaPago !== undefined ) {
     swal({
         title: "Confirmar Solicitud!",
         text: "Confirma que desea solicitar el retiro de tus ganancias?",
@@ -335,16 +338,20 @@ function solicitarRetiro(){
       })
       .then((willDelete) => {
         if (willDelete) {
-          confirmarRetiro();
+          confirmarRetiro(formaPago);
         }
       });
+    } else {
+        swal("Por favor seleccione el metodo de pago.");
+    }
     
 }
 
-function confirmarRetiro(){
+function confirmarRetiro(formaPago){
     
     var parametros = {
-        "retirar" : true
+        "solicitarRetiro" : true,
+        "formaPago" : formaPago
     };
     $.ajax({
                 data:  parametros,
@@ -367,40 +374,60 @@ function confirmarRetiro(){
 
 
 
-function formularioCuentasBancarias(){
+function formularioCuentasBancarias(id){
     
-    $("#modal-title").html("Registro Cuenta Transaccional");
-    $('#form_modal').attr('onsubmit', 'editarPerfil(); return false;');
+    var titulo = "Registro Cuenta Transaccional";
+    var bitcoin = "";
+    var banco = "";
+    var titularcuenta = "";
+    var numerocuenta = "";
+    
+    if ( id != "" && id != undefined ) {
+        
+        titulo = "Modificar mi Cuenta Transaccional";
+        bitcoin = datosCuenta.bitcoin;
+        titularcuenta = datosCuenta.titular;
+        numerocuenta = datosCuenta.cuenta;
+    }
+    
+    $("#modal-title").html(titulo);
+    //$('#form_modal').attr('onsubmit', 'editarPerfil(); return false;');
     $("#modal-body").html('<ul class="nav nav-tabs"><li class="active"><a data-toggle="tab" href="#home">' +
                                       '<i class="fa fa-bitcoin"></i> Cuenta Bitcoin</a></li><li><a data-toggle="tab" href="#menu1"><i class="fa fa-university"></i> Cuenta Bancaria</a></li>'+
                                       '</ul>'+
                                       '<div class="tab-content"><div id="home" class="tab-pane fade in active"><p> '+
                                       '<br>'+
                                       'Digite el ID o direccion de Bitcoin, si desea que sus ganancias se reflejen por medio de esta forma de pago.'+
-                                      "<br><br><label for='direccionBitcoin'>Direccion Bitcoin: </label><input type='text' value='' class='form-control' placeholder='Direccion Bitcoin' name='direccionBitcoin' id='direccionBitcoin'>"+
+                                      "<br><br><label for='direccionBitcoin'>Direccion Bitcoin: </label><input type='text' value='"+bitcoin+"' class='form-control' placeholder='Direccion Bitcoin' name='direccionBitcoin' id='direccionBitcoin'>"+
                                       '</p></div>'+
                                       
                                       '<div id="menu1" class="tab-pane fade">'+
                                       '<br>'+
                                       'Digite la informaci&oacute;n de su cuenta Bancaria'+
-                                      "<br><br><label for='banco'>Banco: <select class='form-control' id = 'nombreBanco' id = 'nombreBanco'>" +
+                                      "<br><br><label for='banco'>Banco: <select class='form-control' id = 'nombreBanco' name = 'nombreBanco'>" +
                                         '<option value="">--</option><option value="BANCO AV VILLAS">BANCO AV VILLAS</option><option value="BANCO BBVA COLOMBIA S.A.">BANCO BBVA COLOMBIA S.A.</option><option value="BANCO COLPATRIA">BANCO COLPATRIA</option><option value="BANCO DAVIVIENDA">BANCO DAVIVIENDA</option><option value="BANCO DE BOGOTA">BANCO DE BOGOTA</option><option value="BANCO DE OCCIDENTE">BANCO DE OCCIDENTE</option><option value="BANCO GNB SUDAMERIS">BANCO GNB SUDAMERIS</option><option value="BANCO POPULAR">BANCO POPULAR</option><option value="BANCOLOMBIA">BANCOLOMBIA</option><option value="CITIBANK ">CITIBANK </option><option value="BANCO CORPBANCA - HELM BANK S.A.">BANCO CORPBANCA - HELM BANK S.A.</option> </select>  ' +
                                         "</label>"+
-                                        "<label for='tipocuenta'>Tipo de Cuenta: <select class='form-control' id = 'tipoCuenta' id = 'tipoCuenta'>" +
+                                        "<label for='tipocuenta'>Tipo de Cuenta: <select class='form-control' id = 'tipoCuenta' name = 'tipoCuenta'>" +
                                         '<option value="">--</option><option value="AHORROS">AHORROS</option><option value="CORRIENTE">CORRIENTE</option> </select>  ' +
                                         "</label>"+
-                                      "<label for='nocuenta'>N&uacute;mero de Cuenta: </label><input type='text' value='' class='form-control' placeholder='Numero Cuenta' name='nocuenta' id='nocuenta'>"+
-                                      "<label for='anombre'>Nombre Titular: </label><input type='text' value='' class='form-control' placeholder='Nombre Titular' name='anombre' id='anombre'>"+
+                                      "<label for='nocuenta'>N&uacute;mero de Cuenta: </label><input type='text' value='"+numerocuenta+"' class='form-control' placeholder='Numero Cuenta' name='nocuenta' id='nocuenta'>"+
+                                      "<label for='anombre'>Nombre Titular: </label><input type='text' value='"+titularcuenta+"' class='form-control' placeholder='Nombre Titular' name='anombre' id='anombre'>"+
                                       '</div>'+
                                       '</div>    </div></div>' 
                           
                          );
-    $("#modal-footer").html('<input type="button" class="btn btn-info" style="font-size: 10px;" value="Guardar" onclick="validarCuentasBancarias()"><button type="button" class="btn btn-default" data-dismiss="modal" style="font-size: 10px;">Cancelar</button>');           
+    $("#modal-footer").html('<input type="button" class="btn btn-info" style="font-size: 10px;" value="Guardar" onclick="validarCuentasBancarias('+id+')"><button type="button" class="btn btn-default" data-dismiss="modal" style="font-size: 10px;">Cancelar</button>');           
+    
+    if ( id != "" && id != undefined ) {
+        $("#nombreBanco").val(datosCuenta.banco).attr('selected', 'selected');
+        $("#tipoCuenta").val(datosCuenta.tipo).attr('selected', 'selected');
+    }
+    
     $("#modalCuenta").modal();
     
 }
 
-function validarCuentasBancarias(){
+function validarCuentasBancarias(id){
     
     var cuentaBitcoin = $("#direccionBitcoin").val().trim();
     var banco = $("#nombreBanco").val().trim();
@@ -432,12 +459,13 @@ function validarCuentasBancarias(){
         }
         
         var parametros = {
-            "crearCuentaBancaria" : true,
+            "guardarCuentaBancaria" : true,
             "cuentaBitcoin" : cuentaBitcoin,
             "banco" : banco,
             "tipoCuenta" : tipoCuenta,
             "numeroCuenta" : numeroCuenta,
-            "aNombre" : aNombre
+            "aNombre" : aNombre,
+            "idCuenta" : id
         };
         $.ajax({
                     data:  parametros,
@@ -448,7 +476,8 @@ function validarCuentasBancarias(){
                             var result = JSON.parse(response);
                             if ( result.respuesta ) {
                                 $("#modalCuenta").modal('hide');
-                                swal(result.msg);
+                                setTimeout ("cargarHtml('cuentabancaria')", 100); 
+                                //swal(result.msg);
 
                             } else {
                                 swal(result.msg);

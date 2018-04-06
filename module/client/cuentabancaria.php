@@ -1,7 +1,8 @@
 <?php
 $cliente = new cliente();
 $cuentas = $cliente->consultarMisCuentas();
-var_export($cuentas);
+//var_export($cuentas);
+
 
 if( !$cuentas ){ ?>
     
@@ -15,6 +16,7 @@ if( !$cuentas ){ ?>
 
 <?php    
 } else {
+    echo '<input type="hidden" id="infoCuenta" name = "infoCuenta" value="'.serialize($cuentas).'">';
 ?>
 <div class="panel panel-default">
     <div class="panel-heading" style="text-align: center;"><h4><b>Mis Cuentas Transaccionales</b></h4></div>
@@ -28,11 +30,13 @@ if( !$cuentas ){ ?>
                 <th scope="row">Entidad</th>
                 <th scope="row">Tipo Cuenta</th>
                 <th scope="row">Numero</th>
+                <th scope="row">Titular</th>
               </tr>
               <tr>
-                <td>Davivienda</td>
-                <td>Ahorros</td>
-                <td>2001234899899</td>
+                <td><?= $cuentas[0]["banco"] ?></td>
+                <td><?= $cuentas[0]["tipo"] ?></td>
+                <td><?= $cuentas[0]["cuenta"] ?></td>
+                <td><?= $cuentas[0]["titular"] ?></td>
               </tr>
               
         </table>
@@ -52,9 +56,15 @@ if( !$cuentas ){ ?>
         <?php } ?>
 
 
-<div  style="text-align: center;"> <button class="btn btn-info">Modificar</button> </div>
+<div  style="text-align: center;"> <button class="btn btn-info" onclick="formularioCuentasBancarias(<?= $cuentas[0]["cuenta_cliente_id"] ?>)">Modificar</button> </div>
     </div>
 </div>
+    
+
+<script type="text/javascript">
+    var datosCuenta=<?php echo json_encode($cuentas[0]);?>;
+</script>
+    
 <?php } ?>
 
     

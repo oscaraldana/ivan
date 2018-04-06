@@ -63,16 +63,16 @@ if ( isset($_POST["editarPerfil"]) && $_POST["editarPerfil"] ){
     
 }
 
-if ( isset($_POST["retirar"]) && $_POST["retirar"] ){
+if ( isset($_POST["solicitarRetiro"]) && $_POST["solicitarRetiro"] ){
     
     $cliente = new cliente();
     
-    $cliente->procesarRetiro();
+    $cliente->procesarRetiro($_POST["formaPago"]);
     
 }
 
 
-if ( isset($_POST["crearCuentaBancaria"]) && $_POST["crearCuentaBancaria"] ) {
+if ( isset($_POST["guardarCuentaBancaria"]) && $_POST["guardarCuentaBancaria"] ) {
     
     $cliente = new cliente();
     $cliente->guardarCuentaBancaria($_POST);
