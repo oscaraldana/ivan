@@ -7,6 +7,8 @@ class cliente {
     public $gananciasTotales;
     public $gananciasPorPaquete;
     public $dispoParaRetiro;
+    public $misRetiros;
+    public $misRetirosPorPaquete;
     
     function __construct(){
         $this->gananciasInversion = 0;
@@ -14,6 +16,8 @@ class cliente {
         $this->gananciasTotales = 0;
         $this->gananciasPorPaquete = [];
         $this->dispoParaRetiro = 0;
+        $this->misRetiros = [];
+        $this->misRetirosPorPaquete = [];
     }
     
     public function loguearse($data){
@@ -392,6 +396,47 @@ class cliente {
         }
     }
 
+    
+    public function consultarRetiros () {
+        
+        $conex = WolfConex::conex();
+        
+        $res = [];
+        
+        $sql = "select * from retiros_cliente where cliente_id = ".$_SESSION["clientId"];
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            $this->misRetiros = [];
+        } else {
+            if ( !mysqli_num_rows($result) > 0 ){
+                $this->misRetiros = [];
+            } else {
+                while ($fila = mysqli_fetch_array($result)) {
+                    $res[] = $fila;
+                    
+                    $sql2 = "select * from retiros_paquetes where retiro_cliente_id = ".$fila["retiro_id"];
+                    $result2 = mysqli_query($conex->getLinkConnect(), $sql2);
+                    if ( !$result2 ) {
+                        $this->misRetirosPorPaquete[$fila["retiro_id"]] = [];
+                    } else {
+                        if ( !mysqli_num_rows($result2) > 0 ){
+                            $this->misRetirosPorPaquete[$fila["retiro_id"]] = [];
+                        } else {
+                            while ($fila2 = mysqli_fetch_array($result2)) {
+                                $this->misRetirosPorPaquete[$fila["retiro_id"]][] = $fila2;
+                            }
+                        }
+                    }
+                    
+                }
+                $this->misRetiros = $res;
+            }
+        }
+        
+    }
+    
+    
+    
     
     public function primerDiaMes() {
       $month = date('m');

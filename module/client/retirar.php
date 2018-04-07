@@ -4,6 +4,12 @@
     $cliente->consultarDatosParaRetiro();
     $cuentas = $cliente->consultarMisCuentas();
     
+    $cliente->consultarRetiros();
+    
+    echo "<pre>";
+    var_export($cliente->misRetiros);
+    echo "</pre>";
+    
     $vlrComision = 0;
     $vlrRetirar = 0;
     
@@ -16,6 +22,14 @@
     if ( $vlrRetirar <= 0 ){
         $disabled = " disabled ";
     }
+    
+    $existeRetiroPendiente = false;
+    foreach ( $cliente->misRetiros as $misRet ) {
+        if ( $misRet["estado"] == "0" ) {
+            $existeRetiroPendiente = true;
+        }
+    }
+    
 ?>
 
 <div class="panel panel-default">
@@ -58,7 +72,10 @@
         <div style="text-align: center;">
             <?php if ( !$cuentas ) { 
                 echo "<p class='text-danger'>No existe configurada ninguna cuenta transaccional para procesar la solicitud de retiro.</p>";
-            } else if ( $cliente->tieneR() ) { ?>
+            } else if ( $existeRetiroPendiente ) {
+                echo "<p class='text-danger'>Hasta que no se procese la solicitud de retiro pendiente, no es posible realizar una nueva solicitud de retiro.</p>";
+            } else {
+                ?>
             <button class="btn btn-info" style="cursor: no-drop;" <?= $disabled ?> onclick="solicitarRetiro();">Solicitar Retiro</button>
             <?php } ?>
         </div>
@@ -70,7 +87,11 @@
     <div class="panel-heading" style="text-align: center;"><b>HISTORIAL DE RETIROS</b></div>
     <div class="panel-content">
       
-        <table class="table table-hover">
+        <?php 
+        
+        if ( is_array($cliente->misRetiros) && count($cliente->misRetiros) > 0 ) {
+
+            echo '<table class="table table-hover">
             <tr>
                 <th scope="row">Fecha Solicitud</th>
                 <th scope="row">Fecha Pago</th>
@@ -78,17 +99,29 @@
                 <th scope="row">Tipo</th>
                 <th scope="row">Cantidad</th>
                 <th scope="row">Estado</th>
-              </tr>
-              <tr>
-                <td>10/01/2018</td>
-                <td>20/01/2018</td>
-                <td>BITCOIN</td>
-                <td>REFERIDO</td>
-                <td>$200</td>
-                <td><span class="badge">Pagado</span></td>
-              </tr>
+              </tr>';
+            
+            
               
-        </table>
+            
+            foreach ( $cliente->misRetiros as $misRet ) {
+                echo '  <tr>
+                            <td>'.date("d/m/Y", strtotime($misRet["fecha_solicitud"]) ).'</td>
+                            <td>20/01/2018</td>
+                            <td>BITCOIN</td>
+                            <td>REFERIDO</td>
+                            <td>$200</td>
+                            <td><span class="badge">Pagado</span></td>
+                          </tr>';
+            }
+            
+            echo '</table>';
+            
+        } else {
+        
+            echo "<h5>No existen registros de solicitudes de retiro para mostrar.</h5>";
+        }
+        ?>
         
     </div>
 </div>
