@@ -105,13 +105,21 @@
               
             
             foreach ( $cliente->misRetiros as $misRet ) {
+                $estado = "";
+                
+                switch ( $misRet["estado"] ) {
+                    case "0" : $estado = "Pendiente"; break;
+                    case "1" : $estado = "Pagado"; break;
+                    case "2" : $estado = "Rechazado"; break;
+                }
+                
                 echo '  <tr>
                             <td>'.date("d/m/Y", strtotime($misRet["fecha_solicitud"]) ).'</td>
-                            <td>20/01/2018</td>
-                            <td>BITCOIN</td>
-                            <td>REFERIDO</td>
-                            <td>$200</td>
-                            <td><span class="badge">Pagado</span></td>
+                            <td>'.date("d/m/Y", strtotime($misRet["fecha_pago"]) ).'</td>
+                            <td>'.( !empty($misRet["bitcoin"]) ) ? "Bitcoin" : $misRet["banco"] .'</td>
+                            <td>Inversion</td>
+                            <td align="right">$ '.$misRet["valor_retiro"].'</td>
+                            <td><span class="badge">'.$estado.'</span></td>
                           </tr>';
             }
             
