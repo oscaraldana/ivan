@@ -269,11 +269,30 @@ class cliente {
     public function consultarDatosParaRetiro() {
         
         $this->consultarGanancias();
-        
+        $this->consultarRetiros();
+        //echo "<pre>"; var_Export($this->gananciasPorPaquete);
+        //echo "<hr>";
+        //var_export($this->misRetiros);
+        //echo "<hr>";
+        //var_export($this->misRetirosPorPaquete);
+        //echo "</pre>";
         foreach ( $this->gananciasPorPaquete as $ganPaq ) {
             
+            $retiroRestar = 0;
             if ( $ganPaq["ganancia"] >= $ganPaq["retiro_minimo"] ) {
-                $this->dispoParaRetiro += $ganPaq["ganancia"];
+                
+                foreach ( $this->misRetiros as $kRetp => $misRetPaq) {
+                    foreach ( $misRetPaq["paquetes"] as $mrp ){
+                        if ( $mrp["paquete_cliente_id"] == $ganPaq["paquete_cliente_id"] && $misRetPaq["estado"] == 1 ){
+                            $retiroRestar += $mrp["valor_retiro"];
+                        }
+                    }
+                }
+                
+                $valorDispoPaq = $ganPaq["ganancia"] - $retiroRestar;
+                if ( $valorDispoPaq >= $ganPaq["retiro_minimo"] ) {
+                    $this->dispoParaRetiro += $valorDispoPaq;
+                }
             }
             
         }
@@ -412,7 +431,8 @@ class cliente {
                 $this->misRetiros = [];
             } else {
                 while ($fila = mysqli_fetch_array($result)) {
-                    $res[] = $fila;
+                    $cantRes = count($res);
+                    $res[$cantRes] = $fila;
                     
                     $sql2 = "select * from retiros_paquetes where retiro_cliente_id = ".$fila["retiro_id"];
                     $result2 = mysqli_query($conex->getLinkConnect(), $sql2);
@@ -424,6 +444,7 @@ class cliente {
                         } else {
                             while ($fila2 = mysqli_fetch_array($result2)) {
                                 $this->misRetirosPorPaquete[$fila["retiro_id"]][] = $fila2;
+                                $res[$cantRes]["paquetes"][] = $fila2;
                             }
                         }
                     }

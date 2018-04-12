@@ -6,9 +6,6 @@
     
     $cliente->consultarRetiros();
     
-    echo "<pre>";
-    var_export($cliente->misRetiros);
-    echo "</pre>";
     
     $vlrComision = 0;
     $vlrRetirar = 0;
@@ -113,10 +110,11 @@
                     case "2" : $estado = "Rechazado"; break;
                 }
                 
+                $metodo = ( !empty($misRet["bitcoin"]) ) ? "Bitcoin" : $misRet["banco"];
                 echo '  <tr>
                             <td>'.date("d/m/Y", strtotime($misRet["fecha_solicitud"]) ).'</td>
                             <td>'.date("d/m/Y", strtotime($misRet["fecha_pago"]) ).'</td>
-                            <td>'.( !empty($misRet["bitcoin"]) ) ? "Bitcoin" : $misRet["banco"] .'</td>
+                            <td>'.$metodo.'</td>
                             <td>Inversion</td>
                             <td align="right">$ '.$misRet["valor_retiro"].'</td>
                             <td><span class="badge">'.$estado.'</span></td>
