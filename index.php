@@ -1,7 +1,7 @@
 
 <?php
 
-$menu = true;
+//$menu = true;
 
 include 'header.php';
 ?>

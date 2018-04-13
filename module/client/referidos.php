@@ -1,0 +1,123 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+?>
+<link rel="stylesheet" href="css/hierarchy-view.css">
+<link rel="stylesheet" href="css/main.css">
+<style>body{ background-color: #303840 }</style>
+<!--Management Hierarchy-->
+    <section class="management-hierarchy">
+        
+        <h1> Mis Referidos</h1>
+        <div class="hv-container">
+            <div class="hv-wrapper">
+
+                <!-- Nuevo Nodo -->
+                <div class="hv-item">
+
+                    <div class="hv-item-parent">
+                        <div class="person">
+                            <img src="https://randomuser.me/api/portraits/men/62.jpg" alt="">
+                            <p class="name">
+                                El papa de todos
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="hv-item-children">
+
+                        <div class="hv-item-child">
+                            
+                            <!-- Nuevo Nodo -->
+                            <div class="hv-item">
+
+                                <div class="hv-item-parent">
+                                    <div class="person">
+                                        <img src="https://randomuser.me/api/portraits/women/50.jpg" alt="">
+                                        <p class="name">Una Hija</p>
+                                    </div>
+                                </div>
+
+                                <div class="hv-item-children">
+
+                                    <div class="hv-item-child">
+                                        <div class="person">
+                                            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="">
+                                            <p class="name">Una Nieta</p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="hv-item-child">
+                                        <div class="person">
+                                            <img src="https://randomuser.me/api/portraits/men/81.jpg" alt="">
+                                            <p class="name">Un Nieto</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="hv-item-child">
+                                        <div class="person">
+                                            <img src="https://randomuser.me/api/portraits/women/18.jpg" alt="">
+                                            <p class="name">Otra Nieta </p>
+                                        </div>
+                                    </div>
+                                    <div class="hv-item-child">
+                                        <div class="person">
+                                            <img src="https://randomuser.me/api/portraits/women/11.jpg" alt="">
+                                            <p class="name">Ooootra nieta</p>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="hv-item-child">
+                            <!-- Key component -->
+                            <div class="hv-item">
+
+                                <div class="hv-item-parent">
+                                    <div class="person">
+                                        <img src="https://randomuser.me/api/portraits/men/3.jpg" alt="">
+                                        <p class="name">Un hijo</p>
+                                    </div>
+                                </div>
+
+                                <div class="hv-item-children">
+
+                                    <div class="hv-item-child">
+                                        <div class="person">
+                                            <img src="https://randomuser.me/api/portraits/men/41.jpg" alt="">
+                                            <p class="name">Un nieto</p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="hv-item-child">
+                                        <div class="person">
+                                            <img src="https://randomuser.me/api/portraits/men/90.jpg" alt="">
+                                            <p class="name">Otro Nieto</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
