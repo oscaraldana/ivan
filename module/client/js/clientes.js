@@ -41,6 +41,9 @@ function cargarHtml(cargar){
                 },
                 success:  function (response) {
                         $("#homeContent").html(response);
+                        if(cargar == "referidos") {
+                            $('[data-toggle="tooltip"]').tooltip();
+                        }
                 }
         });
     

@@ -19,11 +19,11 @@
                 <!-- Nuevo Nodo -->
                 <div class="hv-item">
 
-                    <div class="hv-item-parent">
-                        <div class="person">
-                            <img src="https://randomuser.me/api/portraits/men/62.jpg" alt="">
+                    <div class="hv-item-parent" title="dddddddd d d ">
+                        <div class="person"  data-toggle="tooltip" title="loquesea">
+                            <img src="https://randomuser.me/api/portraits/men/62.jpg" alt="xxxxx" data-toggle="tooltip" title="loquesea"> 
                             <p class="name">
-                                El papa de todos
+                                Este soy yo!
                             </p>
                         </div>
                     </div>
@@ -121,3 +121,10 @@
             </div>
         </div>
     </section>
+
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
