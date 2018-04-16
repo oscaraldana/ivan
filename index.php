@@ -15,8 +15,9 @@ include 'header.php';
                   <h1> 
                     <center><img src="images/wolf.png" width="120px" ></center>
                     <!-- <i class="step icon-diamond size-36"></i>  -->
-                    <span class="seconday">Wolves
-                      Traders</span> <span>Company</span> </h1>
+                    <span class="seconday">Wolves Traders Company</span> 
+                    <!-- <span style="font-style: italic;">Company</span>  -->
+                  </h1>
                 </div>
               </div>
             </section>
@@ -24,20 +25,14 @@ include 'header.php';
               <div class="content">
                 <div class="container-template">
                   <div class="headergroup">
-                    <h2 class="in-point"> <span class="seconday">What Is</span> <span>Wolves
-                        Traders Company?</span> </h2>
+                      <h2 class="in-point"> <span class="seconday" style="font-size: 50px;">Quienes somos?</span> </h2>
                   </div>
-                  <div class="intro content-template">
-                    <p><strong>The number-one Luxury property showcase on the web,
-                        today. </strong></p>
-                    <p>Luxury Homes, the number-one purveyor of Luxury Homes in the
-                      world, is proud to prsent this short online showcase to you.
-                      We hope you enjoy it.</p>
-                    <p>Luxury Homes is the ‘hidden gem’ of the global luxury market,
-                      with a target audience of the most discerning high net worth
-                      individuals globally.</p>
+                  <div class=" content-template"><br>
+                    <p><strong>Somos un equipo de profesionales del trading. </strong></p>
+                    <p>Realizamos transacciones internacionales.</p>
+                    
                   </div>
-                  <ul class="timeline">
+                  <!--<ul class="timeline">
                     <li class="year">2012</li>
                     <li class="upper-line"> <span class="title">Founded by John Doe
                         in 2012</span> <span class="timeline-content paragraph-text">“My
@@ -57,7 +52,7 @@ include 'header.php';
                         We have our business in 12 countries all over the world. We
                         want to spread it throughout the world. You can contribute
                         us joining the winning the team </span> </li>
-                  </ul>
+                  </ul> -->
                 </div>
               </div>
             </section>
@@ -214,39 +209,29 @@ include 'header.php';
             
             
             <!-- TESTIMONIALS SECTION -->
-            <!--
+            
             <section class="testimonials-part" id="testimonials-part">
               
               <div class="testimonials-part-section-seperator">
                 <div class="container-template">
-                  <h2> <span class="seconday">What our</span> Clients say </h2>
+                  <h2> <span class="seconday">Que Dicen</span> Nuestros Inversores </h2>
                   <div class="testimonials-container">
                     <ul class="testimonials testimonials-wrapper">
-                      <li class="testimonials-slide"> <span class="testimonial-text">I
-                          am in love with the home designs. They are what i've been
-                          looking for a long time! I am in love with the home
-                          designs. They are what i've been looking for a long time!</span>
-                        <span class="testimonial-author">Ben Carson, DIRECTOR Carson
-                          Energy</span> </li>
-                      <li class="testimonials-slide"> <span class="testimonial-text">A
-                          very interesting and haunting visual experience!'It stats
-                          with you a long time. Very, very unique. A very
-                          interesting and haunting visual experience!'It stats with
-                          you a long time. Very, very unique.</span> <span class="testimonial-author">Bob
-                          Gerry, CO-FOUNDER Hales &amp; Carters</span> </li>
-                      <li class="testimonials-slide"> <span class="testimonial-text">We
-                          must definitely give you a nod for this great experience.
-                          It was very much worth my time. A very interesting and
-                          haunting visual experience!'It stats with you a long
-                          time.Very,very unique.</span> <span class="testimonial-author">Catherine
-                          Denton, DIRECTOR Parpar</span> </li>
+                      <li class="testimonials-slide"> <span class="testimonial-text">Estoy muy contento con los rendimientos, Quiero invertir mas.</span>
+                        <span class="testimonial-author">Andres Parra</span> </li>
+                      <li class="testimonials-slide"> <span class="testimonial-text">Los recomiendo totalmente, son confiables y serios y cumplidos.</span> 
+                          <span class="testimonial-author">Ofelia Vanegas</span> </li>
+                      <li class="testimonials-slide"> <span class="testimonial-text">Excelente inversion, las ganancias son extraordinarias.</span> 
+                          <span class="testimonial-author">Felipe Gomez</span> </li>
+                      <li class="testimonials-slide"> <span class="testimonial-text">Al principio no creia, pero un amigo me insistio tanto hasta que inverti, ahora estoy convenciendo a otros amigos, realmente me convencio, estoy feliz!.</span> 
+                          <span class="testimonial-author">Andrea Vargas</span> </li>
                     </ul>
                   </div>
                   <div class="testimonials-pagination"></div>
                 </div>
               </div>
             </section>
-            
+            <!--
             <section class="membership-part" id="membership-part">
               
               <div class="membership-part-section-seperator" data-stellar-background-ratio="0.5"
@@ -271,7 +256,8 @@ include 'header.php';
                 </div>
               </div>
             </section>
-            
+            -->
+            <!--
             <section class="featured-part" id="featured-part">
               
               <div class="content">
@@ -320,40 +306,30 @@ include 'header.php';
                 </div>
               </div>
             </section>
-            
+            -->
+            <br><br><br><br>
             <section class="tips-part" id="tips-part">
               <div class="section-seperator">
                 <div class="container-template">
-                  <h2> <span class="seconday">Important</span> Tips </h2>
+                  <h2> <span class="seconday">Tips</span> Importantes </h2>
                 </div>
               </div>
               
               <div class="content">
                 <div class="container-template">
-                  <h2> Important Tips </h2>
+                  <h2> Tips Importantes </h2>
                   <div class="content-template">
                     <ul>
-                      <li> <i class="icon-task-check"></i> Your listing will be
-                        included in the Luxury directory area (coming soon!) </li>
-                      <li> <i class="icon-task-check"></i> This listing will
-                        include your company logo, company&nbsp;description and
-                        contact details </li>
-                      <li> <i class="icon-task-check"></i> Payment can be made
-                        online via Stripe. </li>
-                      <li> <i class="icon-task-check"></i> Inclusion in the our
-                        social media activity plus followed and liked by Luxury </li>
-                      <li> <i class="icon-task-check"></i> Inclusion in the
-                        member’s only Luxury online directory </li>
-                      <li> <i class="icon-task-check"></i> A Luxury logo will be
-                        provided for you to feature this on your website. </li>
+                      <li> <i class="icon-task-check"></i> Puedes comprar todos los paquetes que quieras. </li>
+                      <li> <i class="icon-task-check"></i> Obtendras excelente rentabilidad mensual garantizada. </li>
+                      <li> <i class="icon-task-check"></i> Despues de registrarte, podras acceder al panel de control de tu cuenta. </li>
+                      <li> <i class="icon-task-check"></i> Si invitas a tus amigos, podras ganar cuando ellos inviertan. </li>
                     </ul>
                   </div>
-                  <br>
-                  <button type="button" class="form-btn semibold">Space booking Form</button>
                 </div>
               </div>
             </section>
-            -->
+            
             
             
             
@@ -593,7 +569,7 @@ include 'header.php';
               <div class="content">
                 <div class="container-template">
                   <div class="headergroup">
-                    <h2> <span class="seconday">Meet our</span> <span>Founder</span>
+                    <h2> <span class="seconday">Meet our</span> <span>Fundador</span>
                     </h2>
                   </div>
                   <!-- Team Members List -->
@@ -601,11 +577,9 @@ include 'header.php';
                     <li>
                       <div class="team-member-image"> <img src="images/Reza.jpg" alt="yours alone">
                       </div>
-                      <h3 class="team-member-title"> <span class="seconday">John
-                          Doe</span> </h3>
+                      <h3 class="team-member-title"> <span class="seconday">Ivan Contreras</span> </h3>
                       <div class="team-member-text content-template">
-                        <p>Founder of Luxury. Doe has 27 years experience in
-                          high-end luxury, commercial and residential development.</p>
+                        <p>Fundador de Wolves Traders Company. Mas de 4 años realizando Trading de manera profesional.</p>
                       </div>
                     </li>
                   </ul>
@@ -614,8 +588,7 @@ include 'header.php';
             </section>
             <section class="contact-form" id="contact-form">
               <div class="headergroup">
-                <h2> <span class="seconday">Contact us</span> <span>When you need</span>
-                </h2>
+                <h2> <span class="secondary">Contactenos</span></h2>
               </div>
               <div class="container">
                 <div class="inner contact">
@@ -626,30 +599,26 @@ include 'header.php';
                       <!-- Left Inputs -->
                       <div class="col-xs-6 ">
                         <!-- Name --> <br>
-                        <input name="name" id="name" required="required" class="form"
-
-                          placeholder="Name" type="text">
+                        <input name="name" id="name" required="required" class="form" placeholder="Nombre" type="text">
                         <!-- Email --> <input name="email" id="email" required="required"
 
-                          class="form" placeholder="Email" type="email">
-                        <!-- secondayject --> <input name="secondayject" id="secondayject"
+                          class="form" placeholder="Correo" type="email">
+                        <!-- secondayject --> <input name="asunto" id="asunto"
 
-                          required="required" class="form" placeholder="secondayject"
+                          required="required" class="form" placeholder="Asunto"
 
                           type="text"> </div>
                       <!-- End Left Inputs -->
                       <!-- Right Inputs -->
                       <div class="col-xs-6">
                         <!-- Message --> <br>
-                        <textarea name="message" id="message" class="form textarea"
-
-    placeholder="Message"></textarea> </div>
+                        <textarea name="message" id="message" class="form textarea" placeholder="Mensaje"></textarea> </div>
                       <!-- End Right Inputs -->
                       <!-- Bottom secondaymit -->
                       <div class="relative fullwidth col-xs-12">
                         <!-- Send Button --> <button type="button" id="secondaymit"
 
-                          name="secondaymit" class="form-btn semibold">Send Message</button>
+                          name="secondaymit" class="form-btn semibold">Enviar</button>
                       </div>
                       <!-- End Bottom secondaymit -->
                       <!-- Clear -->

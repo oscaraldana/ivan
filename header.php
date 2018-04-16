@@ -45,12 +45,17 @@ if(!file_exists("css/style.css")){
             }
             else { ?>
             
-            <li> <a class="smoothScroll" href="#timeline-part" title="What Is Wolves?">
-                    <i class="step icon-question size-24"></i><span class="text">What is Wolves?</span>
+            <li> <a class="smoothScroll" href="#timeline-part" title="¿Quienes Somos?">
+                    <i class="step icon-question size-24"></i><span class="text">¿Quienes Somos?</span>
                 </a> 
             </li>
+            <li> <a class="smoothScroll" href="#testimonials-part" title="Testimonios">
+                    <i class="step icon-thumbs-up size-24"></i><span class="text">Testimonios</span></a>
+            </li>
+            <li> <a class="smoothScroll" href="#tips-part" title="Tips Importantes">
+                    <i class="step icon-light-bulb size-24"></i><span class="text">Tips Importantes</span></a> </li>
             <li> <a class="smoothScroll" href="module/client/" title="">
-                    <i class="step icon-identification size-24"></i><span class="text">Modulo de clientes</span>
+                    <i class="step icon-identification size-24"></i><span class="text">Mi panel de control</span>
                 </a> 
             </li>
             <li> <a class="smoothScroll" href="#contact-form" title="Contact Form"><i class="step icon-envelope-1 size-24"></i><span class="text">Contact</span></a>
