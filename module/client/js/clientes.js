@@ -68,6 +68,9 @@ function logout(cargar){
     
 }
 
+function sweetal(val){
+    swal(val);
+}
 
 function registro(){
     
@@ -75,9 +78,11 @@ function registro(){
     $("#modal-body").html("<label for='nombre'>Nombre: </label><input type='text' class='form-control' placeholder='Nombre' name='nombre' id='nombre' required>"+
                           "<label for='correo'>Correo: </label><input type='text' class='form-control' placeholder='Correo' name='mail' id='nombre' required>"+
                           "<label for='usuario'>Usuario: </label><input type='text' class='form-control' placeholder='Usuario' name='usuario' id='usuario' required>"+
-                          "<label for='clave1'>Contrase&nacute;a: </label><input type='text' class='form-control' placeholder='Contrase&ntilde;a' name='clave1' id='clave1' required>"+
-                          "<label for='clave2'>Confirmar Contrase&nacute;a: </label><input type='text' class='form-control' placeholder='Confirmar Contrase&ntilde;a' name='clave2' id='clave2' required>"+
-                          "<label for='referido'>Referido: </label><input type='text' class='form-control' placeholder='Referido Por' name='referido' id='referido' required>"
+                          "<label for='clave1'>Contrase&nacute;a: </label><input type='password' class='form-control' placeholder='Contrase&ntilde;a' name='clave1' id='clave1' required>"+
+                          "<label for='clave2'>Confirmar Contrase&nacute;a: </label><input type='password' class='form-control' placeholder='Confirmar Contrase&ntilde;a' name='clave2' id='clave2' required>"+
+                          "<label for='foto'>Foto: </label><input name='foto' id='foto' type='file' class='form-control form-file' accept='image/x-png,image/gif,image/jpeg' />"+
+                          "<label for='referido'>Referido: </label><input type='text' class='form-control' placeholder='Referido Por' name='referido' id='referido' required>"+
+                          "<input type='hidden' name='registro' id='hidden' value = 'true'><iframe name='iframeUpload' style='display:none'></iframe>"
                           
                          );
     $("#modal-footer").html('<input type="submit" class="btn btn-info" style="font-size: 10px;" value="Registrarme"><button type="button" class="btn btn-default" data-dismiss="modal" style="font-size: 10px;">Cancelar</button>');           
@@ -125,12 +130,17 @@ function miperfil(){
     
 }
 
+function closeModal(){
+    $("#modalBuy").modal('hide');
+}
+
 function aceptarRegistro(){
     
     if ( $("#clave1").val() != $("#clave2").val() ) {
         swal("Las contraseñas ingresadas no coinciden");
     } else {
-        
+        $("#form_registro").submit();
+        /*
         var parametros = {
             "registro" : true,
             "datosForm" : $("#form_registro").serialize()
@@ -152,7 +162,7 @@ function aceptarRegistro(){
                                 swal(result.msg);
                             }
                     }
-        });
+        }); */
     }
     
     
@@ -479,7 +489,7 @@ function validarCuentasBancarias(id){
                             var result = JSON.parse(response);
                             if ( result.respuesta ) {
                                 $("#modalCuenta").modal('hide');
-                                setTimeout ("cargarHtml('cuentabancaria')", 100); 
+                                setTimeout ("cargarHtml('cuentabancaria')", 300); 
                                 //swal(result.msg);
 
                             } else {

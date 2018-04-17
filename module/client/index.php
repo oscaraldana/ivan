@@ -42,8 +42,7 @@ include_once '../../header_only.php';
         <div class="col-sm-6 col-md-4 col-md-offset-4">
             <h1 class="text-center login-title"><?= $lang["client_login_tittle"] ?></h1>
             <div class="account-wall">
-                <img class="profile-img" src="../../images/wolf_.jpg"
-                    alt="">
+                <img class="profile-img" src="../../images/wolvess.jpeg"  alt="">
                 <form class="form-signin" onsubmit="login(); return false;">
                     <input type="text" id="user_login" name="user_login" required="" class="form-control" placeholder="<?= $lang["login_user"] ?>" autofocus>
                     <input type="password"  id="pass_login"  name="pass_login" required="" class="form-control" placeholder="<?= $lang["login_passwd"] ?>" >
@@ -67,7 +66,9 @@ include_once '../../header_only.php';
 
     <!-- Modal content-->
     <div class="modal-content" style="background-color: #262b2d;">
-        <form onsubmit='aceptarRegistro(); return false;' id="form_registro" name="form_registro">
+        <form id="form_registro" name="form_registro" method="post" enctype="multipart/form-data"
+            action="controller.php"
+            target="iframeUpload">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title" name="modal-title" id="modal-title">Modal Header</h4>

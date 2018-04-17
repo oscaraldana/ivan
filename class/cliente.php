@@ -9,6 +9,8 @@ class cliente {
     public $dispoParaRetiro;
     public $misRetiros;
     public $misRetirosPorPaquete;
+    public $misReferidos;
+    public $imprimirMisRef;
     
     function __construct(){
         $this->gananciasInversion = 0;
@@ -18,6 +20,8 @@ class cliente {
         $this->dispoParaRetiro = 0;
         $this->misRetiros = [];
         $this->misRetirosPorPaquete = [];
+        $this->misReferidos = [];
+        $this->imprimirMisRef = "";
     }
     
     public function loguearse($data){
@@ -36,6 +40,7 @@ class cliente {
             $_SESSION["clientId"] = $row["cliente_id"];
             $_SESSION["clientNombre"] = $row["nombre"];
             $_SESSION["clientLogin"] = $row["login"];
+            $_SESSION["clientImg"] = $row["foto"];
             
             echo json_encode( [ "respuesta" => true, "usuario" => $row["login"] ] );
         }
@@ -44,16 +49,25 @@ class cliente {
         return true;
     }
     
-    public function registrarCliente ($datosForm) {
+    public function registrarCliente () {
         
+        $datosForm = $_POST;
         $conex = WolfConex::conex();
+        //var_export($_POST);
+        if ( $_POST["clave1"] != $_POST["clave2"] ) {
+            echo "<script>parent.sweetal(\"Las claves ingresadas no coinciden.\");</script>";
+            return;
+        }
+        //if ( $_POST[""] )
+        
         
         $sql = "select * from cliente where login = '".$datosForm["referido"]."' ";
         $result = mysqli_query($conex->getLinkConnect(), $sql);
         $row = mysqli_fetch_array($result);
         
         if ( !mysqli_num_rows($result) > 0 ){
-            echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "El referido ".$datosForm["referido"]." no se encuentra en nuestra base de datos" ] );
+            echo "<script>parent.sweetal(\"El referido ".$datosForm["referido"]." no se encuentra en nuestra base de datos.\");</script>";
+            //echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "El referido ".$datosForm["referido"]." no se encuentra en nuestra base de datos" ] );
         } else {
             
             $ref = $row["cliente_id"];
@@ -63,16 +77,37 @@ class cliente {
             $row = mysqli_fetch_array($result);
 
             if ( mysqli_num_rows($result) > 0 ){
-                echo json_encode( ["respuesta" => false, "error" => 2, "msg" => "El usuario ".$datosForm["usuario"]." ya existe en nuestro sistema." ] );
+                echo "<script>parent.sweetal(\"El usuario ".$datosForm["usuario"]." ya existe en nuestro sistema.\");</script>";
+                //echo json_encode( ["respuesta" => false, "error" => 2, "msg" => "El usuario ".$datosForm["usuario"]." ya existe en nuestro sistema." ] );
             } else {
+                $dir = __DIR__."/../module/client/img/clients/";
+                
+                
+                
+
+                //var_export($_FILES);
                 
                 $sql = "insert into cliente (nombre, login, contrasena, correo, estado, referido) values ('".$datosForm["nombre"]."', '".$datosForm["usuario"]."', '".md5($datosForm["clave1"])."', '".$datosForm["mail"]."', 1, ".$ref.")";
                 $result = mysqli_query($conex->getLinkConnect(), $sql);
                 if ( !$result ) {
-                    echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible registrar en este momento." ] );
+                    echo "<script>parent.sweetal(\"No es posible realizar el registro en este momento.\");</script>";
+                    //echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible registrar en este momento." ] );
                 } else {
-                    echo json_encode( ["respuesta" => true, "msg" => "Usuario registrado exitosamente." ] );
+                    
+                    $clientId = mysqli_insert_id($conex->getLinkConnect());
+                    
+                    if (isset($_FILES['foto']['tmp_name'])) {
+                        $extencion = end(explode(".", $_FILES['foto']['name']));
+                        if (!copy($_FILES['foto']['tmp_name'], $dir.$clientId.".".$extencion)){
+                            error_log("Error al guardar la imagen");
+                        }
+
+                   }
+                   echo "<script>parent.sweetal(\"El registro se ha realizado exitosamente.\"); parent.closeModal();</script>";
+                    //echo json_encode( ["respuesta" => true, "msg" => "Usuario registrado exitosamente." ] );
                 }
+                  
+                 
             }
             
             
@@ -88,15 +123,22 @@ class cliente {
     
             $conex = WolfConex::conex();
 
-            $sql = "select cliente.nombre, cliente.correo, cliente.login, c.login as referido
+            $cond = $cond2 ='';
+            
+            if ( $_SESSION["clientId"] != "1" ){
+                $cond = "inner join cliente c on c.cliente_id = cliente.referido";
+                $cond2 = ", c.login as referido";
+            }
+            
+            $sql = "select cliente.nombre, cliente.correo, cliente.login $cond2
                     from cliente
-                    inner join cliente c on c.cliente_id = cliente.referido
+                    $cond
                     where cliente.cliente_id = ".$_SESSION["clientId"]." ";
             $result = mysqli_query($conex->getLinkConnect(), $sql);
             $row = mysqli_fetch_array($result);
 
             if ( !mysqli_num_rows($result) > 0 ){
-                echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "Los datos d eusuario no se encuentran disponibles!" ] );
+                echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "Los datos de usuario no se encuentran disponibles!" ] );
             } else {
                 echo json_encode( ["respuesta" => true, "msg" => "Datos de perfil", "datos" => $row ] );
             }
@@ -223,7 +265,7 @@ class cliente {
                 //var_export($res);
                 $dias = 0;
                 foreach ($res as $k => $paq){
-                    
+                    $dias = 0;
                     $actualDate = date('Y-m-d'); // ." -> ".$paq["inicia"]." -> ".$paq["finaliza"];
                     //echo $actualDate." -> ".$paq["inicia"]." -> ".$paq["finaliza"]; // echos today! 
                     $initDate = date('Y-m-d', strtotime($paq["inicia"]));
@@ -456,9 +498,145 @@ class cliente {
         
     }
     
-    
-    
-    
+
+    public function consultarReferidos($id=""){
+        $conex = WolfConex::conex();
+        
+        
+        
+        if ( empty($id) ){
+            $id = $_SESSION["clientId"];
+            
+            $sql = "select * from cliente where cliente_id = $id";
+            $result = mysqli_query($conex->getLinkConnect(), $sql);
+            if ( !$result ) {
+                return false;
+            } else {
+                if ( !mysqli_num_rows($result) > 0 ){
+                    return false;
+                } else {
+                    while ($fila = mysqli_fetch_array($result)) {
+                        $this->misReferidos[1][$fila["cliente_id"]] = $fila;
+                        //$this->misReferidos[2][$id][] = $fila["cliente_id"];
+                    }
+                    //return $res;
+                }
+            }
+            
+        }
+        
+        $sql = "select * from cliente where referido = $id";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            return false;
+        } else {
+            if ( !mysqli_num_rows($result) > 0 ){
+                return false;
+            } else {
+                while ($fila = mysqli_fetch_array($result)) {
+                    $this->misReferidos[1][$fila["cliente_id"]] = $fila;
+                    $this->misReferidos[2][$id][] = $fila["cliente_id"];
+                    $this->consultarReferidos($fila["cliente_id"]);
+                }
+                //return $res;
+            }
+        }
+    }
+
+
+    public function imprimirReferidos ( $id = "" ) {
+       // echo "<pre>"; var_Export($this->misReferidos[1]); echo "</pre>";
+        $primero = false;
+        if ( $id == "" ) {
+            $id = $_SESSION["clientId"];
+            $primero = true;
+        }
+        
+        $dir = "img/clients/";
+        
+        if($primero){
+            $this->imprimirMisRef .= '<div class="hv-item">';
+
+            $img = $dir."default-user.png";
+            
+            if( isset($this->misReferidos[1][$id]["foto"]) && !empty($this->misReferidos[1][$id]["foto"]) && file_exists($dir.$this->misReferidos[1][$id]["foto"])){
+                $img = $dir.$this->misReferidos[1][$id]["foto"];
+            }
+            $this->imprimirMisRef .= '<div class="hv-item-parent" title="d">
+                                        <div class="person"  data-toggle="tooltip" title="Soy el mejor...">
+                                            <img src="'.$img.'"> 
+                                            <p class="name">
+                                                '.$this->misReferidos[1][$id]["nombre"].'
+                                            </p>
+                                        </div>
+                                    </div>';
+            
+            if( isset($this->misReferidos[1][$id]) && is_array($this->misReferidos[1][$id]) && count($this->misReferidos[1][$id]) > 0 ){
+                
+                $this->imprimirMisRef .= '<div class="hv-item-children">';
+                foreach ( $this->misReferidos[2][$id] as $idRefp ){
+                    $this->imprimirReferidos($idRefp);
+                }
+                $this->imprimirMisRef .= '</div">';
+            }
+            
+            $this->imprimirMisRef .= '</div>';
+        } else {
+            
+                
+            if ( isset($this->misReferidos[2][$id]) && is_array($this->misReferidos[2][$id]) && count($this->misReferidos[2][$id]) > 0 ) {
+
+                $this->imprimirMisRef .= '<div class="hv-item-child">';
+                
+                $this->imprimirMisRef .= '<div class="hv-item">';
+                
+                $img = $dir."default-user.png";
+
+                if( isset($this->misReferidos[1][$id]["foto"]) && !empty($this->misReferidos[1][$id]["foto"]) && file_exists($dir.$this->misReferidos[1][$id]["foto"])){
+                    $img = $dir.$this->misReferidos[1][$id]["foto"];
+                }
+
+                $this-> imprimirMisRef .= '<div class="hv-item-parent">
+                                                    <div class="person">
+                                                        <img src="'.$img.'" alt="">
+                                                        <p class="name">'.$this->misReferidos[1][$id]["nombre"].'</p>
+                                                    </div>
+                                                </div>';
+                
+                $this->imprimirMisRef .= '<div class="hv-item-children">';
+                foreach ( $this->misReferidos[2][$id] as $idRef ){
+                            $this->imprimirReferidos($idRef);
+ 
+                    
+                }
+                
+                $this->imprimirMisRef .= '</div>'; // children
+                
+                $this->imprimirMisRef .= '</div>'; // item
+                
+                $this->imprimirMisRef .= '</div>'; // child
+                
+            } else {
+                $img = $dir."default-user.png";
+                if( isset($this->misReferidos[1][$id]["foto"]) && !empty($this->misReferidos[1][$id]["foto"]) && file_exists($dir.$this->misReferidos[1][$id]["foto"])){
+                    $img = $dir.$this->misReferidos[1][$id]["foto"];
+                }
+                $this->imprimirMisRef .= '<div class="hv-item-child">
+                                        <div class="person">
+                                            <img src="'.$img.'" alt="">
+                                            <p class="name">'.$this->misReferidos[1][$id]["nombre"].'</p>
+                                        </div>
+                                    </div>';
+                
+            }
+
+            
+            
+        }
+        //
+        
+    }
+
     public function primerDiaMes() {
       $month = date('m');
       $year = date('Y');

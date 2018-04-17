@@ -28,12 +28,10 @@ if ( isset($_POST["logout"]) ) {
 
 if ( isset($_POST["registro"]) && $_POST["registro"] ){
     
+    
     $cliente = new cliente();
     
-    $datosForm = [];
-    parse_str($_POST["datosForm"], $datosForm);
-    
-    $cliente->registrarCliente($datosForm);
+    $cliente->registrarCliente();
     
 }
 

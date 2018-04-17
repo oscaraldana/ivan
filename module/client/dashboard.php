@@ -11,6 +11,7 @@
   <!-- bootstrap theme -->
   <link href="css/bootstrap-theme.css" rel="stylesheet">
   <!--external css-->
+<a href="dashboard.php"></a>
   <!-- font icon -->
   <link href="css/elegant-icons-style.css" rel="stylesheet" />
   <link href="css/font-awesome.min.css" rel="stylesheet" />
@@ -35,6 +36,22 @@
     Author: BootstrapMade
     Author URL: https://bootstrapmade.com
   ======================================================= -->
+  
+  <style>
+      body::after {
+             content: "";
+             background: url(../../images/wolvess.jpeg);
+             background-repeat:no-repeat;
+             background-size: cover;
+             opacity: 0.2;
+             top: 0;
+             left: 0;
+             bottom: 0;
+             right: 0;
+             position: absolute;
+             z-index: -1;   
+           }           
+  </style>
 </head>
 
 <body>
@@ -48,7 +65,7 @@
       </div>
 
       <!--logo start-->
-      <a href="../client/" class="logo"><img src="../../images/wolf_.jpg" width="40px" ><span class="lite" style="font-size: 15px;"><b> Wolves Traders Client</b></span> </a>
+      <a href="../client/" class="logo"><img src="../../images/wolvess.jpeg" width="40px" ><span class="lite" style="font-size: 15px;"><b> Wolves Traders Client</b></span> </a>
       <!--logo end-->
 
       <div class="top-nav notification-row">
@@ -58,11 +75,16 @@
           
           <li class="dropdown">
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <!--
                             <span class="profile-ava">
-                                <img alt="" src="img/avatar1_small.jpg">
+                                <?php 
+                                if (isset($_SESSION["clientImg"]) && !empty($_SESSION["clientImg"]) && file_exists("img/clients/".$_SESSION["clientImg"]) ){
+                                    echo '<img alt="" src="img/clients/'.$_SESSION["clientImg"].'" width="50px" >';
+                                } else {
+                                    echo '<img alt="" src="img/clients/default-user.png" width="50px">';
+                                }
+                                    ?>
+                                
                             </span>
-                            -->
                             <span class="username"> <?php echo $_SESSION["clientNombre"] ?> </span>
                             <b class="caret"></b>
                         </a>

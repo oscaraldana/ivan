@@ -1,8 +1,8 @@
 @import url("https://fonts.googleapis.com/css?family=Poppins");
-html, body {
+/*html, body {
     background-color: #EFE6E2;
 }
-/*html, body {
+html, body {
   height: 100%;
   font-family: 'Poppins', sans-serif;
   padding: 0;
@@ -30,8 +30,8 @@ section {
     overflow: auto;
     justify-content: center; }
 
-.basic-style {
-  background-color: #EFE6E2; }
+/*.basic-style {
+  background-color: #EFE6E2; }*/
   .basic-style > h1 {
     color: #ac2222; }
 
@@ -49,8 +49,8 @@ p.simple-card {
   font-weight: bold;
   color: #DE5454; }
 
-.management-hierarchy {
-  background-color: #303840; }
+/*.management-hierarchy {
+  background-color: #303840; }*/
   .management-hierarchy > h1 {
     color: #FFF; }
   .management-hierarchy .person {

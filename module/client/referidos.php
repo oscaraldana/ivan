@@ -5,6 +5,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+$cliente = new cliente();
+$cliente->consultarReferidos();
+
 ?>
 <link rel="stylesheet" href="css/hierarchy-view.css">
 <link rel="stylesheet" href="css/main.css">
@@ -13,10 +17,27 @@
     <section class="management-hierarchy">
         
         <h1> Mis Referidos</h1>
+        
+        <div class="hv-container">
+            <div class="hv-wrapper">
+<?php
+                
+                $cliente->imprimirReferidos();
+                
+                echo $cliente->imprimirMisRef;
+                
+                ?>
+                                
+            </div>
+        </div>
+        
+        
+        <!--
         <div class="hv-container">
             <div class="hv-wrapper">
 
-                <!-- Nuevo Nodo -->
+                
+                
                 <div class="hv-item">
 
                     <div class="hv-item-parent" title="dddddddd d d ">
@@ -32,7 +53,7 @@
 
                         <div class="hv-item-child">
                             
-                            <!-- Nuevo Nodo -->
+                            
                             <div class="hv-item">
 
                                 <div class="hv-item-parent">
@@ -82,7 +103,8 @@
 
 
                         <div class="hv-item-child">
-                            <!-- Key component -->
+                            
+                            
                             <div class="hv-item">
 
                                 <div class="hv-item-parent">
@@ -120,6 +142,8 @@
 
             </div>
         </div>
+-->        
+        
     </section>
 
 
