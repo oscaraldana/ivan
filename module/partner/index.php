@@ -19,7 +19,7 @@ $conex = WolfConex::conex();
 
 <?php 
 
-if ( !isset($_SESSION["clientId"]) || ( isset($_SESSION["clientId"]) && empty($_SESSION["clientId"]) ) ) {
+if ( (!isset($_SESSION["clientId"]) || ( isset($_SESSION["clientId"]) && empty($_SESSION["clientId"]) ) ) || ( ( !isset($_SESSION["clientIsAdmin"]) || (isset($_SESSION["clientIsAdmin"]) && !$_SESSION["clientIsAdmin"]) ) ) ) {
 //include_once '../../header_only.php';    
     ?> 
 <!-- Bootstrap CSS 
@@ -30,16 +30,16 @@ if ( !isset($_SESSION["clientId"]) || ( isset($_SESSION["clientId"]) && empty($_
 -->
 
 <!-- Bootstrap CSS -->
-  <link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="../client/css/bootstrap.min.css" rel="stylesheet">
   <!-- bootstrap theme -->
-  <link href="css/bootstrap-theme.css" rel="stylesheet">
+  <link href="../client/css/bootstrap-theme.css" rel="stylesheet">
   <!--external css-->
   <!-- font icon -->
-  <link href="css/elegant-icons-style.css" rel="stylesheet" />
-  <link href="css/font-awesome.css" rel="stylesheet" />
+  <link href="../client/css/elegant-icons-style.css" rel="stylesheet" />
+  <link href="../client/css/font-awesome.css" rel="stylesheet" />
   <!-- Custom styles -->
-  <link href="css/style.css" rel="stylesheet">
-  <link href="css/style-responsive.css" rel="stylesheet" />
+  <link href="../client/css/style.css" rel="stylesheet">
+  <link href="../client/css/style-responsive.css" rel="stylesheet" />
 
 
 <style>
@@ -152,10 +152,10 @@ if ( !isset($_SESSION["clientId"]) || ( isset($_SESSION["clientId"]) && empty($_
 </div>
 
 
-<script src="js/clientes.js"></script>
-<script src="js/jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/sweetalert.min.js"></script>
+<script src="../client/js/clientes.js"></script>
+<script src="../client/js/jquery.js"></script>
+<script src="../client/js/bootstrap.min.js"></script>
+<script src="../client/js/sweetalert.min.js"></script>
 
 <?php } else {
 

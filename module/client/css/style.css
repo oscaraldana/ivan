@@ -186,7 +186,7 @@ table tr th { color: #688a7e;}
 
     max-width: 350px;
 
-    margin: 200px auto 0;
+    margin: 20px auto 0;
 
     background: #d5d7de;
 
@@ -9921,4 +9921,100 @@ span.customSelect.changed {
 
 #sendmessage.show, #errormessage.show, .show {
 	display:block;
+}
+
+
+
+.btn-logg { 
+  color: #ffffff; 
+  background-color: #272629; 
+  border-color: #0A0A0D; 
+} 
+ 
+.btn-logg:hover, 
+.btn-logg:focus, 
+.btn-logg:active, 
+.btn-logg.active, 
+.open .dropdown-toggle.btn-logg { 
+  color: #ffffff; 
+  background-color: #050505; 
+  border-color: #0A0A0D; 
+} 
+ 
+.btn-logg:active, 
+.btn-logg.active, 
+.open .dropdown-toggle.btn-logg { 
+  background-image: none; 
+} 
+ 
+.btn-logg.disabled, 
+.btn-logg[disabled], 
+fieldset[disabled] .btn-logg, 
+.btn-logg.disabled:hover, 
+.btn-logg[disabled]:hover, 
+fieldset[disabled] .btn-logg:hover, 
+.btn-logg.disabled:focus, 
+.btn-logg[disabled]:focus, 
+fieldset[disabled] .btn-logg:focus, 
+.btn-logg.disabled:active, 
+.btn-logg[disabled]:active, 
+fieldset[disabled] .btn-logg:active, 
+.btn-logg.disabled.active, 
+.btn-logg[disabled].active, 
+fieldset[disabled] .btn-logg.active { 
+  background-color: #272629; 
+  border-color: #0A0A0D; 
+} 
+ 
+.btn-logg .badge { 
+  color: #272629; 
+  background-color: #ffffff; 
+}
+
+
+
+.btn-regg { 
+  color: #ffffff; 
+  background-color: #706F7D; 
+  border-color: #7C7C7D; 
+} 
+ 
+.btn-regg:hover, 
+.btn-regg:focus, 
+.btn-regg:active, 
+.btn-regg.active, 
+.open .dropdown-toggle.btn-regg { 
+  color: #ffffff; 
+  background-color: #515154; 
+  border-color: #7C7C7D; 
+} 
+ 
+.btn-regg:active, 
+.btn-regg.active, 
+.open .dropdown-toggle.btn-regg { 
+  background-image: none; 
+} 
+ 
+.btn-regg.disabled, 
+.btn-regg[disabled], 
+fieldset[disabled] .btn-regg, 
+.btn-regg.disabled:hover, 
+.btn-regg[disabled]:hover, 
+fieldset[disabled] .btn-regg:hover, 
+.btn-regg.disabled:focus, 
+.btn-regg[disabled]:focus, 
+fieldset[disabled] .btn-regg:focus, 
+.btn-regg.disabled:active, 
+.btn-regg[disabled]:active, 
+fieldset[disabled] .btn-regg:active, 
+.btn-regg.disabled.active, 
+.btn-regg[disabled].active, 
+fieldset[disabled] .btn-regg.active { 
+  background-color: #706F7D; 
+  border-color: #7C7C7D; 
+} 
+ 
+.btn-regg .badge { 
+  color: #706F7D; 
+  background-color: #ffffff; 
 }

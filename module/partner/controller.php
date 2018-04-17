@@ -10,6 +10,45 @@ require_once '../../conf/sesion.php';
 require_once '../../conf/conf.php';
 require_once '../../connection/conex.php';
 
+
+if (isset($_POST["formSearch"]) && $_POST["formSearch"]){
+    
+    $partner = new partner();
+    
+    $values = array();
+    parse_str($_POST['datosForm'], $values);
+    
+    $partner->listarPaquetes($values);
+    
+}
+
+
+if ( isset($_POST["consultapaquete"]) && $_POST["consultapaquete"] ){
+    
+    $partner = new partner();
+    
+    $partner->consultapaquete($_POST);
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/********************************************************************/
+//  Metodos de cliente...
+/********************************************************************/
+
 if ( isset($_POST["html"]) && file_exists($_POST["html"].".php") ) {
         include $_POST["html"].".php";
 }

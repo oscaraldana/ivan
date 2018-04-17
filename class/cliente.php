@@ -41,6 +41,9 @@ class cliente {
             $_SESSION["clientNombre"] = $row["nombre"];
             $_SESSION["clientLogin"] = $row["login"];
             $_SESSION["clientImg"] = $row["foto"];
+            if ( $row["es_admin"] ){
+                $_SESSION["clientIsAdmin"] = $row["es_admin"];
+            }
             
             echo json_encode( [ "respuesta" => true, "usuario" => $row["login"] ] );
         }
@@ -101,7 +104,9 @@ class cliente {
                         if (!copy($_FILES['foto']['tmp_name'], $dir.$clientId.".".$extencion)){
                             error_log("Error al guardar la imagen");
                         }
-
+                        
+                        $sql = " update cliente set foto = '".$clientId.".$extencion' where cliente_id = $clientId ";
+                        $result = mysqli_query($conex->getLinkConnect(), $sql);
                    }
                    echo "<script>parent.sweetal(\"El registro se ha realizado exitosamente.\"); parent.closeModal();</script>";
                     //echo json_encode( ["respuesta" => true, "msg" => "Usuario registrado exitosamente." ] );
@@ -181,10 +186,33 @@ class cliente {
         $sql = "update cliente set nombre = '".$datosForm["nombre"]."', correo = '".$datosForm["mail"]."' where cliente_id = ".$_SESSION["clientId"];
         $result = mysqli_query($conex->getLinkConnect(), $sql);
         if ( !$result ) {
-            echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible actualizar tu perfil en este momento." ] );
+            echo "<script>parent.sweetal(\"No es posible actualizar tu perfil en este momento.\");</script>";
+            //echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible actualizar tu perfil en este momento." ] );
         } else {
             $_SESSION["clientNombre"] = $datosForm["nombre"];
-            echo json_encode( ["respuesta" => true, "msg" => "Perfil actualizado exitosamente." ] );
+            
+            $fileInfo = "";
+            
+            if (isset($_FILES['foto']['tmp_name']) && !empty($_FILES['foto']['tmp_name'])) {
+                $dir = __DIR__."/../module/client/img/clients/";
+                $clientId = $_SESSION["clientId"];
+                $extencion = end(explode(".", $_FILES['foto']['name']));
+                if (!copy($_FILES['foto']['tmp_name'], $dir.$clientId.".".$extencion)){
+                    error_log("Error al guardar la imagen");
+                }
+
+                $sql = " update cliente set foto = '".$clientId.".$extencion' where cliente_id = $clientId ";
+                $result = mysqli_query($conex->getLinkConnect(), $sql);
+                
+                $fileInfo = "img/clients/".$clientId.".$extencion";
+            }
+            
+            echo "<script>
+                    parent.actInfo('".$datosForm["nombre"]."', '$fileInfo');
+                    parent.sweetal(\"Perfil actualizado exitosamente.\");
+                    parent.closeModalx('modalClient');
+                  </script>";
+            //echo json_encode( ["respuesta" => true, "msg" => "Perfil actualizado exitosamente." ] );
         }
 
     }
@@ -574,8 +602,25 @@ class cliente {
             if( isset($this->misReferidos[1][$id]) && is_array($this->misReferidos[1][$id]) && count($this->misReferidos[1][$id]) > 0 ){
                 
                 $this->imprimirMisRef .= '<div class="hv-item-children">';
-                foreach ( $this->misReferidos[2][$id] as $idRefp ){
-                    $this->imprimirReferidos($idRefp);
+                if ( isset($this->misReferidos[2][$id]) ){
+                    foreach ( $this->misReferidos[2][$id] as $idRefp ){
+                        
+                        if ( isset($_SESSION["clientIsAdmin"]) && $_SESSION["clientIsAdmin"] ) {
+                            $this->imprimirReferidos($idRefp);
+                        } else {
+                            $img = $dir."default-user.png";
+                            if( isset($this->misReferidos[1][$idRefp]["foto"]) && !empty($this->misReferidos[1][$idRefp]["foto"]) && file_exists($dir.$this->misReferidos[1][$idRefp]["foto"])){
+                                $img = $dir.$this->misReferidos[1][$idRefp]["foto"];
+                            }
+                            $this->imprimirMisRef .= '<div class="hv-item-child">
+                                                    <div class="person">
+                                                        <img src="'.$img.'" alt="">
+                                                        <p class="name">'.$this->misReferidos[1][$idRefp]["nombre"].'</p>
+                                                    </div>
+                                                </div>';
+                        }
+                        
+                    }
                 }
                 $this->imprimirMisRef .= '</div">';
             }
@@ -587,9 +632,9 @@ class cliente {
             if ( isset($this->misReferidos[2][$id]) && is_array($this->misReferidos[2][$id]) && count($this->misReferidos[2][$id]) > 0 ) {
 
                 $this->imprimirMisRef .= '<div class="hv-item-child">';
-                
+
                 $this->imprimirMisRef .= '<div class="hv-item">';
-                
+
                 $img = $dir."default-user.png";
 
                 if( isset($this->misReferidos[1][$id]["foto"]) && !empty($this->misReferidos[1][$id]["foto"]) && file_exists($dir.$this->misReferidos[1][$id]["foto"])){
@@ -602,20 +647,20 @@ class cliente {
                                                         <p class="name">'.$this->misReferidos[1][$id]["nombre"].'</p>
                                                     </div>
                                                 </div>';
-                
+
                 $this->imprimirMisRef .= '<div class="hv-item-children">';
                 foreach ( $this->misReferidos[2][$id] as $idRef ){
                             $this->imprimirReferidos($idRef);
- 
-                    
+
+
                 }
-                
+
                 $this->imprimirMisRef .= '</div>'; // children
-                
+
                 $this->imprimirMisRef .= '</div>'; // item
-                
+
                 $this->imprimirMisRef .= '</div>'; // child
-                
+
             } else {
                 $img = $dir."default-user.png";
                 if( isset($this->misReferidos[1][$id]["foto"]) && !empty($this->misReferidos[1][$id]["foto"]) && file_exists($dir.$this->misReferidos[1][$id]["foto"])){
@@ -627,11 +672,11 @@ class cliente {
                                             <p class="name">'.$this->misReferidos[1][$id]["nombre"].'</p>
                                         </div>
                                     </div>';
-                
+
             }
 
-            
-            
+
+
         }
         //
         

@@ -85,7 +85,7 @@ function registro(){
                           "<input type='hidden' name='registro' id='hidden' value = 'true'><iframe name='iframeUpload' style='display:none'></iframe>"
                           
                          );
-    $("#modal-footer").html('<input type="submit" class="btn btn-info" style="font-size: 10px;" value="Registrarme"><button type="button" class="btn btn-default" data-dismiss="modal" style="font-size: 10px;">Cancelar</button>');           
+    $("#modal-footer").html('<input type="submit" class="btn btn-logg" style="font-size: 10px;" value="Registrarme"><button type="button" class="btn btn-default" data-dismiss="modal" style="font-size: 10px;">Cancelar</button>');           
     $("#modalBuy").modal();
     
     
@@ -110,15 +110,21 @@ function miperfil(){
                         
                             if ( result.respuesta ) {
                                 
+                                $('#form_modal').attr('onsubmit', '');
+                                $('#form_modal').attr('method', 'post');
+                                $('#form_modal').attr('enctype', 'multipart/form-data');
+                                $('#form_modal').attr('action', 'controller.php');
+                                $('#form_modal').attr('target', 'iframeUpload');
                                 $("#modal-title").html("Editar Mi Perfil");
-                                $('#form_modal').attr('onsubmit', 'editarPerfil(); return false;');
+                                //$('#form_modal').attr('onsubmit', 'editarPerfil(); return false;');
                                 $("#modal-body").html("<label for='nombre'>Nombre: </label><input type='text' value='"+result.datos.nombre+"' class='form-control' placeholder='Nombre' name='nombre' id='nombre' required>"+
                                                       "<label for='correo'>Correo: </label><input type='text' value='"+result.datos.correo+"' class='form-control' placeholder='Correo' name='mail' id='nombre' required>"+
+                                                      "<label for='foto'>Foto: </label><input name='foto' id='foto' type='file' class='form-control form-file' accept='image/x-png,image/gif,image/jpeg' />"+
                                                       "<label for='usuario'>Usuario: </label><input type='text' readonly value='"+result.datos.login+"' class='form-control' placeholder='Usuario' name='usuario' id='usuario' required>"+
-                                                      "<label for='referido'>Referido: </label><input type='text' readonly value='"+result.datos.referido+"' class='form-control' placeholder='Referido Por' name='referido' id='referido' required>"
-
+                                                      "<label for='referido'>Referido: </label><input type='text' readonly value='"+result.datos.referido+"' class='form-control' placeholder='Referido Por' name='referido' id='referido' required>"+
+                                                      "<input type='hidden' name='editarPerfil' id='editarPerfil' value ='true'>"
                                                      );
-                                $("#modal-footer").html('<input type="submit" class="btn btn-info" style="font-size: 10px;" value="Guardar"><button type="button" class="btn btn-default" data-dismiss="modal" style="font-size: 10px;">Cancelar</button>');           
+                                $("#modal-footer").html('<input type="submit" class="btn btn-logg" style="font-size: 10px;" value="Guardar"><button type="button" class="btn btn-default" data-dismiss="modal" style="font-size: 10px;">Cancelar</button><iframe name="iframeUpload" style="display:none"></iframe>');           
                                 $("#modalClient").modal();
                                 
                             } else {
@@ -193,6 +199,18 @@ function editarPerfil(){
     });
 }
 
+
+function actInfo (nombre, foto){
+    $('#nomPerfil').html(nombre);
+    if( foto.length > 0 ){
+        d = new Date();
+        $('#imgPerfil').attr('src', foto+'?'+d.getTime());
+    }
+}
+
+function closeModalx (x){
+    $("#"+x).modal('hide');
+}
 
 function modalInfo(id){
     
