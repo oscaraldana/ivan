@@ -8,8 +8,8 @@
             <div class="form-group">
               <label for="estado">Estado:</label>
               <?php
-                $partner = new partner();
-                $estados = $partner->getEstados();
+                $admin = new admin();
+                $estados = $admin->getEstados();
                 $precargar = "0";
                 echo '<select class="form-control" name="paqestado" id="paqestado">';
                 if ( isset($_SESSION["busqueda_estado"]) && $_SESSION["busqueda_estado"] != "" ) {

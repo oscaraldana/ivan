@@ -4,12 +4,12 @@
 <head>
   <link rel="shortcut icon" href="img/favicon.png">
 
-  <title>Partner Wolves Traders</title>
+  <title>Admin Wolves Traders</title>
 
   <!-- Bootstrap CSS -->
   <link href="../client/css/bootstrap.min.css" rel="stylesheet">
-  <!-- bootstrap theme -->
-  <link href="../client/css/bootstrap-theme.css" rel="stylesheet">
+  <!-- bootstrap theme 
+  <link href="../client/css/bootstrap-theme.css" rel="stylesheet">-->
   <!--external css-->
 <a href="dashboard.php"></a>
   <!-- font icon -->
@@ -30,6 +30,7 @@
   <link href="../client/css/style-responsive.css" rel="stylesheet" />
   <link href="../client/css/xcharts.min.css" rel=" stylesheet">
   <link href="../client/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+  <link href="../client/css/bootstrap-select.min.css" rel="stylesheet">
   <!-- =======================================================
     Theme Name: NiceAdmin
     Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -65,7 +66,7 @@
       </div>
 
       <!--logo start-->
-      <a href="../partner/" class="logo"><img src="../../images/wolvess.jpeg" width="40px" ><span class="lite" style="font-size: 15px;"><b> Wolves Traders Partner</b></span> </a>
+      <a href="../admin/" class="logo"><img src="../../images/wolvess.jpeg" width="40px" ><span class="lite" style="font-size: 15px;"><b> Wolves Traders Admin</b></span> </a>
       <!--logo end-->
 
       <div class="top-nav notification-row">
@@ -130,7 +131,7 @@
         <!-- sidebar menu start-->
         <ul class="sidebar-menu">
           <li class="active">
-              <a class="" href="../partner/">
+              <a class="" href="../admin/">
                           <i class="icon_house_alt"></i>
                           <span>Inicio</span>
                       </a>
@@ -316,9 +317,8 @@
   
   
   <!-- javascripts -->
-  <script src="../client/js/jquery.js"></script>
+  <script src="../client/js/jquery-3.3.1.min.js"></script>
   <script src="../client/js/jquery-ui-1.10.4.min.js"></script>
-  <script src="../client/js/jquery-1.8.3.min.js"></script>
   <script type="../client/text/javascript" src="js/jquery-ui-1.9.2.custom.min.js"></script>
   <!-- bootstrap -->
   <script src="../client/js/bootstrap.min.js"></script>
@@ -357,8 +357,9 @@
     <script src="../client/js/charts.js"></script>
     <script src="../client/js/jquery.slimscroll.min.js"></script>
     <script src="../client/js/clientes.js"></script>
-    <script src="js/partner.js"></script>
+    <script src="js/admin.js"></script>
     <script src="../client/js/sweetalert.min.js"></script>
+    <script src="../client/js/bootstrap-select.js"></script>
     <script>
       //knob
       $(function() {

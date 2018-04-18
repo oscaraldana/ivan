@@ -13,21 +13,29 @@ require_once '../../connection/conex.php';
 
 if (isset($_POST["formSearch"]) && $_POST["formSearch"]){
     
-    $partner = new partner();
+    $admin = new admin();
     
     $values = array();
     parse_str($_POST['datosForm'], $values);
     
-    $partner->listarPaquetes($values);
+    $admin->listarPaquetes($values);
     
 }
 
 
 if ( isset($_POST["consultapaquete"]) && $_POST["consultapaquete"] ){
     
-    $partner = new partner();
+    $admin = new admin();
     
-    $partner->consultapaquete($_POST);
+    $admin->consultapaquete($_POST);
+    
+}
+
+if ( isset($_POST["actualizarPaquete"]) && $_POST["actualizarPaquete"] ) {
+
+    $admin = new admin();
+    
+    $admin->actualizarPaquete($_POST);
     
 }
 

@@ -11,7 +11,7 @@
  *
  * @author oscar.aldana
  */
-class partner {
+class admin {
     //put your code here
     
     public function getEstados() {
@@ -155,7 +155,24 @@ class partner {
             if ( !mysqli_num_rows($result) > 0 ){
                 echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "Los datos del paquete no se encuentran disponibles!" ] );
             } else {
-                echo json_encode( ["respuesta" => true, "msg" => "Datos de paquete", "datos" => $row ] );
+                
+                $states[0] = [ "0" => "Pendiente", "1" => "Activo", "2" => "Rechazado" ];
+                $states[1] = [ "0" => "#eb984e", "1" => "#5dade2", "2" => "#c0392b" ];
+                $select = "<select class='form-control' onchange='validarEstadoPaq()' name='selectEstado' id='selectEstado'>";
+                foreach ( $states[0] as $k => $val ){
+                    $select .= '<option style="background: '.$states[1][$k].'; color: #fff;" value="'.$k.'">'.$val.'</option>';
+                }
+                $select .= '</select>';
+                
+                
+                
+                
+                if( isset($row["valor"]) ) { $row["valor"] = number_format($row["valor"], 2, ',', '.'); }
+                if( isset($row["fecha_registro"]) ) { $row["fecha_registro"] = date("d/m/Y", strtotime($row["fecha_registro"]) ); }
+                if( isset($row["inicia"]) && !empty($row["inicia"]) ) { $row["inicia"] = date("d/m/Y", strtotime($row["inicia"]) ); }
+                if( isset($row["finaliza"]) && !empty($row["finaliza"]) ) { $row["finaliza"] = date("d/m/Y", strtotime($row["finaliza"]) ); }
+                
+                echo json_encode( ["respuesta" => true, "msg" => "Datos de paquete", "datos" => $row, "estados" => $select ] );
             }
         }
     }

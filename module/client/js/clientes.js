@@ -99,7 +99,7 @@ function miperfil(){
         };
         $.ajax({
                     data:  parametros,
-                    url:   'controller.php',
+                    url:   '../client/controller.php',
                     type:  'post',
                     /*beforeSend: function () {
                             $("#homeContent").html("Procesando, espere por favor...");

@@ -8,8 +8,7 @@
 
   <!-- Bootstrap CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
-  <!-- bootstrap theme -->
-  <link href="css/bootstrap-theme.css" rel="stylesheet">
+
   <!--external css-->
 <a href="dashboard.php"></a>
   <!-- font icon -->
@@ -316,9 +315,8 @@
   
   
   <!-- javascripts -->
-  <script src="js/jquery.js"></script>
+  <script src="js/jquery-3.3.1.min.js"></script>
   <script src="js/jquery-ui-1.10.4.min.js"></script>
-  <script src="js/jquery-1.8.3.min.js"></script>
   <script type="text/javascript" src="js/jquery-ui-1.9.2.custom.min.js"></script>
   <!-- bootstrap -->
   <script src="js/bootstrap.min.js"></script>

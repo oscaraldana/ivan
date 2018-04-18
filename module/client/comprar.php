@@ -83,7 +83,7 @@
 
 
 <!-- Modal -->
-<div id="modalBuy" class="modal fade" role="dialog">
+<div id="modalBuy" class="modal fade" role="dialog" style="display: none;">
   <div class="modal-dialog">
 
     <!-- Modal content-->
@@ -102,3 +102,4 @@
 
   </div>
 </div>
+
