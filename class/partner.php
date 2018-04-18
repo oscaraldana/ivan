@@ -137,7 +137,7 @@ class partner {
     
             $conex = WolfConex::conex();
             
-            $sql = "select c.nombre, paqcli.*, 
+            $sql = "select c.nombre, paqcli.*, p.nombre as paquete, p.valor,
                     case 
                         when paqcli.estado = 0 then 'Pendiente'
                         when paqcli.estado = 1 then 'Activo'
