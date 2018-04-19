@@ -681,6 +681,63 @@ class cliente {
         //
         
     }
+    
+    
+    public function guardarNuevaContra($datosForm) {
+        
+        
+        if ( !isset($datosForm["actual"]) || ( isset($datosForm["actual"]) && empty($datosForm["actual"]) ) ) {
+            echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "Digite la contraseña actual." ] );        
+            return;
+        }
+        if ( !isset($datosForm["nueva1"]) || ( isset($datosForm["nueva1"]) && empty($datosForm["nueva1"]) ) ) {
+            echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "Digite la nueva contraseña." ] );        
+            return;
+        }
+        if ( !isset($datosForm["nueva2"]) || ( isset($datosForm["nueva2"]) && empty($datosForm["nueva2"]) ) ) {
+            echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "Digite la confirmacion de su nueva contraseña." ] );
+            return;
+        }
+        if ( $datosForm["nueva1"] != $datosForm["nueva2"] ) {
+            echo json_encode( ["respuesta" => false, "error" => 2, "msg" => "La nueva contraseña no coincide con la confirmacion." ] );
+            return; 
+        }
+        
+        $conex = WolfConex::conex();
+
+        
+        
+        $sql = "select * from cliente where cliente_id = ".$_SESSION["clientId"];
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "No es posible realizar esta solicitud en este momento." ] );
+            return;
+        } else {
+            if ( !mysqli_num_rows($result) > 0 ){
+                echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "No es posible realizar esta solicitud en este momento." ] );
+                return;
+            } else {
+                while ($fila = mysqli_fetch_array($result)) {
+                    $cmp = md5($datosForm["actual"]);
+                    if ( $cmp != $fila["contrasena"] ) {
+                        echo json_encode( ["respuesta" => false, "error" => 2, "msg" => "La contraseña actual digitada, no coincide con la del sistema." ] );
+                        return; 
+                    }
+                    
+                }
+            }
+        }
+        
+        $sql = "update cliente set contrasena = '". md5($datosForm["nueva2"])."' where cliente_id = ".$_SESSION["clientId"];
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            //echo "<script>parent.sweetal(\"No es posible actualizar tu perfil en este momento.\");</script>";
+            echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible modificar tu contraseña en este momento.".$sql ] );
+        } else {
+             echo json_encode( ["respuesta" => true, "msg" => "Contraseña actualizada exitosamente."] );
+        }
+
+    }
 
     public function primerDiaMes() {
       $month = date('m');

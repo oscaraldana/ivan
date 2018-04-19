@@ -91,6 +91,42 @@ function registro(){
     
 }
 
+function cambiarContra(){
+    
+    $("#modal-title").html("Cambiar Mi Contraseña");
+    $("#modal-body").html("<label for='actual'>Mi contraseña actual: </label><input type='password' class='form-control' placeholder='Contraseña Actual' name='actual' id='actual' required>"+
+                          "<label for='nueva1'>Mi nueva contraseña: </label><input type='password' class='form-control' placeholder='Nueva Contraseña' name='nueva1' id='nueva1' required>"+
+                          "<label for='nueva2'>Confirmar mi nueva contraseña: </label><input type='password' class='form-control' placeholder='Confirmar Nueva Contraseña' name='nueva2' id='nueva2' required>"
+                          
+                         );
+    $("#modal-footer").html('<input type="submit" class="btn btn-logg" style="font-size: 10px;" value="Guardar"><button type="button" class="btn btn-default" data-dismiss="modal" style="font-size: 10px;">Cancelar</button>');           
+    $("#modalClient").modal();
+    $('#form_modal').attr('onsubmit', 'cambiarMiContra(); return false;');
+}
+
+function cambiarMiContra(){
+    
+     var parametros = {
+        "cambiarContra" : true,
+        "datosForm" : $("#form_modal").serialize()
+    };
+    $.ajax({
+                data:  parametros,
+                url:   '../client/controller.php',
+                type:  'post',
+                
+                success:  function (response) {
+                        var result = JSON.parse(response);
+                        if ( result.respuesta ) {
+                            $("#modalClient").modal('hide');
+                            swal(result.msg);
+
+                        } else {
+                            swal(result.msg);
+                        }
+                }
+    });
+}
 
 function miperfil(){
     

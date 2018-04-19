@@ -95,7 +95,10 @@
                   <a href="javascript:;" onclick="miperfil()"><i class="icon_profile"></i> Mi Perfil</a>
               </li>
               <li>
-                  <a href="javascript:;" onclick="logout()"><i class="icon_key_alt"></i> Salir</a>
+                  <a href="javascript:;" onclick="cambiarContra()"><i class="icon_key_alt"></i> Cambiar Contraseña</a>
+              </li>
+              <li>
+                  <a href="javascript:;" onclick="logout()"><i class="arrow_back"></i> Salir</a>
               </li>
               <!--<li>
                 <a href="#"><i class="icon_mail_alt"></i> My Inbox</a>
@@ -139,17 +142,18 @@
           <li class="sub-menu">
             <a href="javascript:;" class="">
                           <i class="icon_document_alt"></i>
-                          <span>Transacciones</span>
+                          <span>Administrar</span>
                           <span class="menu-arrow arrow_carrot-right"></span>
                       </a>
             <ul class="sub">
-              <li><a class="" href="javascript:;" onclick="cargarHtml('adm_paquetes');">Administrar Paquetes</a></li>
-              <li><a class="" href="javascript:;" onclick="cargarHtml('retirar');">Retiros</a></li>
+              <li><a class="" href="javascript:;" onclick="cargarHtml('adm_paquetes');">Paquetes Clientes</a></li>
+              <!-- <li><a class="" href="javascript:;" onclick="cargarHtml('retirar');">Retiros</a></li>
               <li><a class="" href="javascript:;" onclick="cargarHtml('histocompras');">Historial de Compra</a></li>
+              -->
             </ul>
           </li>
           <li>
-            <a class="" href="javascript:;" onclick="cargarHtml('clientes');">
+            <a class="" href="javascript:;" onclick="cargarHtml('../client/referidos');">
                           <i class="icon_group"></i>
                           <span>Clientes</span>
                       </a>

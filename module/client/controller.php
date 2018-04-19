@@ -74,3 +74,10 @@ if ( isset($_POST["guardarCuentaBancaria"]) && $_POST["guardarCuentaBancaria"] )
     $cliente->guardarCuentaBancaria($_POST);
     
 }
+
+if ( isset($_POST["cambiarContra"]) && $_POST["cambiarContra"] ) {
+    $cliente = new cliente();
+    $values = array();
+    parse_str($_POST['datosForm'], $values);
+    $cliente->guardarNuevaContra($values);
+}

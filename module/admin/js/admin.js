@@ -55,9 +55,9 @@ function editarPaquete (id) {
                                 
                                 var mostrar = 'none';
                                 if ( result.datos.estado == '1' ){
-                                    alert("activo");
                                     mostrar = true;
                                 }
+    
     
                                 $("#modal-title").html("Administrar Paquete");
                                 $("#modal-body").html("<form onsubmit='return false;' id='formactpaq' ><table class='table'>"+
@@ -68,9 +68,9 @@ function editarPaquete (id) {
                                                       "<tr><td>Tipo de pago:</td><td class='text-right'>"+result.datos.tipo_pago+"<td></tr>"+
                                                       "<tr><td>Referencia Pago:</td><td class='text-right'>"+result.datos.referencia_pago+"<td></tr>"+
                                                       "<tr><td>Estado:</td><td class='text-right'>"+result.estados+"<td></tr>"+
-                                                      "<tr id='fecinipaq' style='display:"+mostrar+";'><td>Fecha Inicio:</td><td class='text-right'><input type='date' value='"+result.datos.inicia+"' id='datefecinipaq' class='form-control'><td></tr>"+
-                                                      "<tr id='fecfinpaq' style='display:"+mostrar+";'><td>Fecha Fin:</td><td class='text-right'><input type='date' value='"+result.datos.finaliza+"' id='datefecfinpaq' class='form-control'><td></tr>"+
-                                                      "</table></form>"
+                                                      "<tr id='fecinipaq' style='display:"+mostrar+";'><td>Fecha Inicio:</td><td class='text-right'><input type='date' value='"+result.datos.inicia+"' id='datefecinipaq' name='datefecinipaq' class='form-control'><td></tr>"+
+                                                      "<tr id='fecfinpaq' style='display:"+mostrar+";'><td>Fecha Fin:</td><td class='text-right'><input type='date' value='"+result.datos.finaliza+"' id='datefecfinpaq' name='datefecfinpaq' class='form-control'><td></tr>"+
+                                                      "</table><input type='hidden' id='paquete_id' name='paquete_id' value='"+id+"'></form>"
 
                                                      );
                                 $("#modal-footer").html('<input type="submit" class="btn btn-logg" style="font-size: 10px;" value="Guardar" onclick="modificarPaquete()"><button type="button" class="btn btn-default" data-dismiss="modal" style="font-size: 10px;">Cancelar</button>');           
@@ -99,9 +99,6 @@ function validarEstadoPaq() {
 
 function modificarPaquete(){
     
-    alert($("#selectEstado").val());
-    alert($("#datefecinipaq").val());
-    alert($("#datefecfinpaq").val());
     
     var parametros = {
         "actualizarPaquete" : true,
@@ -115,8 +112,9 @@ function modificarPaquete(){
                 success:  function (response) {
                         var result = JSON.parse(response);
                         if ( result.respuesta ) {
-                            //$("#listaPaquetes").html(result.tabla);
+                            consultarPaquetes();
                             swal(result.msg);
+                            $("#modalPaq").modal('hide');
 
                         } else {
                             swal(result.msg);

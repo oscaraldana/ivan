@@ -1,6 +1,6 @@
 
 <div class="panel panel-default">
-    <div class="panel-heading" style="text-align: center;">Administrar Paquetes</div>
+    <div class="panel-heading" style="text-align: center;">Administrar Paquetes Clientes</div>
     <div class="panel-content">
     
         
@@ -32,11 +32,11 @@
               <label for="pwd">Fin Compra:</label>
               <input type="date" class="form-control" id="date2" id="finCompra" name="finCompra">
             </div>
-            <div class="form-group">
+            <!--<div class="form-group">
               <label for="estado">Cliente:</label>
               <input type="text" class="form-control" id="cliente" name="cliente">
-            </div>
-            <button type="submit" class="btn btn-default">Buscar</button>
+            </div> -->
+            <button type="submit" class="btn btn-regg">Buscar</button>
         </form> 
         
         <div name="listaPaquetes" id="listaPaquetes">

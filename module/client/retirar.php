@@ -27,55 +27,103 @@
         }
     }
     
+    
+    
+    $tabla2 = "";
+    $tabla = '<table class="table table-hover">
+                    <tr>
+                        <th scope="row">Diponible para retirar por inversion:</th>
+                        <td>$ '.$cliente->dispoParaRetiro.'</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Comision de retiro:</th>
+                        <td>$ '.$vlrComision.'</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Total a Retirar:</th>
+                        <td>$ '.$vlrRetirar.'</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Metodo de pago:</th>
+                        <td>';
+    
+    
+    
+        $tabla1 = '<table class="table table-hover">
+                    <tr>
+                        <th scope="row">Diponible para retirar por referidos:</th>
+                        <td>$ '.$cliente->dispoParaRetiro.'</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Comision de retiro:</th>
+                        <td>$ '.$vlrComision.'</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Total a Retirar:</th>
+                        <td>$ '.$vlrRetirar.'</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Metodo de pago:</th>
+                        <td>';
+
+    
+    if ( !$cuentas ) { 
+        $tabla2 .= "<p class='text-danger'><b>?</b></p>";
+    } else {
+        $tabla2 .= '<select name="metodoPagoRetiro" id="metodoPagoRetiro" class="form-control"><option value="">Seleccione Metodo de Pago</option>';
+                            
+        if ( isset($cuentas[0]["banco"]) && !empty($cuentas[0]["banco"]) ){
+            $tabla2 .= '<option value="2">'.$cuentas[0]["banco"].' ***'.substr($cuentas[0]["cuenta"], -3).'</option>';
+        }
+        if ( isset($cuentas[0]["bitcoin"]) && !empty($cuentas[0]["bitcoin"]) ){
+            $tabla2 .= '<option value="1">BITCOIN ***'.substr($cuentas[0]["bitcoin"], -3).'</option>';
+        }
+
+        $tabla2 .= '</select>';
+    }
+        
+    $tabla2 .= '       </td>
+                  </tr>
+
+                </table>';
+    
+    
+    $button = '<div style="text-align: center;">';
+                if ( !$cuentas ) { 
+                    $button .= "<p class='text-danger'>No existe configurada ninguna cuenta transaccional para procesar la solicitud de retiro.</p>";
+                } else if ( $existeRetiroPendiente ) {
+                    $button .= "<p class='text-danger'>Hasta que no se procese la solicitud de retiro pendiente, no es posible realizar una nueva solicitud de retiro.</p>";
+                } else {
+                    
+                    $button .= '<button class="btn btn-info" style="cursor: no-drop;" '.$disabled.' onclick="solicitarRetiro();">Solicitar Retiro</button>';
+                }
+   $button .=  '</div>';
+    
 ?>
 
 <div class="panel panel-default">
     <div class="panel-heading" style="text-align: center;"><b>SOLICITAR RETIRO</b></div>
     <div class="panel-content">
-        <table class="table table-hover">
-            <tr>
-                <th scope="row">Diponible para retirar:</th>
-                <td>$ <?php echo $cliente->dispoParaRetiro; ?></td>
-              </tr>
-              <tr>
-                <th scope="row">Comision de retiro:</th>
-                <td>$ <?php echo $vlrComision; ?></td>
-              </tr>
-              <tr>
-                <th scope="row">Total a Retirar:</th>
-                <td>$ <?php echo $vlrRetirar; ?></td>
-              </tr>
-              <tr>
-                <th scope="row">Metodo de pago:</th>
-                <td>
-                    <?php if ( !$cuentas ) { 
-                        echo "<p class='text-danger'><b>?</b></p>";
-                    } else { ?>
-                    <select name="metodoPagoRetiro" id="metodoPagoRetiro" class="form-control"><option value="">Seleccione Metodo de Pago</option>
-                        <?php 
-                        if ( isset($cuentas[0]["banco"]) && !empty($cuentas[0]["banco"]) ){
-                            echo '<option value="2">'.$cuentas[0]["banco"].' ***'.substr($cuentas[0]["cuenta"], -3).'</option>';
-                        }
-                        if ( isset($cuentas[0]["bitcoin"]) && !empty($cuentas[0]["bitcoin"]) ){
-                            echo '<option value="1">BITCOIN ***'.substr($cuentas[0]["bitcoin"], -3).'</option>';
-                        }
-                        ?>
-                    </select>
-                    <?php } ?>
-                </td>
-              </tr>
-
-        </table>
-        <div style="text-align: center;">
-            <?php if ( !$cuentas ) { 
-                echo "<p class='text-danger'>No existe configurada ninguna cuenta transaccional para procesar la solicitud de retiro.</p>";
-            } else if ( $existeRetiroPendiente ) {
-                echo "<p class='text-danger'>Hasta que no se procese la solicitud de retiro pendiente, no es posible realizar una nueva solicitud de retiro.</p>";
-            } else {
-                ?>
-            <button class="btn btn-info" style="cursor: no-drop;" <?= $disabled ?> onclick="solicitarRetiro();">Solicitar Retiro</button>
-            <?php } ?>
+        
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#paquetes"><i class="fa fa-money"></i> Retiro por Inversion</a></li>
+            <li><a data-toggle="tab" href="#referidos"><i class="fa fa-users"></i> Retiro por Referidos</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="paquetes" class="tab-pane fade in active">
+                <!-- Para Retiros por Inversion -->
+                <?php echo $tabla.$tabla2. $button ?>
+            </div>
+            
+            <div id="referidos" class="tab-pane fade">
+                <?php echo $tabla1.$tabla2.$button ?>
+            </div>
         </div>
+        
+        
+        
+        <!-- BUTTON -->
+        
     </div>
 </div>
 

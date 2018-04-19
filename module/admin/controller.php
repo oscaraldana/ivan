@@ -35,7 +35,10 @@ if ( isset($_POST["actualizarPaquete"]) && $_POST["actualizarPaquete"] ) {
 
     $admin = new admin();
     
-    $admin->actualizarPaquete($_POST);
+    $values = array();
+    parse_str($_POST['datosForm'], $values);
+    
+    $admin->actualizarPaquete($values);
     
 }
 

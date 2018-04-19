@@ -10,8 +10,8 @@ $cliente = new cliente();
 $cliente->consultarReferidos();
 
 ?>
-<link rel="stylesheet" href="css/hierarchy-view.css">
-<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="../client/css/hierarchy-view.css">
+<link rel="stylesheet" href="../client/css/main.css">
 <style>body{ background-color: #303840 }</style>
 <!--Management Hierarchy-->
     <section class="management-hierarchy">
