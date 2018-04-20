@@ -369,6 +369,12 @@ class cliente {
         
     }
     
+    public function consultarDatosParaRetiroReferidos () {
+        
+        
+        
+    }
+    
     
     public function procesarRetiro($formaPago){
         

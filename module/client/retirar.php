@@ -2,6 +2,7 @@
 
     $cliente = new cliente();
     $cliente->consultarDatosParaRetiro();
+    $cliente->consultarDatosParaRetiroReferidos();
     $cuentas = $cliente->consultarMisCuentas();
     
     $cliente->consultarRetiros();
