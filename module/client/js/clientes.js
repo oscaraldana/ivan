@@ -557,3 +557,44 @@ function validarCuentasBancarias(id){
     }
         
 }
+
+function formOlvidoClave () {
+    
+    $("#modal-titlex").html("Olvide mi contrase&ntilde;a");
+    $("#modal-bodyx").html("<br><br>"+
+                           "<br><label for='userl'><i class='icon_profile'></i> Usuario de acceso</label><input type='text' class='form-control' placeholder='Digite su usuario' name='userl' id='userl' required><br>&nbsp;");
+    $("#modal-footerx").html('<input type="button" class="btn btn-logg" style="font-size: 10px;" value="Recordar Contrase&ntilde;a" onclick="olvideContra()"><button type="button" class="btn btn-default" data-dismiss="modal" style="font-size: 10px;">Cancelar</button>');           
+    $("#modalx").modal();
+    
+    
+}
+
+function olvideContra(){
+
+    if( $("#userl").val().trim() == '' ){
+        swal("Digite su nombre de usuario.");
+        return;
+    }
+    
+    var parametros = {
+        "olvideContrasena" : true,
+        "usuario" : $("#userl").val()
+    };
+    $.ajax({
+                data:  parametros,
+                url:   '../client/controller.php',
+                type:  'post',
+
+                success:  function (response) {
+                        var result = JSON.parse(response);
+                        if ( result.respuesta ) {
+                            $("#modalx").modal('hide');
+                            swal(result.msg);
+
+                        } else {
+                            swal(result.msg);
+                        }
+                }
+    });
+
+}

@@ -68,6 +68,12 @@ if ( isset($_POST["solicitarRetiro"]) && $_POST["solicitarRetiro"] ){
 }
 
 
+if ( isset($_POST["olvideContrasena"]) && $_POST["olvideContrasena"] ) {
+    $cliente = new cliente();
+    $cliente->olvideContrasena();
+}
+
+
 if ( isset($_POST["guardarCuentaBancaria"]) && $_POST["guardarCuentaBancaria"] ) {
     
     $cliente = new cliente();

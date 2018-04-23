@@ -17,7 +17,7 @@ function autoload_clases($className)
     $nombre=$className;
     
     $fileName  = $PathFile."../class/".$nombre.".php";
-    error_log($fileName);
+    //error_log($fileName);
     if ( is_file($fileName) ){
          require $fileName;
     }else{

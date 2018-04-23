@@ -8,8 +8,14 @@
     $cliente->consultarRetiros();
     
     
-    $vlrComision = 0;
-    $vlrRetirar = 0;
+    $vlrComision = $vlrComRef = 0;
+    $vlrRetirar = $vlrRetRef = 0;
+    echo $cliente->valorPendientePorReferidos ;
+    if ( $cliente->valorPendientePorReferidos > 0 ){
+        $vlrComRef = $cliente->valorPendientePorReferidos * ( COMISION_RETIRO / 100 );
+        $vlrRetRef = $cliente->valorPendientePorReferidos - $vlrComision;
+    }
+    
     
     if ( $cliente->dispoParaRetiro > 0 ){
         $vlrComision = $cliente->dispoParaRetiro * ( COMISION_RETIRO / 100 );
@@ -53,15 +59,15 @@
         $tabla1 = '<table class="table table-hover">
                     <tr>
                         <th scope="row">Diponible para retirar por referidos:</th>
-                        <td>$ '.$cliente->dispoParaRetiro.'</td>
+                        <td>$ '.$cliente->valorPendientePorReferidos.'</td>
                       </tr>
                       <tr>
                         <th scope="row">Comision de retiro:</th>
-                        <td>$ '.$vlrComision.'</td>
+                        <td>$ '.$vlrComRef.'</td>
                       </tr>
                       <tr>
                         <th scope="row">Total a Retirar:</th>
-                        <td>$ '.$vlrRetirar.'</td>
+                        <td>$ '.$vlrRetRef.'</td>
                       </tr>
                       <tr>
                         <th scope="row">Metodo de pago:</th>
@@ -107,8 +113,8 @@
     <div class="panel-content">
         
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#paquetes"><i class="fa fa-money"></i> Retiro por Inversion</a></li>
-            <li><a data-toggle="tab" href="#referidos"><i class="fa fa-users"></i> Retiro por Referidos</a></li>
+            <li class="active"><a data-toggle="tab" href="#paquetes"><i class="fa fa-money"></i> &nbsp;&nbsp;&nbsp;Retiro por Inversion</a></li>
+            <li><a data-toggle="tab" href="#referidos"><i class="fa fa-users"></i> &nbsp;&nbsp;&nbsp;Retiro por Referidos</a></li>
         </ul>
         <div class="tab-content">
             <div id="paquetes" class="tab-pane fade in active">

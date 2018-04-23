@@ -190,10 +190,18 @@ class admin {
     
     public function actualizarPaquete ( $dataPost ) {
         
+        if ( $dataPost["selectEstado"] == "1" && ( empty($dataPost["datefecinipaq"]) || empty($dataPost["datefecfinpaq"]) ) ) {
+            echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "Por favor seleccione las fechas de vigencia del paquete." ] );
+            return;
+        }
+        
         $conex = WolfConex::conex();
         
         // Consultamos el estado actual del paquete
-        $sql = "select * from paquetes_cliente where paquete_cliente_id = ".$dataPost["paquete_id"];
+        $sql = "select paquetes_cliente.*, paquetes.valor 
+                from paquetes_cliente 
+                inner join paquetes on paquetes.paquete_id = paquetes_cliente.paquete_id
+                where paquete_cliente_id = ".$dataPost["paquete_id"];
         $res = mysqli_query($conex->getLinkConnect(), $sql);
         $paqAct = mysqli_fetch_array($res);
         
@@ -204,7 +212,20 @@ class admin {
             echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible modificar este paquete en este momento.".$sql ] );
         } else {
             
-            
+            if ( $dataPost["selectEstado"] == "1" ) {
+                
+                $sql = "select * from bonos_referidos where paquete_cliente_id = ".$dataPost["paquete_id"];
+                $res = mysqli_query($conex->getLinkConnect(), $sql);
+                $bonoRef = mysqli_fetch_array($res);
+                if ( count($bonoRef) <= 0 ) {
+                    
+                    $sql = "insert into bonos_referidos (paquete_cliente_id, valor) values 
+                           ( ".$dataPost["paquete_id"].", '".( $paqAct["valor"] * 0.05 )."' );";
+                    $res = mysqli_query($conex->getLinkConnect(), $sql);
+                }
+
+                
+            }
             
             
              echo json_encode( ["respuesta" => true, "msg" => "Paquete actualizado correctamente."] );

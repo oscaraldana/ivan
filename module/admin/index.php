@@ -31,8 +31,6 @@ if ( (!isset($_SESSION["clientId"]) || ( isset($_SESSION["clientId"]) && empty($
 
 <!-- Bootstrap CSS -->
 <link href="../client/css/bootstrap.min.css" rel="stylesheet">
-  <!-- bootstrap theme -->
-  <link href="../client/css/bootstrap-theme.css" rel="stylesheet">
   <!--external css-->
   <!-- font icon -->
   <link href="../client/css/elegant-icons-style.css" rel="stylesheet" />
@@ -80,7 +78,7 @@ if ( (!isset($_SESSION["clientId"]) || ( isset($_SESSION["clientId"]) && empty($
         </div>
         <label class="checkbox">
                 <!-- <input type="checkbox" value="remember-me"> Remember me -->
-                <span class="pull-right"> <a href="#"> ¿Olvido su clave?</a></span>
+                <span class="pull-right"><a href="javascript:;" class="btn-link" onclick="formOlvidoClave();">&iquest;Olvido su contrase&ntilde;a?</a></span>
             </label>
         <button class="btn btn-logg btn-lg btn-block" type="submit">Ingresar</button>
         <p class="btn btn-regg btn-lg btn-block" onclick="registro()">Registrarme</p>
@@ -152,8 +150,32 @@ if ( (!isset($_SESSION["clientId"]) || ( isset($_SESSION["clientId"]) && empty($
 </div>
 
 
+
+
+<!-- Modal -->
+<div id="modalx" class="modal fade"  role="dialog" style="display: none">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="background-color: #262b2d;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" name="modal-titlex" id="modal-titlex">Modal Header</h4>
+      </div>
+      <div class="modal-body" id="modal-bodyx" name="modal-bodyx">
+        <p>Some text in the modal.</p>
+      </div>
+      <div class="modal-footer" id="modal-footerx" name="modal-footerx">
+        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<script src="../client/js/jquery-3.3.1.min.js"></script>
 <script src="../client/js/clientes.js"></script>
-<script src="../client/js/jquery.js"></script>
 <script src="../client/js/bootstrap.min.js"></script>
 <script src="../client/js/sweetalert.min.js"></script>
 

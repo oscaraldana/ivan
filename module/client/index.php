@@ -29,10 +29,7 @@ if ( !isset($_SESSION["clientId"]) || ( isset($_SESSION["clientId"]) && empty($_
 <link href="../../css/client.css" rel="stylesheet" id="client-css">
 -->
 
-<!-- Bootstrap CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
-  <!-- bootstrap theme -->
-  <link href="css/bootstrap-theme.css" rel="stylesheet">
   <!--external css-->
   <!-- font icon -->
   <link href="css/elegant-icons-style.css" rel="stylesheet" />
@@ -72,16 +69,17 @@ if ( !isset($_SESSION["clientId"]) || ( isset($_SESSION["clientId"]) && empty($_
         <p class="login-img"><i class="icon_lock_alt"></i></p>
         <div class="input-group">
           <span class="input-group-addon"><i class="icon_profile"></i></span>
-          <input type="text" class="form-control" placeholder="Username" autofocus id="user_login" name="user_login" required="true">
+          <input type="text" class="form-control" placeholder="Usuario" autofocus id="user_login" name="user_login" required="true">
         </div>
         <div class="input-group">
           <span class="input-group-addon"><i class="icon_key_alt"></i></span>
-          <input type="password" class="form-control" placeholder="Password" id="pass_login" name="pass_login" required="true">
+          <input type="password" class="form-control" placeholder="Contrase&ntilde;a" id="pass_login" name="pass_login" required="true">
         </div>
         <label class="checkbox">
                 <!-- <input type="checkbox" value="remember-me"> Remember me -->
-                <span class="pull-right"> <a href="#"> ¿Olvido su clave?</a></span>
+            <span class="pull-right"><a href="javascript:;" class="btn-link" onclick="formOlvidoClave();">&iquest;Olvido su contrase&ntilde;a?</a></span>
             </label>
+        <br>
         <button class="btn btn-logg btn-lg btn-block" type="submit">Ingresar</button>
         <p class="btn btn-regg btn-lg btn-block" onclick="registro()">Registrarme</p>
       </div>
@@ -127,7 +125,7 @@ if ( !isset($_SESSION["clientId"]) || ( isset($_SESSION["clientId"]) && empty($_
 -->
 
 <!-- Modal -->
-<div id="modalBuy" class="modal fade"  role="dialog">
+<div id="modalBuy" class="modal fade"  role="dialog" style="display: none">
   <div class="modal-dialog">
 
     <!-- Modal content-->
@@ -152,9 +150,33 @@ if ( !isset($_SESSION["clientId"]) || ( isset($_SESSION["clientId"]) && empty($_
 </div>
 
 
-<script src="js/clientes.js"></script>
-<script src="js/jquery.js"></script>
+
+
+<!-- Modal -->
+<div id="modalx" class="modal fade"  role="dialog" style="display: none">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="background-color: #262b2d;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" name="modal-titlex" id="modal-titlex">Modal Header</h4>
+      </div>
+      <div class="modal-body" id="modal-bodyx" name="modal-bodyx">
+        <p>Some text in the modal.</p>
+      </div>
+      <div class="modal-footer" id="modal-footerx" name="modal-footerx">
+        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/clientes.js"></script>
 <script src="js/sweetalert.min.js"></script>
 
 <?php } else {

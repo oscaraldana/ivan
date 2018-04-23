@@ -11,6 +11,7 @@ class cliente {
     public $misRetirosPorPaquete;
     public $misReferidos;
     public $imprimirMisRef;
+    public $valorPendientePorReferidos;
     
     function __construct(){
         $this->gananciasInversion = 0;
@@ -22,6 +23,7 @@ class cliente {
         $this->misRetirosPorPaquete = [];
         $this->misReferidos = [];
         $this->imprimirMisRef = "";
+        $this->valorPendientePorReferidos = 0;
     }
     
     public function loguearse($data){
@@ -371,6 +373,34 @@ class cliente {
     
     public function consultarDatosParaRetiroReferidos () {
         
+        $conex = WolfConex::conex();
+        //echo $_SESSION["clientId"]."<br>";
+        echo $_SESSION["clientId"];
+        $sql = "SELECT bonos_referidos.* FROM bonos_referidos
+                inner join paquetes_cliente on paquetes_cliente.paquete_cliente_id = bonos_referidos.paquete_cliente_id
+                where paquetes_cliente.cliente_id = ".$_SESSION["clientId"];
+        
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        
+        $res = [];
+        if ( $result ) {
+            return false;
+        } else {
+            if ( !mysqli_num_rows($result) > 0 ){
+                return false;
+            } else {
+                while ($fila = mysqli_fetch_array($result)) {
+                    $res[] = $fila;
+                }
+            }
+        }
+                
+        $this->valorPendientePorReferidos = 0;
+        foreach ( $res as $bonos ){
+            if ( $bonos["estado"] == "0" ) {
+                $this->valorPendientePorReferidos +=  $bonos["valor"];
+            }
+        }
         
         
     }
@@ -738,13 +768,48 @@ class cliente {
         $result = mysqli_query($conex->getLinkConnect(), $sql);
         if ( !$result ) {
             //echo "<script>parent.sweetal(\"No es posible actualizar tu perfil en este momento.\");</script>";
-            echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible modificar tu contraseña en este momento.".$sql ] );
+            echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible modificar tu contraseña en este momento." ] );
         } else {
              echo json_encode( ["respuesta" => true, "msg" => "Contraseña actualizada exitosamente."] );
         }
 
     }
 
+    
+    
+    public function olvideContrasena() {
+        
+        $conex = WolfConex::conex();
+        
+        $sql = "select * from cliente where login = '".$_POST["usuario"]."'";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "No es posible realizar esta solicitud en este momento. $sql" ] );
+            return;
+        } else {
+            if ( !mysqli_num_rows($result) > 0 ){
+                echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "El usuario que digito ".$_POST["usuario"]." no se encuentra en el sistema." ] );
+                return;
+            } else {
+                $row = mysqli_fetch_array($result);
+                $new = rand(1000000, 9999999);
+                $sql = "update cliente set contrasena = '". md5($new)."' where cliente_id = ".$row["cliente_id"];
+                $result = mysqli_query($conex->getLinkConnect(), $sql);
+                if ( !$result ) {
+                    //echo "<script>parent.sweetal(\"No es posible actualizar tu perfil en este momento.\");</script>";
+                    echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible modificar tu contraseña en este momento.".$sql ] );
+                } else {
+                     mail($row["correo"], "Nueva clave de acceso.", "Su nueva clave de acceso es $new");
+                     echo json_encode( ["respuesta" => true, "msg" => "Se ha enviado una nueva clave al correo ".substr($row["correo"], 0, 5)."xxx@xxxx" ] );
+                }
+                
+            }
+        }
+        
+        
+    }
+    
+    
     public function primerDiaMes() {
       $month = date('m');
       $year = date('Y');
