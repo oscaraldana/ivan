@@ -80,7 +80,7 @@ function registro(){
                           "<label for='usuario'>Usuario: </label><input type='text' class='form-control' placeholder='Usuario' name='usuario' id='usuario' required>"+
                           "<label for='clave1'>Contrase&nacute;a: </label><input type='password' class='form-control' placeholder='Contrase&ntilde;a' name='clave1' id='clave1' required>"+
                           "<label for='clave2'>Confirmar Contrase&nacute;a: </label><input type='password' class='form-control' placeholder='Confirmar Contrase&ntilde;a' name='clave2' id='clave2' required>"+
-                          "<label for='foto'>Foto: </label><input name='foto' id='foto' type='file' class='form-control form-file' accept='image/x-png,image/gif,image/jpeg' />"+
+                          "<label for='foto'>Foto: </label><input name='foto' id='foto' type='file' class='form-control form-file' accept='image/*' />"+
                           "<label for='referido'>Referido: </label><input type='text' class='form-control' placeholder='Referido Por' name='referido' id='referido' required>"+
                           "<input type='hidden' name='registro' id='hidden' value = 'true'><iframe name='iframeUpload' style='display:none'></iframe>"
                           
@@ -155,7 +155,7 @@ function miperfil(){
                                 //$('#form_modal').attr('onsubmit', 'editarPerfil(); return false;');
                                 $("#modal-body").html("<label for='nombre'>Nombre: </label><input type='text' value='"+result.datos.nombre+"' class='form-control' placeholder='Nombre' name='nombre' id='nombre' required>"+
                                                       "<label for='correo'>Correo: </label><input type='text' value='"+result.datos.correo+"' class='form-control' placeholder='Correo' name='mail' id='nombre' required>"+
-                                                      "<label for='foto'>Foto: </label><input name='foto' id='foto' type='file' class='form-control form-file' accept='image/x-png,image/gif,image/jpeg' />"+
+                                                      "<label for='foto'>Foto: </label><input name='foto' id='foto' type='file' class='form-control form-file' accept='image/*' />"+
                                                       "<label for='usuario'>Usuario: </label><input type='text' readonly value='"+result.datos.login+"' class='form-control' placeholder='Usuario' name='usuario' id='usuario' required>"+
                                                       "<label for='referido'>Referido: </label><input type='text' readonly value='"+result.datos.referido+"' class='form-control' placeholder='Referido Por' name='referido' id='referido' required>"+
                                                       "<input type='hidden' name='editarPerfil' id='editarPerfil' value ='true'>"

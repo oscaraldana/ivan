@@ -161,6 +161,16 @@
                           <span>Mis Referidos</span>
                       </a>
           </li>
+          <?php if ( isset($_SESSION["clientIsAdmin"]) && $_SESSION["clientIsAdmin"] ) {
+            echo '<li style="background: #414a5A;">
+                    <a class="" href="../admin">
+                                  <i class="icon_tools"></i>
+                                  <span style="color:">Modulo Admin</span>
+                              </a>
+                  </li>';  
+          }
+          
+          ?>
           <!--<li>
             <a class="" href="widgets.html">
                           <i class="icon_genius"></i>

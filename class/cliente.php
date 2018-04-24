@@ -282,55 +282,71 @@ class cliente {
                     inner join paquetes on paquetes.paquete_id = paquetes_cliente.paquete_id 
                     where paquetes_cliente.cliente_id = ".$_SESSION["clientId"]." and paquetes_cliente.estado = 1";
         $result = mysqli_query($conex->getLinkConnect(), $sql);
-        if ( !$result ) {
-            return false;
-        } else {
-            if ( !mysqli_num_rows($result) > 0 ){
-                return false;
-            } else {
-                while ($fila = mysqli_fetch_array($result)) {
-                    $res[] = $fila;
-                }
-                
-                //var_export($res);
-                $dias = 0;
-                foreach ($res as $k => $paq){
-                    $dias = 0;
-                    $actualDate = date('Y-m-d'); // ." -> ".$paq["inicia"]." -> ".$paq["finaliza"];
-                    //echo $actualDate." -> ".$paq["inicia"]." -> ".$paq["finaliza"]; // echos today! 
-                    $initDate = date('Y-m-d', strtotime($paq["inicia"]));
-                    $finishDate = date('Y-m-d', strtotime($paq["finaliza"]));
+        if ( $result && mysqli_num_rows($result) > 0 ) {
+           
+            while ($fila = mysqli_fetch_array($result)) {
+                $res[] = $fila;
+            }
 
-                    if ($actualDate >= $initDate && $actualDate <= $finishDate){
-                        //echo "<hr>";
-                        $fechaInicio=strtotime($paq["inicia"]);
-                        $fechaFin=strtotime(date('Y-m-d'));
-                        $m = ""; $d = 0;
-                        for($i=$fechaInicio; $i<=$fechaFin; $i+=86400){
-                            if( $m != date("m", $i) ){
-                                $m = date("m", $i);
-                                $d=0;
-                            }
-                            
-                            if( date("N", $i) < 6 ) {
-                                $d++;
-                                if($d<=20){
-                                    $dias++;
-                                }
+            //var_export($res);
+            $dias = 0;
+            foreach ($res as $k => $paq){
+                $dias = 0;
+                $actualDate = date('Y-m-d'); // ." -> ".$paq["inicia"]." -> ".$paq["finaliza"];
+                //echo $actualDate." -> ".$paq["inicia"]." -> ".$paq["finaliza"]; // echos today! 
+                $initDate = date('Y-m-d', strtotime($paq["inicia"]));
+                $finishDate = date('Y-m-d', strtotime($paq["finaliza"]));
+
+                if ($actualDate >= $initDate && $actualDate <= $finishDate){
+                    //echo "<hr>";
+                    $fechaInicio=strtotime($paq["inicia"]);
+                    $fechaFin=strtotime(date('Y-m-d'));
+                    $m = ""; $d = 0;
+                    for($i=$fechaInicio; $i<=$fechaFin; $i+=86400){
+                        if( $m != date("m", $i) ){
+                            $m = date("m", $i);
+                            $d=0;
+                        }
+
+                        if( date("N", $i) < 6 ) {
+                            $d++;
+                            if($d<=20){
+                                $dias++;
                             }
                         }
-                        
-                      //echo "is between -> $meses -> $diasMeses<br>";
                     }
-                    
-                    $valorDia = ($paq["valor"] * ( $paq["rentabilidad"] / 100 ) ) / 20;
-                    $this->gananciasInversion += ($valorDia * $dias);
-                    
-                    $this->gananciasPorPaquete[$k] = $paq;
-                    $this->gananciasPorPaquete[$k]["ganancia"] = ($valorDia * $dias);
+
+                  //echo "is between -> $meses -> $diasMeses<br>";
+                }
+
+                $valorDia = ($paq["valor"] * ( $paq["rentabilidad"] / 100 ) ) / 20;
+                $this->gananciasInversion += ($valorDia * $dias);
+
+                $this->gananciasPorPaquete[$k] = $paq;
+                $this->gananciasPorPaquete[$k]["ganancia"] = ($valorDia * $dias);
+            }
+                
+            
+        }
+        
+        $this->gananciasReferidos = 0;
+        $sql = "SELECT bonos_referidos.*, cliente.referido 
+                FROM bonos_referidos 
+                inner join paquetes_cliente on paquetes_cliente.paquete_cliente_id = bonos_referidos.paquete_cliente_id 
+                inner join cliente on cliente.cliente_id = paquetes_cliente.cliente_id 
+                where cliente.referido = ".$_SESSION["clientId"]."";
+        
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( $result && mysqli_num_rows($result) > 0 ) {
+           
+            while ($fila = mysqli_fetch_array($result)) {
+                
+                if ( $fila["estado"] == "0" ){
+                    $this->gananciasReferidos += $fila["valor"];
                 }
                 
             }
+
         }
         
         $this->gananciasTotales = $this->gananciasInversion + $this->gananciasReferidos;
@@ -650,7 +666,7 @@ class cliente {
             $primero = true;
         }
         
-        $dir = "img/clients/";
+        $dir = "../client/img/clients/";
         
         if($primero){
             $this->imprimirMisRef .= '<div class="hv-item">';

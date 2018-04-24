@@ -9,7 +9,16 @@ if(!file_exists("css/style.css")){
 <html lang="en-US">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="description" content="">
+    <meta http-equiv="Content-Type" content="text/html; ISO-8859-1">
+    <META NAME="DC.Language" SCHEME="RFC1766" CONTENT="Spanish">
+    <META NAME="AUTHOR" CONTENT="ivan contreras">
+    <META NAME="REPLY-TO" CONTENT="oealdana@gmail.com">
+    <LINK REV="made" href="mailto:oealdana@gmail.com">
+    <META NAME="DESCRIPTION" CONTENT="Sitio de inversion con ganancias mensuales my rentables">
+    <META NAME="KEYWORDS" CONTENT="wolves,trader,company,trading,wolf,bitcoin,dolares,ganancias,rentabilidad">
+    <META NAME="Resource-type" CONTENT="Homepage">
+    <META NAME="DateCreated" CONTENT="Mon, 30 April 2018 00:00:00 GMT+1">
+    <META NAME="robots" content="ALL">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title> Wolves </title>

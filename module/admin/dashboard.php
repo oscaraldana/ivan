@@ -78,8 +78,8 @@
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="profile-ava">
                                 <?php 
-                                if (isset($_SESSION["clientImg"]) && !empty($_SESSION["clientImg"]) && file_exists("img/clients/".$_SESSION["clientImg"]) ){
-                                    echo '<img alt="" src="img/clients/'.$_SESSION["clientImg"].'" height="43px"  id="imgPerfil" name="imgPerfil">';
+                                if (isset($_SESSION["clientImg"]) && !empty($_SESSION["clientImg"]) && file_exists("../client/img/clients/".$_SESSION["clientImg"]) ){
+                                    echo '<img alt="" src="../client/img/clients/'.$_SESSION["clientImg"].'" height="43px"  id="imgPerfil" name="imgPerfil">';
                                 } else {
                                     echo '<img alt="" src="img/clients/default-user.png" height="43px" id="imgPerfil" name="imgPerfil">';
                                 }
@@ -155,7 +155,13 @@
           <li>
             <a class="" href="javascript:;" onclick="cargarHtml('../client/referidos');">
                           <i class="icon_group"></i>
-                          <span>Clientes</span>
+                          <span>Ver Clientes</span>
+                      </a>
+          </li>
+          <li>
+            <a class="" href="../client">
+                          <i class="icon_profile"></i>
+                          <span>Modulo Clientes</span>
                       </a>
           </li>
           <!--<li>
