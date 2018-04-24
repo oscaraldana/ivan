@@ -10,10 +10,12 @@
     
     $vlrComision = $vlrComRef = 0;
     $vlrRetirar = $vlrRetRef = 0;
-    echo $cliente->valorPendientePorReferidos ;
+    
+    $disabled2 = " disabled ";
     if ( $cliente->valorPendientePorReferidos > 0 ){
         $vlrComRef = $cliente->valorPendientePorReferidos * ( COMISION_RETIRO / 100 );
-        $vlrRetRef = $cliente->valorPendientePorReferidos - $vlrComision;
+        $vlrRetRef = $cliente->valorPendientePorReferidos - $vlrComRef;
+        $disabled2 = "";
     }
     
     
@@ -75,36 +77,54 @@
 
     
     if ( !$cuentas ) { 
-        $tabla2 .= "<p class='text-danger'><b>?</b></p>";
+        $tabla .= "<p class='text-danger'><b>?</b></p>";
+        $tabla1 .= "<p class='text-danger'><b>?</b></p>";
     } else {
-        $tabla2 .= '<select name="metodoPagoRetiro" id="metodoPagoRetiro" class="form-control"><option value="">Seleccione Metodo de Pago</option>';
+        $tabla .= '<select name="metodoPagoRetiro" id="metodoPagoRetiro" class="form-control"><option value="">Seleccione Metodo de Pago</option>';
+        $tabla1 .= '<select name="metodoPagoRetiroRef" id="metodoPagoRetiroRef" class="form-control"><option value="">Seleccione Metodo de Pago</option>';
                             
         if ( isset($cuentas[0]["banco"]) && !empty($cuentas[0]["banco"]) ){
-            $tabla2 .= '<option value="2">'.$cuentas[0]["banco"].' ***'.substr($cuentas[0]["cuenta"], -3).'</option>';
+            $tabla .= '<option value="2">'.$cuentas[0]["banco"].' ***'.substr($cuentas[0]["cuenta"], -3).'</option>';
+            $tabla1 .= '<option value="2">'.$cuentas[0]["banco"].' ***'.substr($cuentas[0]["cuenta"], -3).'</option>';
         }
         if ( isset($cuentas[0]["bitcoin"]) && !empty($cuentas[0]["bitcoin"]) ){
-            $tabla2 .= '<option value="1">BITCOIN ***'.substr($cuentas[0]["bitcoin"], -3).'</option>';
+            $tabla .= '<option value="1">BITCOIN ***'.substr($cuentas[0]["bitcoin"], -3).'</option>';
+            $tabla1 .= '<option value="1">BITCOIN ***'.substr($cuentas[0]["bitcoin"], -3).'</option>';
         }
 
-        $tabla2 .= '</select>';
+        $tabla .= '</select>';
+        $tabla1 .= '</select>';
     }
         
-    $tabla2 .= '       </td>
+    $tabla .= '       </td>
+                  </tr>
+
+                </table>';
+    $tabla1 .= '       </td>
                   </tr>
 
                 </table>';
     
     
-    $button = '<div style="text-align: center;">';
+    
                 if ( !$cuentas ) { 
-                    $button .= "<p class='text-danger'>No existe configurada ninguna cuenta transaccional para procesar la solicitud de retiro.</p>";
-                } else if ( $existeRetiroPendiente ) {
-                    $button .= "<p class='text-danger'>Hasta que no se procese la solicitud de retiro pendiente, no es posible realizar una nueva solicitud de retiro.</p>";
+                    $button = $button2 = "<div style='text-align: center;'><p class='text-danger'>No existe configurada ninguna cuenta transaccional para procesar la solicitud de retiro.</p>";
                 } else {
-                    
-                    $button .= '<button class="btn btn-info" style="cursor: no-drop;" '.$disabled.' onclick="solicitarRetiro();">Solicitar Retiro</button>';
+                    $button = $button2 = '<div style="text-align: center;">';
                 }
+                
+                if ( $existeRetiroPendiente ) {
+                    $button .= "<p class='text-danger'>Hasta que no se procese la solicitud de retiro pendiente, no es posible realizar una nueva solicitud de retiro.</p>";
+                    $button2 .= "<p class='text-danger'>Hasta que no se procese la solicitud de retiro pendiente, no es posible realizar una nueva solicitud de retiro.</p>";
+                } else {
+                    $button .= '<button class="btn btn-info" style="cursor: pointer;" '.$disabled.' onclick="solicitarRetiro(1);">Solicitar Retiro</button>';
+                    $button2 .= '<button class="btn btn-info" style="cursor: pointer;" '.$disabled2.' onclick="solicitarRetiro(2);">Solicitar Retiro</button>';
+                }
+                
+                
+                
    $button .=  '</div>';
+   $button2 .=  '</div>';
     
 ?>
 
@@ -123,7 +143,7 @@
             </div>
             
             <div id="referidos" class="tab-pane fade">
-                <?php echo $tabla1.$tabla2.$button ?>
+                <?php echo $tabla1.$tabla2.$button2 ?>
             </div>
         </div>
         
@@ -165,12 +185,19 @@
                     case "2" : $estado = "Rechazado"; break;
                 }
                 
+                $tipo = "";
+                if ( $misRet["tipo_retiro"] == "1" ){
+                    $tipo = "Inversion";
+                } else if ( $misRet["tipo_retiro"] == "2" ) {
+                    $tipo = "Referidos";
+                }
+                
                 $metodo = ( !empty($misRet["bitcoin"]) ) ? "Bitcoin" : $misRet["banco"];
                 echo '  <tr>
                             <td>'.date("d/m/Y", strtotime($misRet["fecha_solicitud"]) ).'</td>
                             <td>'.date("d/m/Y", strtotime($misRet["fecha_pago"]) ).'</td>
                             <td>'.$metodo.'</td>
-                            <td>Inversion</td>
+                            <td>'.$tipo.'</td>
                             <td align="right">$ '.$misRet["valor_retiro"].'</td>
                             <td><span class="badge">'.$estado.'</span></td>
                           </tr>';

@@ -375,24 +375,20 @@ class cliente {
         
         $conex = WolfConex::conex();
         //echo $_SESSION["clientId"]."<br>";
-        echo $_SESSION["clientId"];
-        $sql = "SELECT bonos_referidos.* FROM bonos_referidos
+        //echo $_SESSION["clientId"];
+        $sql = "SELECT bonos_referidos.*, cliente.referido 
+                FROM bonos_referidos
                 inner join paquetes_cliente on paquetes_cliente.paquete_cliente_id = bonos_referidos.paquete_cliente_id
-                where paquetes_cliente.cliente_id = ".$_SESSION["clientId"];
+                inner join cliente on cliente.cliente_id = paquetes_cliente.cliente_id
+                where cliente.referido = ".$_SESSION["clientId"];
         
         $result = mysqli_query($conex->getLinkConnect(), $sql);
         
         $res = [];
-        if ( $result ) {
-            return false;
-        } else {
-            if ( !mysqli_num_rows($result) > 0 ){
-                return false;
-            } else {
+        if ( $result && mysqli_num_rows($result) > 0 ) {
                 while ($fila = mysqli_fetch_array($result)) {
                     $res[] = $fila;
                 }
-            }
         }
                 
         $this->valorPendientePorReferidos = 0;
@@ -406,75 +402,113 @@ class cliente {
     }
     
     
-    public function procesarRetiro($formaPago){
+    public function procesarRetiro($formaPago, $tipoPago){
         
         $conex = WolfConex::conex();
         
         mysqli_autocommit($conex->getLinkConnect(), FALSE); // turn OFF auto
         
-        $this->consultarDatosParaRetiro();
+        
         $cuentas = $this->consultarMisCuentas();
         
-        if ( $this->dispoParaRetiro > 0 ){
+        if ( $formaPago == 1 ) {  // Bitcoin
+            $bitcoin = $cuentas[0]["bitcoin"];
+            $banco = "";
+            $tipo = "";
+            $cuenta = "";
+            $titular = "";
+        } else { // Banco
+            $bitcoin = "";
+            $banco = $cuentas[0]["banco"];
+            $tipo = $cuentas[0]["tipo"];
+            $cuenta = $cuentas[0]["cuenta"];
+            $titular = $cuentas[0]["titular"];
+        }
+        
+        // Por inversion
+        if ( $tipoPago == "1" ){
             
-        
-            $vlrComision = $this->dispoParaRetiro * ( COMISION_RETIRO / 100 );
-            $vlrRetirar = $this->dispoParaRetiro - $vlrComision;
-        
+            $this->consultarDatosParaRetiro();
+            
+            if ( $this->dispoParaRetiro > 0 ){
 
-        
-            if ( $formaPago == 1 ) {  // Bitcoin
-                $bitcoin = $cuentas[0]["bitcoin"];
-                $banco = "";
-                $tipo = "";
-                $cuenta = "";
-                $titular = "";
-            } else { // Banco
-                $bitcoin = "";
-                $banco = $cuentas[0]["banco"];
-                $tipo = $cuentas[0]["tipo"];
-                $cuenta = $cuentas[0]["cuenta"];
-                $titular = $cuentas[0]["titular"];
-            }
 
-            $sql = "insert into retiros_cliente ( cliente_id, valor_retiro, valor_comision, valor_pagado, bitcoin, banco, cuenta, tipo_cuenta, titular, estado ) values "
-                                                . "( ".$_SESSION["clientId"].", '".$this->dispoParaRetiro."', '".$vlrComision."', '".$vlrRetirar."', '".$bitcoin."', '".$banco."', '".$cuenta."', '".$tipo."', '".$titular."', 0 )";
-            $result = mysqli_query($conex->getLinkConnect(), $sql);
-            
-            $exito = true;
-            $retId = "";
-            if ( !$result ) {
-                $exito = false;
-            } else {
-                $retId = mysqli_insert_id($conex->getLinkConnect());
-            }
-            
-            
-            if ( !empty($retId) ) {
-                
-                foreach ( $this->gananciasPorPaquete as $ganPaq ) {
-            
-                    if ( $ganPaq["ganancia"] >= $ganPaq["retiro_minimo"] ) {
-                        
-                        $sql = " insert into retiros_paquetes (retiro_cliente_id, paquete_cliente_id, valor_retiro) values ($retId, ".$ganPaq["paquete_cliente_id"].", '".$ganPaq["ganancia"]."' ) ";
-                        $result = mysqli_query($conex->getLinkConnect(), $sql);
-                        if ( !$result ) {
-                            $exito = false;
-                            break;
+                $vlrComision = $this->dispoParaRetiro * ( COMISION_RETIRO / 100 );
+                $vlrRetirar = $this->dispoParaRetiro - $vlrComision;
+
+                $sql = "insert into retiros_cliente ( cliente_id, valor_retiro, valor_comision, valor_pagado, bitcoin, banco, cuenta, tipo_cuenta, titular, estado, tipo_retiro ) values "
+                                                    . "( ".$_SESSION["clientId"].", '".$this->dispoParaRetiro."', '".$vlrComision."', '".$vlrRetirar."', '".$bitcoin."', '".$banco."', '".$cuenta."', '".$tipo."', '".$titular."', 0, '".$tipoPago."' )";
+                $result = mysqli_query($conex->getLinkConnect(), $sql);
+
+                $exito = true;
+                $retId = "";
+                if ( !$result ) {
+                    $exito = false;
+                } else {
+                    $retId = mysqli_insert_id($conex->getLinkConnect());
+                }
+
+
+                if ( !empty($retId) && $tipoPago == "1" ) {
+
+                    foreach ( $this->gananciasPorPaquete as $ganPaq ) {
+
+                        if ( $ganPaq["ganancia"] >= $ganPaq["retiro_minimo"] ) {
+
+                            $sql = " insert into retiros_paquetes (retiro_cliente_id, paquete_cliente_id, valor_retiro) values ($retId, ".$ganPaq["paquete_cliente_id"].", '".$ganPaq["ganancia"]."' ) ";
+                            $result = mysqli_query($conex->getLinkConnect(), $sql);
+                            if ( !$result ) {
+                                $exito = false;
+                                break;
+                            }
+
                         }
 
                     }
 
                 }
-                
+
+                if ( !$exito ) {
+                    mysqli_commit($conex->getLinkConnect());
+                    echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "No es posible registrar tu solicitud en este momento." ] );
+                } else {
+                    echo json_encode( ["respuesta" => true, "msg" => "Tu solicitud se ha registrado, pronto se hara efectivo tu retiro." ] );
+                }
             }
+        } else if ( $tipoPago == "2" ) { // Por Referidos
+            
+            $exito = true;
+            $this->consultarDatosParaRetiroReferidos();
+            
+            if ( $this->valorPendientePorReferidos > 0 ) {
+            
+                $vlrComision = $this->valorPendientePorReferidos * ( COMISION_RETIRO / 100 );
+                $vlrRetirar = $this->valorPendientePorReferidos - $vlrComision;
+                
+                $sql = "insert into retiros_cliente ( cliente_id, valor_retiro, valor_comision, valor_pagado, bitcoin, banco, cuenta, tipo_cuenta, titular, estado, tipo_retiro ) values "
+                                                        . "( ".$_SESSION["clientId"].", '".$this->valorPendientePorReferidos."', '".$vlrComision."', '".$vlrRetirar."', '".$bitcoin."', '".$banco."', '".$cuenta."', '".$tipo."', '".$titular."', 0, '".$tipoPago."' )";
+                $result = mysqli_query($conex->getLinkConnect(), $sql);
+                
+                $exito = true;
+                $retId = "";
+                if ( !$result ) {
+                    $exito = false;
+                } else {
+                    $retId = mysqli_insert_id($conex->getLinkConnect());
+                }
+
+            }
+            
+            
+            
             
             if ( !$exito ) {
                 mysqli_commit($conex->getLinkConnect());
-                echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible registrar tu solicitud en este momento." ] );
+                echo json_encode( ["respuesta" => false, "error" => 2, "msg" => "No es posible registrar tu solicitud en este momento." ] );
             } else {
                 echo json_encode( ["respuesta" => true, "msg" => "Tu solicitud se ha registrado, pronto se hara efectivo tu retiro." ] );
             }
+            
         }
         
         mysqli_autocommit($conex->getLinkConnect(), TRUE); // turn ON auto

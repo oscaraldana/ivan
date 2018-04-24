@@ -1147,7 +1147,8 @@ main {
     transition: color 0.6s ease;
     -webkit-backface-visibility: hidden;
     width: 19.6875em;
-    padding: 0.9375em 0;
+    /*padding: 0.9375em 0;*/
+    margin-left: 10px;
     text-align: left;
     color: #606669;
   }

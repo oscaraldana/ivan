@@ -31,7 +31,7 @@ if(!file_exists("css/style.css")){
       <header class="pageHeader">
         <!-- Menu Trigger --> <button class="menu-trigger"> <span class="lines"></span>
         </button>
-        <!-- Logo --> <a class="headerLogo smoothScroll" href="#"> <img src="images/wolf_.jpg" width="60px" >
+        <!-- Logo --><a class="headerLogo smoothScroll" href="#"> <img src="images/wolvess.jpeg" width="60px" >
         </a> </header>
       <!-- Sidebar -->
        <div class="sidebar">

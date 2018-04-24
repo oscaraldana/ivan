@@ -147,8 +147,8 @@
                       </a>
             <ul class="sub">
               <li><a class="" href="javascript:;" onclick="cargarHtml('adm_paquetes');">Paquetes Clientes</a></li>
-              <!-- <li><a class="" href="javascript:;" onclick="cargarHtml('retirar');">Retiros</a></li>
-              <li><a class="" href="javascript:;" onclick="cargarHtml('histocompras');">Historial de Compra</a></li>
+              <li><a class="" href="javascript:;" onclick="cargarHtml('adm_retiros');">Retiros Clientes</a></li>
+              <!--<li><a class="" href="javascript:;" onclick="cargarHtml('histocompras');">Historial de Compra</a></li>
               -->
             </ul>
           </li>

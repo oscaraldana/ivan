@@ -13,7 +13,7 @@ include 'header.php';
               <div class="content">
                 <div class="container-template">
                   <h1> 
-                    <center><img src="images/wolf.png" width="120px" ></center>
+                      <center><img src="images/wolvess.jpeg" width="120px" ></center>
                     <!-- <i class="step icon-diamond size-36"></i>  -->
                     <span class="seconday">Wolves Traders Company</span> 
                     <!-- <span style="font-style: italic;">Company</span>  -->

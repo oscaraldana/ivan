@@ -93,7 +93,10 @@
                   <a href="javascript:;" onclick="miperfil()"><i class="icon_profile"></i> Mi Perfil</a>
               </li>
               <li>
-                  <a href="javascript:;" onclick="logout()"><i class="icon_key_alt"></i> Salir</a>
+                  <a href="javascript:;" onclick="cambiarContra()"><i class="icon_key_alt"></i> Cambiar Contraseña</a>
+              </li>
+              <li>
+                  <a href="javascript:;" onclick="logout()"><i class="arrow_back"></i> Salir</a>
               </li>
               <!--<li>
                 <a href="#"><i class="icon_mail_alt"></i> My Inbox</a>

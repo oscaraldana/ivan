@@ -392,9 +392,15 @@ function aceptarCompra(id){
     
 }
 
-function solicitarRetiro(){
+function solicitarRetiro(tipo){
     
-    var formaPago = $("#metodoPagoRetiro").val();
+    var formaPago = "";
+    if ( tipo == 1 ){
+        formaPago = $("#metodoPagoRetiro").val();
+    } else if ( tipo == 2 ) {
+        formaPago = $("#metodoPagoRetiroRef").val();
+    }
+    
     
     if ( formaPago !== "" && formaPago !== undefined ) {
     swal({
@@ -405,7 +411,7 @@ function solicitarRetiro(){
       })
       .then((willDelete) => {
         if (willDelete) {
-          confirmarRetiro(formaPago);
+          confirmarRetiro(formaPago, tipo);
         }
       });
     } else {
@@ -414,11 +420,12 @@ function solicitarRetiro(){
     
 }
 
-function confirmarRetiro(formaPago){
+function confirmarRetiro(formaPago, tipo){
     
     var parametros = {
         "solicitarRetiro" : true,
-        "formaPago" : formaPago
+        "formaPago" : formaPago,
+        "tipoPago" : tipo
     };
     $.ajax({
                 data:  parametros,
@@ -429,6 +436,7 @@ function confirmarRetiro(formaPago){
                         var result = JSON.parse(response);
                         if ( result.respuesta ) {
                             $("#modalClient").modal('hide');
+                            cargarHtml('retirar');
                             swal(result.msg);
 
                         } else {

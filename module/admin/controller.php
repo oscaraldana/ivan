@@ -23,11 +23,32 @@ if (isset($_POST["formSearch"]) && $_POST["formSearch"]){
 }
 
 
+if (isset($_POST["formSearchRet"]) && $_POST["formSearchRet"]){
+    
+    $admin = new admin();
+    
+    $values = array();
+    parse_str($_POST['datosForm'], $values);
+    
+    $admin->listarRetiros($values);
+    
+}
+
+
 if ( isset($_POST["consultapaquete"]) && $_POST["consultapaquete"] ){
     
     $admin = new admin();
     
     $admin->consultapaquete($_POST);
+    
+}
+
+
+if ( isset($_POST["consultaretiro"]) && $_POST["consultaretiro"] ){
+    
+    $admin = new admin();
+    
+    $admin->consultaretiro($_POST);
     
 }
 
@@ -41,6 +62,18 @@ if ( isset($_POST["actualizarPaquete"]) && $_POST["actualizarPaquete"] ) {
     $admin->actualizarPaquete($values);
     
 }
+
+if ( isset($_POST["actualizarRetiro"]) && $_POST["actualizarRetiro"] ) {
+
+    $admin = new admin();
+    
+    $values = array();
+    parse_str($_POST['datosForm'], $values);
+    
+    $admin->actualizarRetiro($values);
+    
+}
+
 
 
 

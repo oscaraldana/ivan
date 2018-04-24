@@ -138,6 +138,98 @@ class admin {
     
     
     
+    public function listarRetiros($dataForm){
+        
+        
+        //var_export($dataForm); 
+        
+        $cond = "";
+        $list = "";
+        if ( isset($dataForm["retestado"]) && $dataForm["retestado"] != "" ){
+            $cond .= ' AND retiros_cliente.estado = '.$dataForm["retestado"].' ';
+        }
+        if ( isset($dataForm["inisoli"]) && $dataForm["inisoli"] != "" ){
+            $cond .= ' AND retiros_cliente.fecha_solicitud >= \''.$dataForm["inisoli"].'\' ';
+        }
+        if ( isset($dataForm["finsoli"]) && $dataForm["finsoli"] != "" ){
+            $cond .= ' AND retiros_cliente.fecha_solicitud <= \''.$dataForm["finsoli"].'\' ';
+        }
+        
+        $conex = WolfConex::conex();
+        
+        $res = [];
+        
+        $sql = "select retiros_cliente.*, cliente.nombre as cliente 
+                from retiros_cliente
+                inner join cliente on cliente.cliente_id = retiros_cliente.cliente_id
+                where true $cond";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( $result ) {
+            
+            if ( mysqli_num_rows($result) > 0 ){
+                
+                while ($fila = mysqli_fetch_array($result)) {
+                    $res[] = $fila;
+                }
+                
+            }
+        }
+        
+        if ( count($res) > 0 ) {
+        
+            $list = '
+                <br>
+                <table class="table table-hover">
+                <tr>
+                    <th scope="row">Fecha Solicitud</th>
+                    <th scope="row">Cliente</th>
+                    <th scope="row">Valor</th>
+                    <th scope="row">Forma Pago</th>
+                    <th scope="row">Fecha Pago</th>
+                    <th scope="row">Estado</th>
+                  </tr>
+
+                  ';
+
+                foreach ( $res as $ret ) {
+
+                    $estado = $class = "";
+                    switch ( $ret["estado"] ) {
+                        case 0 : $estado = "Pendiente"; $class = "badge badgeP"; break;
+                        case 1 : $estado = "Pagado"; $class = "badge"; break;
+                        case 2 : $estado = "Rechazado"; $class = "badge badgeR"; break;
+                        case 3 : $estado = "Vencido"; $class = "badge badgeV"; break;
+                        
+                    }
+                    if ( !empty($ret["bitcoin"]) ){
+                        $forma = "BITCOIN";
+                    } else {
+                        $forma = $ret["banco"];
+                    }
+
+                    $list .='  <tr>
+                          <td>'.date("d/m/Y", strtotime($ret["fecha_solicitud"])).'</td>
+                          <td>'.$ret["cliente"].'</td>
+                          <td>$ '.$ret["valor_retiro"].'</td>
+                          <td>'.$forma.'</td>
+                          <td>'.$ret["fecha_pago"].'</td>
+                          <td><span class="'. $class.'" style="cursor:pointer;" onclick="editarRetiro('.$ret["retiro_id"].')">'. $estado.'</span></td>
+                        </tr>';
+
+                }
+                
+
+
+            $list .= '</table>';
+        } else {
+            $list .= '<br><h4>No hay registros para mostrar.</h4>';
+        }
+        
+       echo json_encode( ["respuesta" => true, "tabla" => $list ] );
+    }
+    
+    
+    
     public function consultapaquete () {
         
         if(isset($_POST["paquete_id"]) && !empty($_POST["paquete_id"]) ){
@@ -188,6 +280,67 @@ class admin {
     }
     
     
+    
+    public function consultaretiro () {
+        
+        if(isset($_POST["retiro_id"]) && !empty($_POST["retiro_id"]) ){
+    
+            $conex = WolfConex::conex();
+            
+            $sql = "select c.nombre, retcli.* ,
+                    case 
+                        when retcli.estado = 0 then 'Pendiente'
+                        when retcli.estado = 1 then 'Pagado'
+                        when retcli.estado = 2 then 'Rechazado'
+                        when retcli.estado = 3 then 'Vencido'
+                        else 'Indefinido'
+                    end as desc_estado,
+                    case 
+                    	when retcli.tipo_retiro = 1 then 'Inversion'
+                    	when retcli.tipo_retiro = 2 then 'Referidos'
+                    	else 'Indefinido'
+                   	end as tipo_des
+                    from retiros_cliente retcli
+                    inner join cliente c on c.cliente_id = retcli.cliente_id
+                    where retcli.retiro_id = ".$_POST["retiro_id"]." ";
+            $result = mysqli_query($conex->getLinkConnect(), $sql);
+            $row = mysqli_fetch_array($result);
+
+            if ( !mysqli_num_rows($result) > 0 ){
+                echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "Los datos del retiro no se encuentran disponibles!" ] );
+            } else {
+                
+                $states[0] = [ "0" => "Pendiente", "1" => "Pagado", "2" => "Rechazado" ];
+                $states[1] = [ "0" => "#eb984e", "1" => "#5dade2", "2" => "#c0392b" ];
+                $select = "<select class='form-control' name='selectEstado' id='selectEstado'>";
+                foreach ( $states[0] as $k => $val ){
+                    $selected = "";
+                    if ( $k == $row["estado"] ) { $selected = " selected "; }
+                    $select .= '<option value="'.$k.'" '.$selected.'>'.$val.'</option>';
+                }
+                $select .= '</select>';
+                
+                $formaPgo = "";
+                if( !empty($row["bitcoin"]) ) {
+                    $formaPgo .= "<tr><td>Forma Pago:</td><td class='text-right'>BITCOIN<td></tr>";
+                    $formaPgo .= "<tr><td>Cuenta Pago:</td><td class='text-right'>".$row["bitcoin"]."<td></tr>";
+                } else {
+                    $formaPgo .= "<tr><td>Forma Pago:</td><td class='text-right'>".$row["banco"]."<td></tr>";
+                    $formaPgo .= "<tr><td>Cuenta Pago:</td><td class='text-right'>".$row["cuenta"]."<td></tr>";
+                    $formaPgo .= "<tr><td>Tipo Cuenta:</td><td class='text-right'>".$row["tipo_cuenta"]."<td></tr>";
+                    $formaPgo .= "<tr><td>Titular Cuenta:</td><td class='text-right'>".$row["titular"]."<td></tr>";
+                }
+                
+                
+                if( isset($row["valor"]) ) { $row["valor"] = number_format($row["valor"], 2, ',', '.'); }
+                if( isset($row["fecha_solicitud"]) ) { $row["fecha_solicitud"] = date("d/m/Y", strtotime($row["fecha_solicitud"]) ); }
+                
+                echo json_encode( ["respuesta" => true, "msg" => "Datos de retiro", "datos" => $row, "estados" => $select, "formaPago" => $formaPgo ] );
+            }
+        }
+    }
+    
+
     public function actualizarPaquete ( $dataPost ) {
         
         if ( $dataPost["selectEstado"] == "1" && ( empty($dataPost["datefecinipaq"]) || empty($dataPost["datefecfinpaq"]) ) ) {
@@ -233,4 +386,41 @@ class admin {
         
         
     }
+    
+    
+    public function actualizarRetiro ( $dataPost ) {
+        
+        
+        $conex = WolfConex::conex();
+        
+        $sql = "update retiros_cliente set estado = '".$dataPost["selectEstado"]."', fecha_pago = now() where retiro_id = ".$dataPost["retiro_id"];
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            //echo "<script>parent.sweetal(\"No es posible actualizar tu perfil en este momento.\");</script>";
+            echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible modificar este retiro en este momento." ] );
+        } else {
+            
+            /*if ( $dataPost["selectEstado"] == "1" ) {
+                
+                $sql = "select * from bonos_referidos where paquete_cliente_id = ".$dataPost["paquete_id"];
+                $res = mysqli_query($conex->getLinkConnect(), $sql);
+                $bonoRef = mysqli_fetch_array($res);
+                if ( count($bonoRef) <= 0 ) {
+                    
+                    $sql = "insert into bonos_referidos (paquete_cliente_id, valor) values 
+                           ( ".$dataPost["paquete_id"].", '".( $paqAct["valor"] * 0.05 )."' );";
+                    $res = mysqli_query($conex->getLinkConnect(), $sql);
+                }
+
+                
+            }*/
+            
+            
+             echo json_encode( ["respuesta" => true, "msg" => "Retiro actualizado correctamente."] );
+        }
+        
+        
+    }
+    
+    
 }

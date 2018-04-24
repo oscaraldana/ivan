@@ -63,7 +63,7 @@ if ( isset($_POST["solicitarRetiro"]) && $_POST["solicitarRetiro"] ){
     
     $cliente = new cliente();
     
-    $cliente->procesarRetiro($_POST["formaPago"]);
+    $cliente->procesarRetiro($_POST["formaPago"], $_POST["tipoPago"]);
     
 }
 

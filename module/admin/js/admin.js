@@ -9,6 +9,11 @@ function consultarPaquetes (){
     buscarListaPaquetes();
 }
 
+
+function consultarRetiros () {
+    buscarListaRetiros();
+}
+
 function buscarListaPaquetes(){
    
    var parametros = {
@@ -24,6 +29,31 @@ function buscarListaPaquetes(){
                         var result = JSON.parse(response);
                         if ( result.respuesta ) {
                             $("#listaPaquetes").html(result.tabla);
+                            //swal(result.msg);
+
+                        } else {
+                            swal(result.msg);
+                        }
+                }
+    });
+    
+}
+
+function buscarListaRetiros(){
+   
+   var parametros = {
+        "formSearchRet" : true,
+        "datosForm" : $("#formSearch").serialize()
+    };
+    $.ajax({
+                data:  parametros,
+                url:   'controller.php',
+                type:  'post',
+                
+                success:  function (response) {
+                        var result = JSON.parse(response);
+                        if ( result.respuesta ) {
+                            $("#listaRetiros").html(result.tabla);
                             //swal(result.msg);
 
                         } else {
@@ -84,6 +114,52 @@ function editarPaquete (id) {
 }
 
 
+
+function editarRetiro (id) {
+    
+    var parametros = {
+            "consultaretiro" : true,
+            "retiro_id" : id
+        };
+        $.ajax({
+                    data:  parametros,
+                    url:   'controller.php',
+                    type:  'post',
+                    /*beforeSend: function () {
+                            $("#homeContent").html("Procesando, espere por favor...");
+                    },*/
+                    success:  function (response) {
+                            var result = JSON.parse(response);
+                            
+                        
+                            if ( result.respuesta ) {
+                                
+                                
+    
+                                $("#modal-title").html("Administrar Retiro");
+                                $("#modal-body").html("<form onsubmit='return false;' id='formactret' ><table class='table'>"+
+                                                      "<tr><td>Cliente:</td><td class='text-right'>"+result.datos.nombre+"<td></tr>"+
+                                                      "<tr><td>Valor:</td><td class='text-right'>US$ <b>"+result.datos.valor_retiro+"<b><td></tr>"+
+                                                      "<tr><td>Fecha de solicitud:</td><td class='text-right'>"+result.datos.fecha_solicitud+"<td></tr>"+
+                                                      "<tr><td>Tipo de pago:</td><td class='text-right'>"+result.datos.tipo_des+"<td></tr>"+
+                                                      ""+result.formaPago+""+
+                                                      "<tr><td>Estado:</td><td class='text-right'>"+result.estados+"<td></tr>"+
+                                                      "</table><input type='hidden' id='retiro_id' name='retiro_id' value='"+id+"'></form>"
+
+                                                     );
+                                $("#modal-footer").html('<input type="submit" class="btn btn-logg" style="font-size: 10px;" value="Guardar" onclick="modificarRetiro()"><button type="button" class="btn btn-default" data-dismiss="modal" style="font-size: 10px;">Cancelar</button>');           
+                                $("#modalPaq").modal();
+    //"<tr><td>Referencia Pago:</td><td class='text-right'>"+result.datos.referencia_pago+"<td></tr>"+
+                                                      
+                            } else {
+                                swal(result.msg);
+                            }
+                    }
+        });
+}
+
+
+
 function validarEstadoPaq() {
     var estadoSel = $("#selectEstado").val();
     
@@ -122,3 +198,31 @@ function modificarPaquete(){
                 }
     });
 }
+
+
+function modificarRetiro(){
+    
+    
+    var parametros = {
+        "actualizarRetiro" : true,
+        "datosForm" : $("#formactret").serialize()
+    };
+    $.ajax({
+                data:  parametros,
+                url:   'controller.php',
+                type:  'post',
+                
+                success:  function (response) {
+                        var result = JSON.parse(response);
+                        if ( result.respuesta ) {
+                            consultarPaquetes();
+                            swal(result.msg);
+                            $("#modalPaq").modal('hide');
+
+                        } else {
+                            swal(result.msg);
+                        }
+                }
+    });
+}
+
