@@ -56,7 +56,46 @@ if ( !isset($_SESSION["clientId"]) || ( isset($_SESSION["clientId"]) && empty($_
              right: 0;
              position: absolute;
              z-index: -1;   
-           }           
+           }  
+           
+           
+/* Radio button */
+.radiobtn {
+  display: none;
+}
+.buttons {
+  margin-left: -40px;
+}
+.buttons li {
+    padding-left: 30px;
+  display: block;
+}
+.buttons li label{
+  padding-left: 30px;
+  position: relative;
+  left: -25px;
+}
+.buttons li label:hover {
+  cursor: pointer;
+}
+.buttons li span {
+  display: inline-block;
+  position: relative;
+  top: 5px;
+  border: 2px solid #999;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+}
+.radiobtn:checked + span::before{
+  content: '';
+  border: 2px solid #fff;
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background-color:  #2b58c0;
+}   
+           
 </style>
 
 
@@ -173,6 +212,12 @@ if ( !isset($_SESSION["clientId"]) || ( isset($_SESSION["clientId"]) && empty($_
   </div>
 </div>
 
+
+<style>
+    
+    
+    
+</style>
 
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>

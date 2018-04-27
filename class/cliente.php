@@ -63,62 +63,72 @@ class cliente {
             echo "<script>parent.sweetal(\"Las claves ingresadas no coinciden.\");</script>";
             return;
         }
-        //if ( $_POST[""] )
+        if ( $_POST["aceptoterminos"] != "1" ) {
+            echo "<script>parent.sweetal(\"Para continuar, deberá aceptar los términos y condiciones.\");</script>";
+            return;
+        }
         
+        $ref = "null";
         
-        $sql = "select * from cliente where login = '".$datosForm["referido"]."' ";
-        $result = mysqli_query($conex->getLinkConnect(), $sql);
-        $row = mysqli_fetch_array($result);
-        
-        if ( !mysqli_num_rows($result) > 0 ){
-            echo "<script>parent.sweetal(\"El referido ".$datosForm["referido"]." no se encuentra en nuestra base de datos.\");</script>";
-            //echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "El referido ".$datosForm["referido"]." no se encuentra en nuestra base de datos" ] );
-        } else {
-            
-            $ref = $row["cliente_id"];
-            
-            $sql = "select * from cliente where login = '".$datosForm["usuario"]."' ";
+        if ( !empty($datosForm["referido"]) ) {
+            $sql = "select * from cliente where login = '".$datosForm["referido"]."' ";
             $result = mysqli_query($conex->getLinkConnect(), $sql);
             $row = mysqli_fetch_array($result);
 
-            if ( mysqli_num_rows($result) > 0 ){
-                echo "<script>parent.sweetal(\"El usuario ".$datosForm["usuario"]." ya existe en nuestro sistema.\");</script>";
-                //echo json_encode( ["respuesta" => false, "error" => 2, "msg" => "El usuario ".$datosForm["usuario"]." ya existe en nuestro sistema." ] );
-            } else {
-                $dir = __DIR__."/../module/client/img/clients/";
-                
-                
-                
-
-                //var_export($_FILES);
-                
-                $sql = "insert into cliente (nombre, login, contrasena, correo, estado, referido) values ('".$datosForm["nombre"]."', '".$datosForm["usuario"]."', '".md5($datosForm["clave1"])."', '".$datosForm["mail"]."', 1, ".$ref.")";
-                $result = mysqli_query($conex->getLinkConnect(), $sql);
-                if ( !$result ) {
-                    echo "<script>parent.sweetal(\"No es posible realizar el registro en este momento.\");</script>";
-                    //echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible registrar en este momento." ] );
-                } else {
-                    
-                    $clientId = mysqli_insert_id($conex->getLinkConnect());
-                    
-                    if (isset($_FILES['foto']['tmp_name'])) {
-                        $extencion = end(explode(".", $_FILES['foto']['name']));
-                        if (!copy($_FILES['foto']['tmp_name'], $dir.$clientId.".".$extencion)){
-                            error_log("Error al guardar la imagen");
-                        }
-                        
-                        $sql = " update cliente set foto = '".$clientId.".$extencion' where cliente_id = $clientId ";
-                        $result = mysqli_query($conex->getLinkConnect(), $sql);
-                   }
-                   echo "<script>parent.sweetal(\"El registro se ha realizado exitosamente.\"); parent.closeModal();</script>";
-                    //echo json_encode( ["respuesta" => true, "msg" => "Usuario registrado exitosamente." ] );
-                }
-                  
-                 
-            }
-            
-            
+            if ( !mysqli_num_rows($result) > 0 ){
+                echo "<script>parent.sweetal(\"El referido ".$datosForm["referido"]." no se encuentra en nuestra base de datos.\");</script>";
+                return;
+                //echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "El referido ".$datosForm["referido"]." no se encuentra en nuestra base de datos" ] );
+            } 
+            $ref = $row["cliente_id"];
         }
+        
+        
+            
+        
+
+        $sql = "select * from cliente where login = '".$datosForm["usuario"]."' ";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        $row = mysqli_fetch_array($result);
+
+        if ( mysqli_num_rows($result) > 0 ){
+            echo "<script>parent.sweetal(\"El usuario ".$datosForm["usuario"]." ya existe en nuestro sistema.\");</script>";
+            //echo json_encode( ["respuesta" => false, "error" => 2, "msg" => "El usuario ".$datosForm["usuario"]." ya existe en nuestro sistema." ] );
+        } else {
+            $dir = __DIR__."/../module/client/img/clients/";
+
+
+
+
+            //var_export($_FILES);
+
+            $sql = "insert into cliente (nombre, login, contrasena, correo, estado, referido) values ('".$datosForm["nombre"]."', '".$datosForm["usuario"]."', '".md5($datosForm["clave1"])."', '".$datosForm["mail"]."', 1, ".$ref.")";
+            $result = mysqli_query($conex->getLinkConnect(), $sql);
+            if ( !$result ) {
+                    echo "<script>parent.sweetal(\"No es posible realizar el registro en este momento.\");</script>";
+                //echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible registrar en este momento." ] );
+            } else {
+
+                $clientId = mysqli_insert_id($conex->getLinkConnect());
+
+                if (isset($_FILES['foto']['tmp_name'])) {
+                    $extencion = end(explode(".", $_FILES['foto']['name']));
+                    if (!copy($_FILES['foto']['tmp_name'], $dir.$clientId.".".$extencion)){
+                        error_log("Error al guardar la imagen");
+                    }
+
+                    $sql = " update cliente set foto = '".$clientId.".$extencion' where cliente_id = $clientId ";
+                    $result = mysqli_query($conex->getLinkConnect(), $sql);
+               }
+               echo "<script>parent.sweetal(\"El registro se ha realizado exitosamente.\"); parent.closeModal();</script>";
+                //echo json_encode( ["respuesta" => true, "msg" => "Usuario registrado exitosamente." ] );
+            }
+
+
+        }
+            
+            
+        
         
     }
     
@@ -621,15 +631,21 @@ class cliente {
         if ( empty($id) ){
             $id = $_SESSION["clientId"];
             
-            $sql = "select * from cliente where cliente_id = $id";
+            $sql = "select *, 
+                    ( coalesce ((select sum (b.valor) from bonos_referidos b where b.paquete_cliente_id in ( select p.paquete_cliente_id from paquetes_cliente p where p.cliente_id = cliente.cliente_id and p.estado = 1 )), 0 ) ) as ganancia
+                     from cliente where cliente.referido = $id";
             $result = mysqli_query($conex->getLinkConnect(), $sql);
             if ( !$result ) {
+                echo "PEROQ UIE PACHO!!!";
+                echo mysqli_error($conex->getLinkConnect());
                 return false;
             } else {
                 if ( !mysqli_num_rows($result) > 0 ){
+                    
                     return false;
                 } else {
                     while ($fila = mysqli_fetch_array($result)) {
+                        
                         $this->misReferidos[1][$fila["cliente_id"]] = $fila;
                         //$this->misReferidos[2][$id][] = $fila["cliente_id"];
                     }
@@ -639,7 +655,10 @@ class cliente {
             
         }
         
-        $sql = "select * from cliente where referido = $id";
+        $sql = "select ( coalesce ((select sum (b.valor) from bonos_referidos b where b.paquete_cliente_id in ( select p.paquete_cliente_id from paquetes_cliente p where p.cliente_id = c.cliente_id and p.estado = 1 )), 0 ) ) as ganancia
+                                , c.*
+                from cliente c
+                where c.referido = $id";
         $result = mysqli_query($conex->getLinkConnect(), $sql);
         if ( !$result ) {
             return false;
@@ -655,6 +674,7 @@ class cliente {
                 //return $res;
             }
         }
+        
     }
 
 
@@ -668,6 +688,10 @@ class cliente {
         
         $dir = "../client/img/clients/";
         
+        echo "<pre>";
+        var_export($this->misReferidos);
+        echo "</pre><hr>";
+        
         if($primero){
             $this->imprimirMisRef .= '<div class="hv-item">';
 
@@ -677,10 +701,11 @@ class cliente {
                 $img = $dir.$this->misReferidos[1][$id]["foto"];
             }
             $this->imprimirMisRef .= '<div class="hv-item-parent" title="d">
-                                        <div class="person"  data-toggle="tooltip" title="Soy el mejor...">
+                                        <div class="person"  data-toggle="tooltip" >
                                             <img src="'.$img.'"> 
                                             <p class="name">
-                                                '.$this->misReferidos[1][$id]["nombre"].'
+                                                '.$this->misReferidos[1][$id]["nombre"].'<br>
+                                                    '.$this->misReferidos[1][$id]["ganancia"].'
                                             </p>
                                         </div>
                                     </div>';

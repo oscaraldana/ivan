@@ -21,7 +21,8 @@ if(!file_exists("css/style.css")){
     <META NAME="robots" content="ALL">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> Wolves </title>
+    <title> Wolves Traders Company </title>
+    <link rel="shortcut icon" type="image/x-icon" href="/images/wolves.ico" />
     <!-- Windows 8 Tiles -->
     <meta name="msapplication-TileColor" content="#FFFFFF">
     <!-- ****** faviconit.com favicons ****** -->
@@ -64,7 +65,7 @@ if(!file_exists("css/style.css")){
             <li> <a class="smoothScroll" href="#tips-part" title="Tips Importantes">
                     <i class="step icon-light-bulb size-24"></i><span class="text">Tips Importantes</span></a> </li>
             <li> <a class="smoothScroll" href="module/client/" title="">
-                    <i class="step icon-identification size-24"></i><span class="text">Mi panel de control</span>
+                    <i class="step icon-identification size-24"></i><span class="text">Registrarme</span>
                 </a> 
             </li>
             <li> <a class="smoothScroll" href="#contact-form" title="Contact Form"><i class="step icon-envelope-1 size-24"></i><span class="text">Contact</span></a>

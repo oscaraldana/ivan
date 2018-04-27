@@ -2,8 +2,7 @@
 <html lang="en">
 
 <head>
-  <link rel="shortcut icon" href="img/favicon.png">
-
+  <link rel="shortcut icon" type="image/x-icon" href="/images/wolves.ico" />
   <title>Client Wolves Traders</title>
 
   <!-- Bootstrap CSS -->

@@ -28,8 +28,8 @@ include 'header.php';
                       <h2 class="in-point"> <span class="seconday" style="font-size: 50px;">Quienes somos?</span> </h2>
                   </div>
                   <div class=" content-template"><br>
-                    <p><strong>Somos un equipo de profesionales del trading. </strong></p>
-                    <p>Realizamos transacciones internacionales.</p>
+                    <p><strong>Somos un equipo de profesionales del trading. </strong></p><br>
+                    <p>En nuestra empresa, nuestra motivación más grande es trabajar para ayudar a cambiar el estilo de vida de nuestros inversionistas, ofrecemos excelentes rendimientos, para que puedan hacer realidad sus sueños. .</p>
                     
                   </div>
                   <!--<ul class="timeline">
@@ -563,16 +563,16 @@ include 'header.php';
             
             
             
-            <!-- FOUNDERS & TEAM SECTION-->
+            <!-- FOUNDERS & TEAM SECTION
             <section class="section-team" id="section-team">
-              <!-- Content -->
+              
               <div class="content">
                 <div class="container-template">
                   <div class="headergroup">
                     <h2> <span class="seconday">Meet our</span> <span>Fundador</span>
                     </h2>
                   </div>
-                  <!-- Team Members List -->
+                  
                   <ul class="team-members">
                     <li>
                       <div class="team-member-image"> <img src="images/Reza.jpg" alt="yours alone">
@@ -586,6 +586,7 @@ include 'header.php';
                 </div>
               </div>
             </section>
+            -->
             <section class="contact-form" id="contact-form">
               <div class="headergroup">
                 <h2> <span class="secondary">Contactenos</span></h2>

@@ -26,7 +26,8 @@
                     <div class="info-box dark-bg" style="text-align: center;">
                         <img src="img/modulos/<?= $paq["imagen"] ?>" height="100px" onclick="modalInfo(<?= $paq["paquete_id"] ?>)" style="cursor: pointer">
                     <div class="count" onclick="modalInfo(<?= $paq["paquete_id"] ?>)" style="cursor: pointer; font-size: 25px;"><?= $paq["nombre"] ?></div>
-                    <div class="title"><?= $paq["descripcion"] ?></div>
+                    <div>Invierte <h3 class="text-warning Bold "><b>US$ <?= number_format($paq["valor"], 0, ",", ".") ?></b></h3></div>
+                    <div class="text-primary"><?= $paq["descripcion"] ?></div>
                     <br>
                     <div class="btn btn-info  btn-sm" style="cursor: pointer; font-weight: 25px;" onclick="comprarPaquete(<?= $paq["paquete_id"] ?>)"><b>COMPRAR</b></div>
                   </div>
