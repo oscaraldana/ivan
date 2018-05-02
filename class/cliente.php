@@ -254,16 +254,23 @@ class cliente {
     }
     
     
-    public function consultarPaquetesCliente () {
+    public function consultarPaquetesCliente ( $params =[] ) {
      
+        $orden = "";
+        
         $conex = WolfConex::conex();
         
         $res = [];
         
+        if ( isset( $params["order"] ) ) {
+            $orden = " order by ".$params["order"]." ";
+        }
+        
         $sql = "select paquetes_cliente.fecha_registro, paquetes.nombre as paquete, paquetes.valor as valor, paquetes_cliente.estado as estado, tipo_pago "
                 . " from paquetes_cliente "
                 . " inner join paquetes on paquetes.paquete_id = paquetes_cliente.paquete_id"
-                . " where paquetes_cliente.cliente_id = ".$_SESSION["clientId"];
+                . " where paquetes_cliente.cliente_id = ".$_SESSION["clientId"]
+                . " $orden ";
         $result = mysqli_query($conex->getLinkConnect(), $sql);
         if ( !$result ) {
             return false;
@@ -622,6 +629,7 @@ class cliente {
         
     }
     
+    
 
     public function consultarReferidos($id=""){
         $conex = WolfConex::conex();
@@ -632,11 +640,19 @@ class cliente {
             $id = $_SESSION["clientId"];
             
             $sql = "select *, 
-                    ( coalesce ((select sum (b.valor) from bonos_referidos b where b.paquete_cliente_id in ( select p.paquete_cliente_id from paquetes_cliente p where p.cliente_id = cliente.cliente_id and p.estado = 1 )), 0 ) ) as ganancia
-                     from cliente where cliente.referido = $id";
+                        ( coalesce (
+			 (select sum(b.valor) 
+			 from bonos_referidos b 
+			 where b.paquete_cliente_id in ( 
+											select p.paquete_cliente_id 
+											from paquetes_cliente p 
+											where p.cliente_id = cliente.cliente_id 
+											and p.estado = 1 
+		    								) ) , 0  ) ) as ganancia 
+                        from cliente 
+                        where cliente.cliente_id = $id";
             $result = mysqli_query($conex->getLinkConnect(), $sql);
             if ( !$result ) {
-                echo "PEROQ UIE PACHO!!!";
                 echo mysqli_error($conex->getLinkConnect());
                 return false;
             } else {
@@ -655,7 +671,7 @@ class cliente {
             
         }
         
-        $sql = "select ( coalesce ((select sum (b.valor) from bonos_referidos b where b.paquete_cliente_id in ( select p.paquete_cliente_id from paquetes_cliente p where p.cliente_id = c.cliente_id and p.estado = 1 )), 0 ) ) as ganancia
+        $sql = "select ( coalesce ((select sum(b.valor) from bonos_referidos b where b.paquete_cliente_id in ( select p.paquete_cliente_id from paquetes_cliente p where p.cliente_id = c.cliente_id and p.estado = 1 )), 0 ) ) as ganancia
                                 , c.*
                 from cliente c
                 where c.referido = $id";
@@ -677,7 +693,7 @@ class cliente {
         
     }
 
-
+   
     public function imprimirReferidos ( $id = "" ) {
        // echo "<pre>"; var_Export($this->misReferidos[1]); echo "</pre>";
         $primero = false;
@@ -688,9 +704,9 @@ class cliente {
         
         $dir = "../client/img/clients/";
         
-        echo "<pre>";
+        /*echo "<pre>";
         var_export($this->misReferidos);
-        echo "</pre><hr>";
+        echo "</pre><hr>";*/
         
         if($primero){
             $this->imprimirMisRef .= '<div class="hv-item">';
@@ -705,7 +721,6 @@ class cliente {
                                             <img src="'.$img.'"> 
                                             <p class="name">
                                                 '.$this->misReferidos[1][$id]["nombre"].'<br>
-                                                    '.$this->misReferidos[1][$id]["ganancia"].'
                                             </p>
                                         </div>
                                     </div>';
@@ -726,7 +741,9 @@ class cliente {
                             $this->imprimirMisRef .= '<div class="hv-item-child">
                                                     <div class="person">
                                                         <img src="'.$img.'" alt="">
-                                                        <p class="name">'.$this->misReferidos[1][$idRefp]["nombre"].'</p>
+                                                        <p class="name">'.$this->misReferidos[1][$idRefp]["nombre"].'<br>
+                                                            <b>US$ '.number_format( $this->misReferidos[1][$idRefp]["ganancia"], 0, '.', ',' ).'</b>
+                                                            </p>
                                                     </div>
                                                 </div>';
                         }

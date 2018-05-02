@@ -48,7 +48,32 @@
              right: 0;
              position: absolute;
              z-index: -1;   
-           }           
+           }    
+           
+           
+ .reloj{
+ font-family: sans-serif;
+ color: #fff;
+ display: inline-block;
+ font-weight: 100;
+ text-align: center;
+ font-size: 10px;
+}
+ 
+.reloj > div{
+    padding: 5px;
+    border-radius: 3px;
+    background: #999999;
+    display: inline-block;
+ 
+}
+ 
+.reloj div > span{
+    padding: 5px;
+    border-radius: 3px;
+    background: rgba(57, 68, 84, 0.27);
+    display: inline-block;
+}
   </style>
 </head>
 
@@ -240,6 +265,10 @@
         
         $cliente->consultarGanancias();
         
+        /*echo "<pre>";
+        var_export($cliente->gananciasPorPaquete);
+        echo "</pre>";*/
+        
         ?>
           
         <div class="row">
@@ -274,6 +303,52 @@
         <!--/.row-->
 
 
+        <?php
+        
+        //$misPaq = $cliente->consultarPaquetesCliente( [ "orden" => "fecha_registro asc"] );
+        $script = "";
+        
+        if ( is_array($cliente->gananciasPorPaquete) && count($cliente->gananciasPorPaquete) > 0  ) {
+            
+            echo "<table class='table'>";
+            
+            echo "<tr><th>PAQUETE</th><th>FECHA COMPRA</th><th>VALOR PAQUETE</th><th>FECHA INICIO</th><th>FECHA FIN</th><th>GANANCIAS</th><th>VIGENCIA</th></tr>";
+            
+            foreach ( $cliente->gananciasPorPaquete as $paq ) { 
+
+                if ( $paq["estado"] == 1 ){
+                    
+                    echo "<tr><td>".$paq["nombre"]."</td><td>".date("d/m/Y", strtotime($paq["fecha_registro"]))."</td>";
+                    echo "<td>".$paq["valor"]."</td>";
+                    echo "<td>".date("d/m/Y", strtotime($paq["inicia"]))."</td>";
+                    echo "<td>".date("d/m/Y", strtotime($paq["finaliza"]))."</td>";
+                    echo "<td><span class='text-right'>".$paq["ganancia"]."</span></td>";
+                    echo '<td><div id="reloj_'.$paq["paquete_cliente_id"].'" class="reloj">
+                            <div> <div class="texto">Días</div> <span class="dias" id="dias_'.$paq["paquete_cliente_id"].'"></span> </div>
+                            <div> <div class="texto">Horas</div> <span class="horas" id="horas_'.$paq["paquete_cliente_id"].'"></span> </div>
+                            <div> <div class="texto">Minutos</div> <span class="minutos" id="minutos_'.$paq["paquete_cliente_id"].'"></span> </div>
+                            <div> <div class="texto">Segundos</div> <span class="segundos" id="segundos_'.$paq["paquete_cliente_id"].'"></span> </div>
+                        </div></td>';
+                    echo "</tr>";
+                    $script .= "
+                        alert('".date("m/d/Y", strtotime($paq["finaliza"]))."');
+                        alert(Date('".date("m/d/Y", strtotime($paq["finaliza"]))."'));
+                            var deadline_".$paq["paquete_cliente_id"]." = new Date('".date("m/d/Y", strtotime($paq["finaliza"]))."');
+                            initializeReloj('reloj_".$paq["paquete_cliente_id"]."', deadline_".$paq["paquete_cliente_id"].", ".$paq["paquete_cliente_id"].");
+                         
+                         ";
+                }
+                
+
+            }
+            
+            echo "</table>";
+        }
+        
+        ?>
+        
+        
+ 
         
        
 
@@ -412,6 +487,13 @@
           }
         });
       });
+      
+      
+    $( document ).ready(function() {
+        <?= $script ?>
+    });
+      
+      
     </script>
 
 </body>

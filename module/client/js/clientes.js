@@ -301,7 +301,7 @@ function comprarPaquete(id){
         case 1:
                 $("#modal-title").html("<img src='img/modulos/principiante.jpg' height='80px'>Paquete Principiante");
                 $("#modal-body").html('<ul class="nav nav-tabs"><li class="active"><a data-toggle="tab" href="#home">' +
-                                      '<i class="fa fa-bitcoin"></i> Bitcoin</a></li><li><a data-toggle="tab" href="#menu1"><img src="img/modulos/logo-bancolombia-Copiar.jpg" height="15px">Bancolombia</a></li>'+
+                                      '<i class="fa fa-bitcoin"></i> Bitcoin</a></li> <!-- <li><a data-toggle="tab" href="#menu1"> <img src="img/modulos/logo-bancolombia-Copiar.jpg" height="15px">Bancolombia</a></li> -->'+
                                       '</ul>'+
                                       '<div class="tab-content"><div id="home" class="tab-pane fade in active"><p>Para comprar el paquete <b>Principiante</b> envia la cantidad de <b>100 USD</b> '+
                                       'a la siguiente direccion de Bitcoin &oacute; escanea el codigo QR desde un movil: <br><div style="text-align:center;"> '+
@@ -319,7 +319,7 @@ function comprarPaquete(id){
         case 2:
                 $("#modal-title").html("<img src='img/modulos/aprendiz.jpg' height='80px'>Paquete Aprendiz");
                 $("#modal-body").html('<ul class="nav nav-tabs"><li class="active"><a data-toggle="tab" href="#home">' +
-                                      '<i class="fa fa-bitcoin"></i> Bitcoin</a></li><li><a data-toggle="tab" href="#menu1"><img src="img/modulos/logo-bancolombia-Copiar.jpg" height="15px">Bancolombia</a></li>'+
+                                      '<i class="fa fa-bitcoin"></i> Bitcoin</a></li> <!-- <li><a data-toggle="tab" href="#menu1"> <img src="img/modulos/logo-bancolombia-Copiar.jpg" height="15px">Bancolombia</a></li> -->'+
                                       '</ul>'+
                                       '<div class="tab-content"><div id="home" class="tab-pane fade in active"><p>Para comprar el paquete <b>Principiante</b> envia la cantidad de <b>1000 USD</b> '+
                                       'a la siguiente direccion de Bitcoin &oacute; escanea el codigo QR desde un movil: <br><div style="text-align:center;"> '+
@@ -337,7 +337,7 @@ function comprarPaquete(id){
         case 3:
                 $("#modal-title").html("<img src='img/modulos/trader.jpg' height='80px'>Paquete Trader");
                 $("#modal-body").html('<ul class="nav nav-tabs"><li class="active"><a data-toggle="tab" href="#home">' +
-                                      '<i class="fa fa-bitcoin"></i> Bitcoin</a></li><li><a data-toggle="tab" href="#menu1"><img src="img/modulos/logo-bancolombia-Copiar.jpg" height="15px">Bancolombia</a></li>'+
+                                      '<i class="fa fa-bitcoin"></i> Bitcoin</a></li> <!-- <li><a data-toggle="tab" href="#menu1"> <img src="img/modulos/logo-bancolombia-Copiar.jpg" height="15px">Bancolombia</a></li> -->'+
                                       '</ul>'+
                                       '<div class="tab-content"><div id="home" class="tab-pane fade in active"><p>Para comprar el paquete <b>Principiante</b> envia la cantidad de <b>2000 USD</b> '+
                                       'a la siguiente direccion de Bitcoin &oacute; escanea el codigo QR desde un movil: <br><div style="text-align:center;"> '+
@@ -355,7 +355,7 @@ function comprarPaquete(id){
         case 4:
                 $("#modal-title").html("<img src='img/modulos/master-vip.jpg' height='80px'>Paquete Master - VIP");
                 $("#modal-body").html('<ul class="nav nav-tabs"><li class="active"><a data-toggle="tab" href="#home">' +
-                                      '<i class="fa fa-bitcoin"></i> Bitcoin</a></li><li><a data-toggle="tab" href="#menu1"><img src="img/modulos/logo-bancolombia-Copiar.jpg" height="15px">Bancolombia</a></li>'+
+                                      '<i class="fa fa-bitcoin"></i> Bitcoin</a></li> <!-- <li><a data-toggle="tab" href="#menu1"> <img src="img/modulos/logo-bancolombia-Copiar.jpg" height="15px">Bancolombia</a></li> -->'+
                                       '</ul>'+
                                       '<div class="tab-content"><div id="home" class="tab-pane fade in active"><p>Para comprar el paquete <b>Principiante</b> envia la cantidad de <b>5000 USD</b> '+
                                       'a la siguiente direccion de Bitcoin &oacute; escanea el codigo QR desde un movil: <br><div style="text-align:center;"> '+
@@ -497,7 +497,7 @@ function formularioCuentasBancarias(id){
                                       '<br>'+
                                       'Digite la informaci&oacute;n de su cuenta Bancaria'+
                                       "<br><br><label for='banco'>Banco: <select class='form-control' id = 'nombreBanco' name = 'nombreBanco'>" +
-                                        '<option value="">--</option><option value="BANCO AV VILLAS">BANCO AV VILLAS</option><option value="BANCO BBVA COLOMBIA S.A.">BANCO BBVA COLOMBIA S.A.</option><option value="BANCO COLPATRIA">BANCO COLPATRIA</option><option value="BANCO DAVIVIENDA">BANCO DAVIVIENDA</option><option value="BANCO DE BOGOTA">BANCO DE BOGOTA</option><option value="BANCO DE OCCIDENTE">BANCO DE OCCIDENTE</option><option value="BANCO GNB SUDAMERIS">BANCO GNB SUDAMERIS</option><option value="BANCO POPULAR">BANCO POPULAR</option><option value="BANCOLOMBIA">BANCOLOMBIA</option><option value="CITIBANK ">CITIBANK </option><option value="BANCO CORPBANCA - HELM BANK S.A.">BANCO CORPBANCA - HELM BANK S.A.</option> </select>  ' +
+                                        '<option value="">--</option><option value="BANCO AV VILLAS">BANCO AV VILLAS</option><option value="BANCO BBVA COLOMBIA S.A.">BANCO BBVA COLOMBIA S.A.</option><option value="BANCO CAJA SOCIAL">BANCO CAJA SOCIAL</option><option value="BANCO COLPATRIA">BANCO COLPATRIA</option><option value="BANCO DAVIVIENDA">BANCO DAVIVIENDA</option><option value="BANCO DE BOGOTA">BANCO DE BOGOTA</option><option value="BANCO DE OCCIDENTE">BANCO DE OCCIDENTE</option><option value="BANCO GNB SUDAMERIS">BANCO GNB SUDAMERIS</option><option value="BANCO POPULAR">BANCO POPULAR</option><option value="BANCOLOMBIA">BANCOLOMBIA</option><option value="CITIBANK ">CITIBANK </option><option value="BANCO CORPBANCA - HELM BANK S.A.">BANCO CORPBANCA - HELM BANK S.A.</option> </select>  ' +
                                         "</label>"+
                                         "<label for='tipocuenta'>Tipo de Cuenta: <select class='form-control' id = 'tipoCuenta' name = 'tipoCuenta'>" +
                                         '<option value="">--</option><option value="AHORROS">AHORROS</option><option value="CORRIENTE">CORRIENTE</option> </select>  ' +
@@ -623,3 +623,54 @@ function olvideContra(){
     });
 
 }
+
+
+
+
+
+
+
+
+/*
+ * Para relog regresivo
+ * 
+ */
+
+function getTimeRemaining(endtime) {
+  var t = Date.parse(endtime) - Date.parse(new Date());
+  var segundos = Math.floor((t / 1000) % 60);
+  var minutos = Math.floor((t / 1000 / 60) % 60);
+  var horas = Math.floor((t / (1000 * 60 * 60)) % 24);
+  var dias = Math.floor(t / (1000 * 60 * 60 * 24));
+ 
+  return {
+    'total': t,
+    'dias': dias,
+    'horas': horas,
+    'minutos': minutos,
+    'segundos': segundos
+  };
+}
+ 
+function initializeReloj(id, endtime, cod) {
+  var reloj = document.getElementById(id);
+  
+  var diaSpan = reloj.querySelector('#dias_'+cod);
+  var horaSpan = reloj.querySelector('#horas_'+cod);
+  var minutoSpan = reloj.querySelector('#minutos_'+cod);
+  var segundoSpan = reloj.querySelector('#segundos_'+cod);
+ 
+  function updateReloj() {
+    var t = getTimeRemaining(endtime);
+    diaSpan.innerHTML = t.dias;
+    horaSpan.innerHTML = ('0' + t.horas).slice(-2);
+    minutoSpan.innerHTML = ('0' + t.minutos).slice(-2);
+    segundoSpan.innerHTML = ('0' + t.segundos).slice(-2);
+    if (t.total <= 0) {
+      clearInterval(timeinterval);
+    }
+  }
+  updateReloj();
+  var timeinterval = setInterval(updateReloj, 1000);
+}
+ 
