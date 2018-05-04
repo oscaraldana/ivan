@@ -31,6 +31,7 @@
   <link href="../client/css/xcharts.min.css" rel=" stylesheet">
   <link href="../client/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
   <link href="../client/css/bootstrap-select.min.css" rel="stylesheet">
+  <link href="../../css/datatables.css" rel="stylesheet">
   <!-- =======================================================
     Theme Name: NiceAdmin
     Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -370,6 +371,7 @@
     <script src="js/admin.js"></script>
     <script src="../client/js/sweetalert.min.js"></script>
     <script src="../client/js/bootstrap-select.js"></script>
+    <script src="../../js/datatables.js"></script>
     <script>
       //knob
       $(function() {

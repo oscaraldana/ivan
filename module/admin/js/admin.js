@@ -29,6 +29,7 @@ function buscarListaPaquetes(){
                         var result = JSON.parse(response);
                         if ( result.respuesta ) {
                             $("#listaPaquetes").html(result.tabla);
+                            $('#tablePaqAdmin').DataTable();
                             //swal(result.msg);
 
                         } else {

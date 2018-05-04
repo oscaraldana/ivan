@@ -43,6 +43,12 @@ if ( isset($_POST["miperfil"]) && $_POST["miperfil"] ){
     
 }
 
+if ( isset($_POST["cambiarUsuario"]) && $_POST["cambiarUsuario"] ) {
+    
+    $cliente = new cliente();
+    
+    $cliente->cambiarUsuario();
+}
 
 if ( isset($_POST["aceptarCompra"]) && $_POST["aceptarCompra"] ){
     

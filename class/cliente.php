@@ -133,6 +133,39 @@ class cliente {
     }
     
     
+    public function cambiarUsuario(){
+        
+        if ( (isset($_POST["idUsuario"]) && !empty($_POST["idUsuario"])) && ( isset($_SESSION["clientIsAdmin"]) && $_SESSION["clientIsAdmin"] ) ) {
+        
+            $conex = WolfConex::conex();
+
+            $sql = "select * from cliente where cliente_id = '".$_POST["idUsuario"]."'";
+            $result = mysqli_query($conex->getLinkConnect(), $sql);
+            $row = mysqli_fetch_array($result);
+
+            //$result = $conex->Execute($sql);
+            if ( !mysqli_num_rows($result) > 0 ){
+                echo json_encode( ["respuesta" => false ] );
+            } else {
+
+                unset($_SESSION["clientIsAdmin"]);
+                $_SESSION["clientId"] = $row["cliente_id"];
+                $_SESSION["clientNombre"] = $row["nombre"];
+                $_SESSION["clientLogin"] = $row["login"];
+                $_SESSION["clientImg"] = $row["foto"];
+                if ( $row["es_admin"] ){
+                    $_SESSION["clientIsAdmin"] = $row["es_admin"];
+                }
+
+                echo json_encode( [ "respuesta" => true, "usuario" => $row["login"] ] );
+            }
+        } else {
+            echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "No es posible realizar tu solicitud en este momento!" ] );
+        }
+        
+        
+    }
+    
     public function miPerfil(){
         
         
@@ -297,7 +330,8 @@ class cliente {
         $sql = "select * 
                     from paquetes_cliente 
                     inner join paquetes on paquetes.paquete_id = paquetes_cliente.paquete_id 
-                    where paquetes_cliente.cliente_id = ".$_SESSION["clientId"]." and paquetes_cliente.estado = 1";
+                    where paquetes_cliente.cliente_id = ".$_SESSION["clientId"]." and paquetes_cliente.estado = 1"
+                . " order by paquetes_cliente.finaliza desc ";
         $result = mysqli_query($conex->getLinkConnect(), $sql);
         if ( $result && mysqli_num_rows($result) > 0 ) {
            
@@ -771,7 +805,11 @@ class cliente {
 
                 $this-> imprimirMisRef .= '<div class="hv-item-parent">
                                                     <div class="person">
-                                                        <img src="'.$img.'" alt="">
+                                                        <img src="'.$img.'" alt="" ';
+                if ( isset($_SESSION["clientIsAdmin"]) && $_SESSION["clientIsAdmin"] ) {
+                    $this->imprimirMisRef .= ' ondblclick="cambiarUsuario('.$id.');" ';
+                }
+                $this->imprimirMisRef .= '>
                                                         <p class="name">'.$this->misReferidos[1][$id]["nombre"].'</p>
                                                     </div>
                                                 </div>';
@@ -796,7 +834,11 @@ class cliente {
                 }
                 $this->imprimirMisRef .= '<div class="hv-item-child">
                                         <div class="person">
-                                            <img src="'.$img.'" alt="">
+                                            <img src="'.$img.'" alt=""';
+                if ( isset($_SESSION["clientIsAdmin"]) && $_SESSION["clientIsAdmin"] ) {
+                    $this->imprimirMisRef .= ' ondblclick="cambiarUsuario('.$id.');" ';
+                }
+                $this->imprimirMisRef .= '>
                                             <p class="name">'.$this->misReferidos[1][$id]["nombre"].'</p>
                                         </div>
                                     </div>';

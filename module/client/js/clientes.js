@@ -625,6 +625,39 @@ function olvideContra(){
 }
 
 
+function cambiarUsuario(id){
+     swal({
+        title: "Confirmar Solicitud!",
+        text: "Confirma que desea loguearse como este cliente?",
+        buttons: true,
+        dangerMode: false,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+            var parametros = {
+                "cambiarUsuario" : true,
+                "idUsuario" : id
+            };
+            
+            $.ajax({
+                    data:  parametros,
+                    url:   '../client/controller.php',
+                    type:  'post',
+
+                    success:  function (response) {
+                            var result = JSON.parse(response);
+                            if ( result.respuesta ) {
+                                
+                                window.location.href = "../client";
+                            } else {
+                                swal(result.msg);
+                            }
+                    }
+           });
+        }
+      });
+}
+
 
 
 
@@ -662,12 +695,22 @@ function initializeReloj(id, endtime, cod) {
  
   function updateReloj() {
     var t = getTimeRemaining(endtime);
-    diaSpan.innerHTML = t.dias;
-    horaSpan.innerHTML = ('0' + t.horas).slice(-2);
-    minutoSpan.innerHTML = ('0' + t.minutos).slice(-2);
-    segundoSpan.innerHTML = ('0' + t.segundos).slice(-2);
+    
     if (t.total <= 0) {
+        diaSpan.innerHTML = "0";
+        horaSpan.innerHTML = 0;
+        minutoSpan.innerHTML = 0;
+        segundoSpan.innerHTML = 0;  
+        diaSpan.style.backgroundColor = "#ff4d4d"; 
+        horaSpan.style.backgroundColor = "#ff4d4d"; 
+        minutoSpan.style.backgroundColor = "#ff4d4d"; 
+        segundoSpan.style.backgroundColor = "#ff4d4d"; 
       clearInterval(timeinterval);
+    } else {
+        diaSpan.innerHTML = t.dias;
+        horaSpan.innerHTML = ('0' + t.horas).slice(-2);
+        minutoSpan.innerHTML = ('0' + t.minutos).slice(-2);
+        segundoSpan.innerHTML = ('0' + t.segundos).slice(-2);
     }
   }
   updateReloj();

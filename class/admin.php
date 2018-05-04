@@ -89,7 +89,8 @@ class admin {
         
             $list = '
                 <br>
-                <table class="table table-hover">
+                <table class="table table-hover" id="tablePaqAdmin">
+                <thead>
                 <tr>
                     <th scope="row">Fecha Compra</th>
                     <th scope="row">Cliente</th>
@@ -99,7 +100,8 @@ class admin {
                     <th scope="row">Ref Compra</th>
                     <th scope="row">Estado</th>
                   </tr>
-
+                  </thead>
+                  <tbody>
                   ';
 
                 foreach ( $res as $paq ) {
@@ -127,7 +129,7 @@ class admin {
                 
 
 
-            $list .= '</table>';
+            $list .= '</tbody></table>';
         } else {
             $list .= '<br><h4>No hay registros para mostrar.</h4>';
         }

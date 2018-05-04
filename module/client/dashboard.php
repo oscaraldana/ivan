@@ -331,8 +331,6 @@
                         </div></td>';
                     echo "</tr>";
                     $script .= "
-                        alert('".date("m/d/Y", strtotime($paq["finaliza"]))."');
-                        alert(Date('".date("m/d/Y", strtotime($paq["finaliza"]))."'));
                             var deadline_".$paq["paquete_cliente_id"]." = new Date('".date("m/d/Y", strtotime($paq["finaliza"]))."');
                             initializeReloj('reloj_".$paq["paquete_cliente_id"]."', deadline_".$paq["paquete_cliente_id"].", ".$paq["paquete_cliente_id"].");
                          
