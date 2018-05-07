@@ -305,7 +305,7 @@ function comprarPaquete(id){
                                       '</ul>'+
                                       '<div class="tab-content"><div id="home" class="tab-pane fade in active"><p>Para comprar el paquete <b>Principiante</b> envia la cantidad de <b>100 USD</b> '+
                                       'a la siguiente direccion de Bitcoin &oacute; escanea el codigo QR desde un movil: <br><div style="text-align:center;"> '+
-                                      '<img src="img/modulos/qr.png" width="150px;"><br><b>18YRQ5po6Jbttjb7jGD6HjTA26krhjHXHG</b></div> <br>'+
+                                      '<img src="img/modulos/qr.png" width="150px;"><br><b>1HZ2wMzf7BPKyoKnw3Y9RAnxJCM9BJMoEK</b></div> <br>'+
                                       'Despues de efectuar el pago ingrese su direccion bitcoin de pago y haz click en confirmar pago.   <div style="text-align:center;">'+
                                       '<input class="form-control round-input" size="20" type="text" name="transaccionBitCoin" id="transaccionBitCoin"></div></p></div>'+
                                       
@@ -323,7 +323,7 @@ function comprarPaquete(id){
                                       '</ul>'+
                                       '<div class="tab-content"><div id="home" class="tab-pane fade in active"><p>Para comprar el paquete <b>Principiante</b> envia la cantidad de <b>1000 USD</b> '+
                                       'a la siguiente direccion de Bitcoin &oacute; escanea el codigo QR desde un movil: <br><div style="text-align:center;"> '+
-                                      '<img src="img/modulos/qr.png" width="150px;"><br><b>18YRQ5po6Jbttjb7jGD6HjTA26krhjHXHG</b></div> <br>'+
+                                      '<img src="img/modulos/qr.png" width="150px;"><br><b>1HZ2wMzf7BPKyoKnw3Y9RAnxJCM9BJMoEK</b></div> <br>'+
                                       'Despues de efectuar el pago ingrese su direccion bitcoin de pago y haz click en confirmar pago.   <div style="text-align:center;">'+
                                       '<input class="form-control round-input" size="20" type="text" name="transaccionBitCoin" id="transaccionBitCoin"></div></p></div>'+
                                       
@@ -341,7 +341,7 @@ function comprarPaquete(id){
                                       '</ul>'+
                                       '<div class="tab-content"><div id="home" class="tab-pane fade in active"><p>Para comprar el paquete <b>Principiante</b> envia la cantidad de <b>2000 USD</b> '+
                                       'a la siguiente direccion de Bitcoin &oacute; escanea el codigo QR desde un movil: <br><div style="text-align:center;"> '+
-                                      '<img src="img/modulos/qr.png" width="150px;"><br><b>18YRQ5po6Jbttjb7jGD6HjTA26krhjHXHG</b></div> <br>'+
+                                      '<img src="img/modulos/qr.png" width="150px;"><br><b>1HZ2wMzf7BPKyoKnw3Y9RAnxJCM9BJMoEK</b></div> <br>'+
                                       'Despues de efectuar el pago ingrese su direccion bitcoin de pago y haz click en confirmar pago.   <div style="text-align:center;">'+
                                       '<input class="form-control round-input" size="20" type="text" name="transaccionBitCoin" id="transaccionBitCoin"></div></p></div>'+
                                       
@@ -359,7 +359,7 @@ function comprarPaquete(id){
                                       '</ul>'+
                                       '<div class="tab-content"><div id="home" class="tab-pane fade in active"><p>Para comprar el paquete <b>Principiante</b> envia la cantidad de <b>5000 USD</b> '+
                                       'a la siguiente direccion de Bitcoin &oacute; escanea el codigo QR desde un movil: <br><div style="text-align:center;"> '+
-                                      '<img src="img/modulos/qr.png" width="150px;"><br><b>18YRQ5po6Jbttjb7jGD6HjTA26krhjHXHG</b></div> <br>'+
+                                      '<img src="img/modulos/qr.png" width="150px;"><br><b>1HZ2wMzf7BPKyoKnw3Y9RAnxJCM9BJMoEK</b></div> <br>'+
                                       'Despues de efectuar el pago ingrese su direccion bitcoin de pago y haz click en confirmar pago.   <div style="text-align:center;">'+
                                       '<input class="form-control round-input" size="20" type="text" name="transaccionBitCoin" id="transaccionBitCoin"></div></p></div>'+
                                       
