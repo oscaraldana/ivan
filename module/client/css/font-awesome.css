@@ -1165,6 +1165,9 @@
 .fa-file:before {
   content: "\f15b";
 }
+.fa-donate:before {
+  content: "\f4b9";
+}
 .fa-file-text:before {
   content: "\f15c";
 }

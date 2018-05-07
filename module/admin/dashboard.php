@@ -367,8 +367,8 @@
     <script src="../client/js/sparklines.js"></script>
     <script src="../client/js/charts.js"></script>
     <script src="../client/js/jquery.slimscroll.min.js"></script>
-    <script src="../client/js/clientes.js"></script>
-    <script src="js/admin.js"></script>
+    <script src="../client/js/clientes.js?v=<?php echo time();?>"></script>
+    <script src="js/admin.js?v=<?php echo time();?>"></script>
     <script src="../client/js/sweetalert.min.js"></script>
     <script src="../client/js/bootstrap-select.js"></script>
     <script src="../../js/datatables.js"></script>

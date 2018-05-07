@@ -93,3 +93,8 @@ if ( isset($_POST["cambiarContra"]) && $_POST["cambiarContra"] ) {
     parse_str($_POST['datosForm'], $values);
     $cliente->guardarNuevaContra($values);
 }
+
+if ( isset($_POST["dataComprarPaquete"]) && $_POST["dataComprarPaquete"] ) {
+    $cliente = new cliente();
+    $cliente->infoComprarPaquete();
+}

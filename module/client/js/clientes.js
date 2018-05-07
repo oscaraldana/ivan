@@ -295,13 +295,40 @@ function modalInfo(id){
 
 function comprarPaquete(id){
     
+     var parametros = {
+        "dataComprarPaquete" : true,
+        "idPaquete" : id
+    };
+    $.ajax({
+                data:  parametros,
+                url:   'controller.php',
+                type:  'post',
+                
+                success:  function (response) {
+                        var result = JSON.parse(response);
+                        if ( result.respuesta ) {
+                            //$("#modalClient").modal('hide');
+                            //swal(result.msg);
+                            $("#modal-title").html(result.title);
+                            $("#modal-body").html(result.body);
+                            $("#modal-footer").html(result.footer);
+                            $("#modalBuy").modal();
+
+                        } else {
+                            swal(result.msg);
+                        }
+                }
+    });
     
-   $("#modal-footer").html('<button type="button" class="btn btn-info" onclick="aceptarCompra('+id+')">Confirmar Pago</button><button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>');
-   switch (id) {
+    /*
+    $("#modal-footer").html('<button type="button" class="btn btn-info" onclick="aceptarCompra('+id+')">Confirmar Pago</button><button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>');
+    switch (id) {
         case 1:
                 $("#modal-title").html("<img src='img/modulos/principiante.jpg' height='80px'>Paquete Principiante");
                 $("#modal-body").html('<ul class="nav nav-tabs"><li class="active"><a data-toggle="tab" href="#home">' +
-                                      '<i class="fa fa-bitcoin"></i> Bitcoin</a></li> <!-- <li><a data-toggle="tab" href="#menu1"> <img src="img/modulos/logo-bancolombia-Copiar.jpg" height="15px">Bancolombia</a></li> -->'+
+                                      '<i class="fa fa-bitcoin"></i> Bitcoin</a></li> '+
+                                      '<!-- <li><a data-toggle="tab" href="#menu1"> <img src="img/modulos/logo-bancolombia-Copiar.jpg" height="15px">Bancolombia</a></li> -->'+
+                                      '<li><a data-toggle="tab" href="#reinvertirTab"><i class="fa fa-exchange"></i> Reinvertir</a></li> '+
                                       '</ul>'+
                                       '<div class="tab-content"><div id="home" class="tab-pane fade in active"><p>Para comprar el paquete <b>Principiante</b> envia la cantidad de <b>100 USD</b> '+
                                       'a la siguiente direccion de Bitcoin &oacute; escanea el codigo QR desde un movil: <br><div style="text-align:center;"> '+
@@ -310,11 +337,20 @@ function comprarPaquete(id){
                                       '<input class="form-control round-input" size="20" type="text" name="transaccionBitCoin" id="transaccionBitCoin"></div></p></div>'+
                                       
                                       '<div id="menu1" class="tab-pane fade"><p>Para comprar el paquete <b>Principiante</b> consigna la cantidad de <b>100 USD</b> '+
+                                      'a la siguiente cuenta de ahorros de Bancolombia: </p><br><div style="text-align:center;">'+
+                                      '<img src="img/modulos/qr.png" width="150px;"><br><b>Ahorros xxxx-xxxxxxx</b></div> <br>'+
+                                      'Despues de realizar la consignacion ingrese el codigo de la transferencia y haz click en confirmar pago.   <div style="text-align:center;">'+
+                                      '<input class="form-control round-input" size="20" type="text" name="transaccionBanco" id="transaccionBanco"></div></p></div>'+
+                                      
+                                      '<div id="reinvertirTab" class="tab-pane fade"><p>Para comprar el paquete <b>Principiante</b> consigna la cantidad de <b>100 USD</b> '+
                                       'a la siguiente cuenta de ahorros de Bancolombia: <br><div style="text-align:center;"></p>'+
                                       '<img src="img/modulos/qr.png" width="150px;"><br><b>Ahorros xxxx-xxxxxxx</b></div> <br>'+
                                       'Despues de realizar la consignacion ingrese el codigo de la transferencia y haz click en confirmar pago.   <div style="text-align:center;">'+
                                       '<input class="form-control round-input" size="20" type="text" name="transaccionBanco" id="transaccionBanco"></div></p></div>'+
-                                      '</div>    </div></div>');
+                                      
+                                      '</div>  </div>'+
+                                      
+                                      '</div>');
                 break;
         case 2:
                 $("#modal-title").html("<img src='img/modulos/aprendiz.jpg' height='80px'>Paquete Aprendiz");
@@ -374,6 +410,7 @@ function comprarPaquete(id){
             console.log("Sorry, we are out of " + id + ".");
 }
    $("#modalBuy").modal();
+    */
 }
 
 

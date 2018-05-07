@@ -439,7 +439,7 @@
     <script src="js/sparklines.js"></script>
     <script src="js/charts.js"></script>
     <script src="js/jquery.slimscroll.min.js"></script>
-    <script src="js/clientes.js"></script>
+    <script src="js/clientes.js?v=<?php echo time();?>"></script>
     <script src="js/sweetalert.min.js"></script>
     <script>
       //knob

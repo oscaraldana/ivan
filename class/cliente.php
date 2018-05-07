@@ -944,6 +944,98 @@ class cliente {
     }
     
     
+    public function infoComprarPaquete(){
+        
+        if ( !isset($_POST["idPaquete"]) || (isset($_POST["idPaquete"]) && empty($_POST["idPaquete"])) ){
+            echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible la compra de paquetes en este momento." ] );
+        } else {
+            
+            $respuesta = [];
+            
+            $conex = WolfConex::conex();
+        
+            $sql = "select * from paquetes where paquete_id = ".$_POST["idPaquete"];
+            $result = mysqli_query($conex->getLinkConnect(), $sql);
+            if ( !$result || !mysqli_num_rows($result) > 0 ) {
+                echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "El paquete que intenta comprar no se encuentra correctamente configurado." ] );
+                return;
+            } else {
+                
+                $row = mysqli_fetch_array($result);
+            
+
+                $body = '<ul class="nav nav-tabs"><li class="active"><a data-toggle="tab" href="#home">' .
+                                          '<i class="fa fa-bitcoin"></i> Bitcoin</a></li> '.
+                                          '<!-- <li><a data-toggle="tab" href="#menu1"> <img src="img/modulos/logo-bancolombia-Copiar.jpg" height="15px">Bancolombia</a></li> -->'.
+                                          '<li><a data-toggle="tab" href="#reinvertirTab"><i class="fa fa-exchange"></i> Reinvertir</a></li> '.
+                                          '</ul>'.
+                                          '<div class="tab-content"><div id="home" class="tab-pane fade in active"><p>Para comprar el paquete <b>'.$row["nombre"].'</b> envia la cantidad de <b>$USD '.number_format($row["valor"], 0, "", ".").' </b> '.
+                                          'a la siguiente direccion de Bitcoin &oacute; escanea el codigo QR desde un movil: <br><div style="text-align:center;"> '.
+                                          '<img src="img/modulos/qr.png" width="150px;"><br><b>1HZ2wMzf7BPKyoKnw3Y9RAnxJCM9BJMoEK</b></div> <br>'.
+                                          'Despues de efectuar el pago ingrese su direccion bitcoin de pago y haz click en confirmar pago.   <div style="text-align:center;">'.
+                                          '<input class="form-control round-input" size="20" type="text" name="transaccionBitCoin" id="transaccionBitCoin"></div></p></div>'.
+
+                                          '<div id="menu1" class="tab-pane fade"><p>Para comprar el paquete <b>Principiante</b> consigna la cantidad de <b>100 USD</b> '.
+                                          'a la siguiente cuenta de ahorros de Bancolombia: </p><br><div style="text-align:center;">'.
+                                          '<img src="img/modulos/qr.png" width="150px;"><br><b>Ahorros xxxx-xxxxxxx</b></div> <br>'.
+                                          'Despues de realizar la consignacion ingrese el codigo de la transferencia y haz click en confirmar pago.   <div style="text-align:center;">'.
+                                          '<input class="form-control round-input" size="20" type="text" name="transaccionBanco" id="transaccionBanco"></div></p></div>'.
+
+                                          '<div id="reinvertirTab" class="tab-pane fade"><p>Para comprar el paquete <b>Principiante</b> consigna la cantidad de <b>100 USD</b> '.
+                                          'a la siguiente cuenta de ahorros de Bancolombia: <br><div style="text-align:center;"></p>'.
+                                          '<img src="img/modulos/qr.png" width="150px;"><br><b>Ahorros xxxx-xxxxxxx</b></div> <br>'.
+                                          'Despues de realizar la consignacion ingrese el codigo de la transferencia y haz click en confirmar pago.   <div style="text-align:center;">'.
+                                          '<input class="form-control round-input" size="20" type="text" name="transaccionBanco" id="transaccionBanco"></div></p></div>'.
+
+                                          '</div>  </div>'.
+
+                                          '</div>';
+
+                switch ( $_POST["idPaquete"] ) {
+
+                    case 1 : 
+                                $respuesta["respuesta"] = true;
+                                $respuesta["title"] = "<img src='img/modulos/principiante.jpg' height='80px'>Paquete Principiante";
+                                $respuesta["body"] = $body;
+                                $respuesta["footer"] = '<button type="button" class="btn btn-info" onclick="aceptarCompra('.$_POST["idPaquete"].')">Confirmar Pago</button><button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>';
+
+                            break;
+
+                    case 2 : 
+                                $respuesta["respuesta"] = true;
+                                $respuesta["title"] = "<img src='img/modulos/aprendiz.jpg' height='80px'>Paquete Inversionista";
+                                $respuesta["body"] = $body;
+                                $respuesta["footer"] = '<button type="button" class="btn btn-info" onclick="aceptarCompra('.$_POST["idPaquete"].')">Confirmar Pago</button><button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>';
+
+                            break;
+
+                    case 3 : 
+                                $respuesta["respuesta"] = true;
+                                $respuesta["title"] = "<img src='img/modulos/trader.jpg' height='80px'>Paquete Trader";
+                                $respuesta["body"] = $body;
+                                $respuesta["footer"] = '<button type="button" class="btn btn-info" onclick="aceptarCompra('.$_POST["idPaquete"].')">Confirmar Pago</button><button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>';
+
+                            break;
+
+                    case 4 : 
+                                $respuesta["respuesta"] = true;
+                                $respuesta["title"] = "<img src='img/modulos/master-vip.jpg' height='80px'>Paquete Master - VIP";
+                                $respuesta["body"] = $body;
+                                $respuesta["footer"] = '<button type="button" class="btn btn-info" onclick="aceptarCompra('.$_POST["idPaquete"].')">Confirmar Pago</button><button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>';
+
+                            break;
+
+                }
+            }
+       
+            
+            echo json_encode( $respuesta );
+        }
+        
+       
+    }
+    
+    
     public function primerDiaMes() {
       $month = date('m');
       $year = date('Y');
