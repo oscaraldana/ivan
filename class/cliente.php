@@ -963,6 +963,18 @@ class cliente {
                 
                 $row = mysqli_fetch_array($result);
             
+                
+                $this->consultarDatosParaRetiro();
+                $this->consultarDatosParaRetiroReferidos();
+                
+                $select = "<label for='selectforpag'><select id='selectforpag' class='form-control'>";
+                if( ! ( $this->dispoParaRetiro >= $row["retiro_minimo"] || $this->valorPendientePorReferidos >= $row["retiro_minimo"] ) ) {
+                    $select  .= "<option>No tiene opcion</option>";
+                } else {
+                    $select  .= "<option>hay una opcion</option>";
+                }
+                
+                $select  .= "</select></label>";
 
                 $body = '<ul class="nav nav-tabs"><li class="active"><a data-toggle="tab" href="#home">' .
                                           '<i class="fa fa-bitcoin"></i> Bitcoin</a></li> '.
@@ -981,9 +993,10 @@ class cliente {
                                           'Despues de realizar la consignacion ingrese el codigo de la transferencia y haz click en confirmar pago.   <div style="text-align:center;">'.
                                           '<input class="form-control round-input" size="20" type="text" name="transaccionBanco" id="transaccionBanco"></div></p></div>'.
 
-                                          '<div id="reinvertirTab" class="tab-pane fade"><p>Para comprar el paquete <b>Principiante</b> consigna la cantidad de <b>100 USD</b> '.
-                                          'a la siguiente cuenta de ahorros de Bancolombia: <br><div style="text-align:center;"></p>'.
-                                          '<img src="img/modulos/qr.png" width="150px;"><br><b>Ahorros xxxx-xxxxxxx</b></div> <br>'.
+                                          '<div id="reinvertirTab" class="tab-pane fade"><p>Para comprar un paquete <b>'.$row["nombre"].'</b>, podrás reinvertir <b>$USD '.number_format($row["valor"], 0, "", ".").'</b> '.
+                                          'de tus ganancias, en caso de que tengas esa cantidad acumulada: '.$this->dispoParaRetiro.'<br> dispoRetiro Referidos '.$this->valorPendientePorReferidos.
+                                          '     <div style="text-align:center;"></p>'.
+                                          $select.'<br><b>Ahorros xxxx-xxxxxxx</b></div> <br>'.
                                           'Despues de realizar la consignacion ingrese el codigo de la transferencia y haz click en confirmar pago.   <div style="text-align:center;">'.
                                           '<input class="form-control round-input" size="20" type="text" name="transaccionBanco" id="transaccionBanco"></div></p></div>'.
 
