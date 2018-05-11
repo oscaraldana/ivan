@@ -418,12 +418,21 @@ function comprarPaquete(id){
 function aceptarCompra(id){
     
     
-    if ($('#transaccionBitCoin').val().trim() !== '' || $('#transaccionBanco').val().trim() !== '' ) {
+    if ($('#transaccionBitCoin').val().trim() !== '' || $('#transaccionBanco').val().trim() !== '' || $("#selectforpag").val() > 0 ) {
+        
+        if ( ($('#transaccionBitCoin').val().trim() !== '' && $('#transaccionBanco').val().trim() !== '' ) ||
+             ($('#transaccionBitCoin').val().trim() !== '' && $("#selectforpag").val() > 0 ) ||   
+             ($('#transaccionBanco').val().trim() !== '' && $("#selectforpag").val() > 0 )    
+        ){
+            swal("Seleccione solamente una forma de pago.");
+        } else {
+        
         var parametros = {
                 "aceptarCompra" : true,
                 "paquete" : id,
                 "transBit" : $("#transaccionBitCoin").val(),
-                "transBan" : $("#transaccionBanco").val()
+                "transBan" : $("#transaccionBanco").val(),
+                "opcionReinvertir" : $("#selectforpag").val()
             };
             $.ajax({
                         data:  parametros,
@@ -440,9 +449,10 @@ function aceptarCompra(id){
                                 }
                         }
             });
-        } else {
-            swal("Por favor digite el comprobante de su transaccion.");
         }
+    } else {
+        swal("Por favor indique su forma de pago.");
+    }
     
 }
 
@@ -754,3 +764,30 @@ function initializeReloj(id, endtime, cod) {
   var timeinterval = setInterval(updateReloj, 1000);
 }
  
+ 
+ function detallarGanancias(id) {
+     
+     var parametros = {
+        "detallarGanancias" : true,
+        "paquete" : id
+    };
+    $.ajax({
+                data:  parametros,
+                url:   '../client/controller.php',
+                type:  'post',
+
+                success:  function (response) {
+                        var result = JSON.parse(response);
+                        if ( result.respuesta ) {
+                            $("#modal-title").html(result.title);
+                            $("#modal-body").html(result.imprimir);
+                            $("#modal-footer").html('<button type="button" class="btn btn-logg" data-dismiss="modal" style="font-size: 10px;">Cerrar</button>');           
+                            $("#modalClient").modal();
+
+                        } else {
+                            swal(result.msg);
+                        }
+                }
+    });
+     
+ }

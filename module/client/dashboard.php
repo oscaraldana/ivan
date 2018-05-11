@@ -74,6 +74,14 @@
     background: rgba(57, 68, 84, 0.27);
     display: inline-block;
 }
+
+span.exmple{
+    font-weight: bold;
+    cursor: pointer;
+}
+span.exmple:hover{
+    color: #171;
+}
   </style>
 </head>
 
@@ -264,10 +272,14 @@
         $cliente = new cliente();
         
         $cliente->consultarGanancias();
+        $cliente->consultarRetiros();
         
-        /*echo "<pre>";
-        var_export($cliente->gananciasPorPaquete);
-        echo "</pre>";*/
+        $restar = 0;
+        foreach ($cliente->misRetiros as $ret) {
+            if ( $ret["estado"] == 1 ) {
+                $restar += $ret["valor_retiro"];
+            }
+        }
         
         ?>
           
@@ -276,7 +288,7 @@
           <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
             <div class="info-box dark-bg">
               <i class="fa fa-dollar"></i>
-              <div class="count"><?php echo $cliente->gananciasInversion; ?></div>
+              <div class="count"><?php echo ($cliente->gananciasInversion - $restar); ?></div>
               <div class="title">Mis Ganancias Por Inversion</div>
             </div>
           </div>
@@ -293,7 +305,7 @@
           <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
             <div class="info-box dark-bg">
               <i class="fa fa-dollar"></i>
-              <div class="count"><?php echo ($cliente->gananciasInversion + $cliente->gananciasReferidos); ?></div>
+              <div class="count"><?php echo (($cliente->gananciasInversion - $restar) + $cliente->gananciasReferidos); ?></div>
               <div class="title">Total Mis Ganancias</div>
             </div>
           </div>
@@ -322,7 +334,7 @@
                     echo "<td>".$paq["valor"]."</td>";
                     echo "<td>".date("d/m/Y", strtotime($paq["inicia"]))."</td>";
                     echo "<td>".date("d/m/Y", strtotime($paq["finaliza"]))."</td>";
-                    echo "<td><span class='text-right'>".$paq["ganancia"]."</span></td>";
+                    echo "<td style='text-align:right;' class='href'><span class='exmple' onclick='detallarGanancias(".$paq["paquete_cliente_id"].")'>USD$ ".$paq["ganancia"]."</span></td>";
                     echo '<td><div id="reloj_'.$paq["paquete_cliente_id"].'" class="reloj">
                             <div> <div class="texto">Días</div> <span class="dias" id="dias_'.$paq["paquete_cliente_id"].'"></span> </div>
                             <div> <div class="texto">Horas</div> <span class="horas" id="horas_'.$paq["paquete_cliente_id"].'"></span> </div>

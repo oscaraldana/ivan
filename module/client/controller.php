@@ -98,3 +98,9 @@ if ( isset($_POST["dataComprarPaquete"]) && $_POST["dataComprarPaquete"] ) {
     $cliente = new cliente();
     $cliente->infoComprarPaquete();
 }
+
+if ( isset($_POST["detallarGanancias"]) && $_POST["detallarGanancias"] ) {
+    $cliente = new cliente();
+    $cliente->detallarGanancias();
+}
+

@@ -98,8 +98,9 @@ function editarPaquete (id) {
                                                       "<tr><td>Fecha de compra:</td><td class='text-right'>"+result.datos.fecha_registro+"<td></tr>"+
                                                       "<tr><td>Tipo de pago:</td><td class='text-right'>"+result.datos.tipo_pago+"<td></tr>"+
                                                       "<tr><td>Referencia Pago:</td><td class='text-right'>"+result.datos.referencia_pago+"<td></tr>"+
+                                                      result.ganancias_dispo+
                                                       "<tr><td>Estado:</td><td class='text-right'>"+result.estados+"<td></tr>"+
-                                                      "<tr id='fecinipaq' style='display:"+mostrar+";'><td>Fecha Inicio:</td><td class='text-right'><input type='date' value='"+result.datos.inicia+"' id='datefecinipaq' name='datefecinipaq' class='form-control'><td></tr>"+
+                                                      "<tr id='fecinipaq' style='display:"+mostrar+";'><td>Fecha Inicio:</td><td class='text-right'><input type='date' value='"+result.datos.inicia+"' id='datefecinipaq' name='datefecinipaq' class='form-control' onchange='cambiaFechaFin()'><td></tr>"+
                                                       "<tr id='fecfinpaq' style='display:"+mostrar+";'><td>Fecha Fin:</td><td class='text-right'><input type='date' value='"+result.datos.finaliza+"' id='datefecfinpaq' name='datefecfinpaq' class='form-control'><td></tr>"+
                                                       "</table><input type='hidden' id='paquete_id' name='paquete_id' value='"+id+"'></form>"
 
@@ -114,6 +115,17 @@ function editarPaquete (id) {
         });
 }
 
+
+function cambiaFechaFin () {
+    
+    var inicio = $("#datefecinipaq").val();
+    vec = inicio.split('-'); // Parsea y pasa a un vector
+    var fecha = new Date(vec[0], vec[1], vec[2]); // crea el Date
+    fecha.setFullYear(fecha.getFullYear()+1); // Hace el cálculo
+    res = fecha.getFullYear()+'-'+ ((fecha.getMonth() < 10 ) ? '0'+fecha.getMonth() : fecha.getDate()) +'-'+ ((fecha.getDate() < 10) ? '0'+fecha.getDate() : fecha.getDate()) ;
+    $("#datefecfinpaq").val(res);
+    
+}
 
 
 function editarRetiro (id) {

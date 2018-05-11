@@ -207,9 +207,23 @@ class cliente {
         if ( !empty($param["transBit"]) ) {
             $referencia = $param["transBit"];
             $tipo = "BITCOIN";
-        } else {
+        } else if ( !empty($param["transBit"]) ) {
             $referencia = $param["transBan"];
             $tipo = "BANCO";
+        } else {
+            if($param["opcionReinvertir"] == "1") {
+                $referencia = "Ganancias Paquetes";
+                $tipo = "RE INVERSION";
+            }
+            if($param["opcionReinvertir"] == "2") {
+                $referencia = "Ganancias Referidos";
+                $tipo = "RE INVERSION";
+            }
+            if($param["opcionReinvertir"] == "3") {
+                $referencia = "Ganancias Paquetes y Referidos";
+                $tipo = "RE INVERSION";
+            }
+            
         }
         
         $sql = "insert into paquetes_cliente ( paquete_id, cliente_id, estado, referencia_pago, tipo_pago ) values ( ".$param["paquete"].", ".$_SESSION["clientId"].", 0, '$referencia', '$tipo' )";
@@ -421,9 +435,11 @@ class cliente {
             if ( $ganPaq["ganancia"] >= $ganPaq["retiro_minimo"] ) {
                 
                 foreach ( $this->misRetiros as $kRetp => $misRetPaq) {
-                    foreach ( $misRetPaq["paquetes"] as $mrp ){
-                        if ( $mrp["paquete_cliente_id"] == $ganPaq["paquete_cliente_id"] && $misRetPaq["estado"] == 1 ){
-                            $retiroRestar += $mrp["valor_retiro"];
+                    if ( isset($misRetPaq["paquetes"]) && is_array($misRetPaq["paquetes"]) ){
+                        foreach ( $misRetPaq["paquetes"] as $mrp ){
+                            if ( $mrp["paquete_cliente_id"] == $ganPaq["paquete_cliente_id"] && $misRetPaq["estado"] == 1 ){
+                                $retiroRestar += $mrp["valor_retiro"];
+                            }
                         }
                     }
                 }
@@ -954,6 +970,8 @@ class cliente {
             
             $conex = WolfConex::conex();
         
+            $comision = ["", 1 => 5, 2 => 10, 3 => 20, 4 => 50];
+            
             $sql = "select * from paquetes where paquete_id = ".$_POST["idPaquete"];
             $result = mysqli_query($conex->getLinkConnect(), $sql);
             if ( !$result || !mysqli_num_rows($result) > 0 ) {
@@ -965,13 +983,38 @@ class cliente {
             
                 
                 $this->consultarDatosParaRetiro();
+                $this->consultarRetiros();
                 $this->consultarDatosParaRetiroReferidos();
                 
+                $restar = 0;
+                foreach ($this->misRetiros as $ret) {
+                    if ( $ret["estado"] == 1 ) {
+                        $restar += $ret["valor_retiro"];
+                    }
+                }
+                
+                $row["valor"] += $comision[$row["paquete_id"]];
+                
+                $opcion = false;
                 $select = "<label for='selectforpag'><select id='selectforpag' class='form-control'>";
-                if( ! ( $this->dispoParaRetiro >= $row["retiro_minimo"] || $this->valorPendientePorReferidos >= $row["retiro_minimo"] ) ) {
-                    $select  .= "<option>No tiene opcion</option>";
+                if( ( $this->gananciasInversion - $restar ) >= $row["valor"] || $this->valorPendientePorReferidos >= $row["valor"] || (($this->gananciasInversion - $restar) + $this->valorPendientePorReferidos) >= $row["valor"] ) {
+                    
+                    $select  .= "<option value='0'>Seleccione opcion de pago.</option>";
+                    
+                    if ( ($this->gananciasInversion - $restar) >= $row["valor"] ) {
+                        $opcion = true;
+                        $select  .= "<option value='1'>Comprar con ganancias por paquetes: (".($this->gananciasInversion-$restar).")</option>";
+                    }
+                    if ( $this->valorPendientePorReferidos >= $row["valor"] ) {
+                        $opcion = true;
+                        $select  .= "<option value='2'>Comprar con ganancias por referidos: (".$this->valorPendientePorReferidos.")</option>";
+                    }
+                    if ( (($this->gananciasInversion -$restar ) + $this->valorPendientePorReferidos) >= $row["valor"] && !$opcion ) {
+                        $select  .= "<option value='3'>Comprar con todas mis ganancias: (".(($this->gananciasInversion - $restar) + $this->valorPendientePorReferidos) .")</option>";
+                    }
+                    
                 } else {
-                    $select  .= "<option>hay una opcion</option>";
+                    $select  .= "<option  value='0'>No tienes las ganancias necesarias para canjear por este paquete</option>";
                 }
                 
                 $select  .= "</select></label>";
@@ -994,12 +1037,10 @@ class cliente {
                                           '<input class="form-control round-input" size="20" type="text" name="transaccionBanco" id="transaccionBanco"></div></p></div>'.
 
                                           '<div id="reinvertirTab" class="tab-pane fade"><p>Para comprar un paquete <b>'.$row["nombre"].'</b>, podrás reinvertir <b>$USD '.number_format($row["valor"], 0, "", ".").'</b> '.
-                                          'de tus ganancias, en caso de que tengas esa cantidad acumulada: '.$this->dispoParaRetiro.'<br> dispoRetiro Referidos '.$this->valorPendientePorReferidos.
+                                          'de tus ganancias, en caso de que tengas esa cantidad acumulada: <br><br>'.
                                           '     <div style="text-align:center;"></p>'.
-                                          $select.'<br><b>Ahorros xxxx-xxxxxxx</b></div> <br>'.
-                                          'Despues de realizar la consignacion ingrese el codigo de la transferencia y haz click en confirmar pago.   <div style="text-align:center;">'.
-                                          '<input class="form-control round-input" size="20" type="text" name="transaccionBanco" id="transaccionBanco"></div></p></div>'.
-
+                                          $select.'<br><br><h6>Recuerda que esta transaccion tiene un costo de US$ '.number_format($comision[$row["paquete_id"]], 0, "", ",").'</h6></div> <br>'.
+                                          
                                           '</div>  </div>'.
 
                                           '</div>';
@@ -1049,6 +1090,124 @@ class cliente {
     }
     
     
+    public function detallarGanancias(){
+        
+        $conex = WolfConex::conex();
+        
+        $res = [];
+        $cad = $title = "";
+        
+        $sql = "select * 
+                    from paquetes_cliente
+                    inner join paquetes on paquetes.paquete_id = paquetes_cliente.paquete_id
+                    where paquete_cliente_id = ".$_POST["paquete"];
+        
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( $result && mysqli_num_rows($result) > 0 ) {
+           
+            while ($fila = mysqli_fetch_array($result)) {
+                $res[] = $fila;
+            }
+
+            //var_export($res);
+            $dias = 0;
+            
+            $ganx = [];
+            foreach ($res as $k => $paq){
+                $dias = 0;
+                $actualDate = date('Y-m-d'); // ." -> ".$paq["inicia"]." -> ".$paq["finaliza"];
+                
+                $title = "Ganancias de su paquete ".$paq["nombre"]." de USD$ ". number_format($paq["valor"], 0, "", ".")." con vigencia ".date("d/m/Y", strtotime($paq["inicia"]))." - ".date("d/m/Y", strtotime($paq["finaliza"]));
+                /*$initDate = date('Y-m-d', strtotime($paq["inicia"]));
+                $finishDate = date('Y-m-d', strtotime($paq["finaliza"]));
+
+                if ($actualDate >= $initDate && $actualDate <= $finishDate ){*/
+                    //echo "<hr>";
+                    $fechaInicio=strtotime($paq["inicia"]);
+                    $fechaFin=strtotime(date('Y-m-d'));
+                    $m = ""; $d = 0;
+                    for($i=$fechaInicio; $i<=$fechaFin; $i+=86400){
+                        if( $m != date("m", $i) ){
+                            $m = date("m", $i);
+                            $d=0;
+                        }
+
+                        if( date("N", $i) < 6 ) {
+                            $d++;
+                            if($d<=20){
+                                $ganx[] = $i;
+                                $dias++;
+                            }
+                        }
+                    }
+
+                  //echo "is between -> $meses -> $diasMeses<br>";
+                //}
+
+                $valorDia = ($paq["valor"] * ( $paq["rentabilidad"] / 100 ) ) / 20;
+                /*$this->gananciasInversion += ($valorDia * $dias);
+
+                $this->gananciasPorPaquete[$k] = $paq;
+                $this->gananciasPorPaquete[$k]["ganancia"] = ($valorDia * $dias);*/
+            }
+                
+            
+        }
+        
+        if ( count($ganx) > 0 ){
+            rsort($ganx);
+            $diasSemana = ["", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"];
+            $mesesAno = ["","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+            $cad .= '<div class="accordion" id="accordionEx" role="tablist" aria-multiselectable="true">';
+            $month = "";
+            foreach ( $ganx as $timed ){
+                
+                // Cambio de mes
+                if ( $month != date("m", $timed) ) {
+                    if ( $month != "" ){
+                        
+                        // fin Body
+                        $cad .= ' </table>
+                            </div>
+                        </div>';
+                        // Fin card
+                        $cad .= '</div>';
+                    }
+                    $cad .= '<div class="card">';
+                    
+                    // Encabezado
+                    $cad .= '<!-- Card header -->
+                            <div class="card-header" role="tab" id="headingOne">
+                                <a data-toggle="collapse" data-parent="#accordionEx" href="#collapse'.date("Y", $timed).date("m", $timed).'" aria-expanded="false" aria-controls="collapseOne">
+                                    <h5 class="mb-0">
+                                        '.$mesesAno[intval(date("m", $timed))].' - '.date("Y", $timed).' <i class="fa fa-angle-down rotate-icon"></i>
+                                    </h5>
+                                </a>
+                            </div>';
+                    
+                    $cad .= '<div id="collapse'.date("Y", $timed).date("m", $timed).'" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordionEx">
+                            <div class="card-body">
+                            <table class="table"><tr><th>Dia</th><th align="right">Ganaste</th></tr>
+                            ';
+                                
+                            
+                    $month = date("m", $timed);
+                }
+                
+                $cad .= '<tr><td>'.$diasSemana[intval(date("N", $timed))].' '.date("d", $timed).' de '.$mesesAno[intval(date("m", $timed))].' de '.date("Y", $timed).'</td><td align="right">USD$ '.$valorDia.' </td>';
+                    
+            }
+            $cad .= '</div>';
+        }
+        
+        
+        
+        
+        echo json_encode( ["respuesta" => true, "msg" => "OK", "imprimir" => $cad, "title" => $title ] );
+        
+    }
+
+
     public function primerDiaMes() {
       $month = date('m');
       $year = date('Y');
