@@ -1003,11 +1003,11 @@ class cliente {
                     
                     if ( ($this->gananciasInversion - $restar) >= $row["valor"] ) {
                         $opcion = true;
-                        $select  .= "<option value='1'>Comprar con ganancias por paquetes: (".($this->gananciasInversion-$restar).")</option>";
+                        $select  .= "<option value='1'>Descontar el valor de este paquete (US$ ".$row["valor"].") de mis ganancias por paquetes: (".($this->gananciasInversion-$restar).")</option>";
                     }
                     if ( $this->valorPendientePorReferidos >= $row["valor"] ) {
                         $opcion = true;
-                        $select  .= "<option value='2'>Comprar con ganancias por referidos: (".$this->valorPendientePorReferidos.")</option>";
+                        $select  .= "<option value='2'>Descontar el valor de este paquete (US$ ".$row["valor"].") de mis ganancias por referidos: (".$this->valorPendientePorReferidos.")</option>";
                     }
                     if ( (($this->gananciasInversion -$restar ) + $this->valorPendientePorReferidos) >= $row["valor"] && !$opcion ) {
                         $select  .= "<option value='3'>Comprar con todas mis ganancias: (".(($this->gananciasInversion - $restar) + $this->valorPendientePorReferidos) .")</option>";
@@ -1024,7 +1024,7 @@ class cliente {
                                           '<!-- <li><a data-toggle="tab" href="#menu1"> <img src="img/modulos/logo-bancolombia-Copiar.jpg" height="15px">Bancolombia</a></li> -->'.
                                           '<li><a data-toggle="tab" href="#reinvertirTab"><i class="fa fa-exchange"></i> Reinvertir</a></li> '.
                                           '</ul>'.
-                                          '<div class="tab-content"><div id="home" class="tab-pane fade in active"><p>Para comprar el paquete <b>'.$row["nombre"].'</b> envia la cantidad de <b>$USD '.number_format($row["valor"], 0, "", ".").' </b> '.
+                                          '<div class="tab-content"><div id="home" class="tab-pane fade in active"><p>Para comprar el paquete <b>'.$row["nombre"].'</b> envia la cantidad de <b>$USD '.number_format(($row["valor"] - $comision[$row["paquete_id"]]), 0, "", ".").' </b> '.
                                           'a la siguiente direccion de Bitcoin &oacute; escanea el codigo QR desde un movil: <br><div style="text-align:center;"> '.
                                           '<img src="img/modulos/qr.png" width="150px;"><br><b>1HZ2wMzf7BPKyoKnw3Y9RAnxJCM9BJMoEK</b></div> <br>'.
                                           'Despues de efectuar el pago ingrese su direccion bitcoin de pago y haz click en confirmar pago.   <div style="text-align:center;">'.
@@ -1036,7 +1036,7 @@ class cliente {
                                           'Despues de realizar la consignacion ingrese el codigo de la transferencia y haz click en confirmar pago.   <div style="text-align:center;">'.
                                           '<input class="form-control round-input" size="20" type="text" name="transaccionBanco" id="transaccionBanco"></div></p></div>'.
 
-                                          '<div id="reinvertirTab" class="tab-pane fade"><p>Para comprar un paquete <b>'.$row["nombre"].'</b>, podrás reinvertir <b>$USD '.number_format($row["valor"], 0, "", ".").'</b> '.
+                                          '<div id="reinvertirTab" class="tab-pane fade"><p>Para comprar un paquete <b>'.$row["nombre"].'</b>, podrás reinvertir <b>$USD '.number_format( ($row["valor"] - $comision[$row["paquete_id"]]), 0, "", ".").'</b> '.
                                           'de tus ganancias, en caso de que tengas esa cantidad acumulada: <br><br>'.
                                           '     <div style="text-align:center;"></p>'.
                                           $select.'<br><br><h6>Recuerda que esta transaccion tiene un costo de US$ '.number_format($comision[$row["paquete_id"]], 0, "", ",").'</h6></div> <br>'.

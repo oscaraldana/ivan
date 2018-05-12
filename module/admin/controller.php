@@ -58,8 +58,8 @@ if ( isset($_POST["actualizarPaquete"]) && $_POST["actualizarPaquete"] ) {
     
     $values = array();
     parse_str($_POST['datosForm'], $values);
-    
-    $admin->actualizarPaquete($values);
+    var_export($values);
+    //$admin->actualizarPaquete($values);
     
 }
 

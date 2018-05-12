@@ -419,6 +419,9 @@ function aceptarCompra(id){
     
     
     if ($('#transaccionBitCoin').val().trim() !== '' || $('#transaccionBanco').val().trim() !== '' || $("#selectforpag").val() > 0 ) {
+    
+        
+        
         
         if ( ($('#transaccionBitCoin').val().trim() !== '' && $('#transaccionBanco').val().trim() !== '' ) ||
              ($('#transaccionBitCoin').val().trim() !== '' && $("#selectforpag").val() > 0 ) ||   
@@ -427,28 +430,45 @@ function aceptarCompra(id){
             swal("Seleccione solamente una forma de pago.");
         } else {
         
-        var parametros = {
-                "aceptarCompra" : true,
-                "paquete" : id,
-                "transBit" : $("#transaccionBitCoin").val(),
-                "transBan" : $("#transaccionBanco").val(),
-                "opcionReinvertir" : $("#selectforpag").val()
-            };
-            $.ajax({
-                        data:  parametros,
-                        url:   'controller.php',
-                        type:  'post',
-                        success:  function (response) {
-                                var result = JSON.parse(response);
-                                if ( result.respuesta ) {
-                                    $("#modalBuy").modal('hide');
-                                    swal(result.msg);
+        
+            if ( $("#selectforpag").val() > 0 ){
+                swal({
+                    title: "Confirmar Solicitud!",
+                    text: "Confirma que desea reinvertir sus ganancias, comprando este paquete?",
+                    buttons: true,
+                    dangerMode: false,
+                })
+                .then((accept) => {
+                    if (accept) {
+                        
+                        var parametros = {
+                            "aceptarCompra" : true,
+                            "paquete" : id,
+                            "transBit" : $("#transaccionBitCoin").val(),
+                            "transBan" : $("#transaccionBanco").val(),
+                            "opcionReinvertir" : $("#selectforpag").val()
+                        };
+                        $.ajax({
+                                    data:  parametros,
+                                    url:   'controller.php',
+                                    type:  'post',
+                                    success:  function (response) {
+                                            var result = JSON.parse(response);
+                                            if ( result.respuesta ) {
+                                                $("#modalBuy").modal('hide');
+                                                swal(result.msg);
 
-                                } else {
-                                    swal(result.msg);
-                                }
-                        }
-            });
+                                            } else {
+                                                swal(result.msg);
+                                            }
+                                    }
+                        });
+                    }
+                });
+
+            }
+        
+        
         }
     } else {
         swal("Por favor indique su forma de pago.");
