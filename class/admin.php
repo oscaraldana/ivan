@@ -446,11 +446,10 @@ class admin {
     }
     
     
-    public function aprobarReinversion($dataPost){ // 1 paquetes, 2 referidos, 3 paquetes y referidos
+    public function aprobarReinversion($dataPost, $codPaquete){ // 1 paquetes, 2 referidos, 3 paquetes y referidos
         
-        // Validar fechas si es aprobado...
-        if ( $dataPost["selectEstado"] == "1" && ( empty($dataPost["datefecinipaq"]) || empty($dataPost["datefecfinpaq"]) ) ) {
-            echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "Por favor seleccione las fechas de vigencia del paquete." ] );
+        if(empty($codPaquete)) {
+            echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible la compra de este paquete en este momento." ] );
             return;
         }
         
@@ -464,7 +463,7 @@ class admin {
         $exito = true;
         
         // Actualizamos estado y fechas de paquete nuevo
-        $sql = "update paquetes_cliente set estado = '".$dataPost["selectEstado"]."', fecha_activacion = now(), inicia = '".$dataPost["datefecinipaq"]."', finaliza = '".$dataPost["datefecfinpaq"]."' where paquete_cliente_id = ".$dataPost["paquete_id"];
+        $sql = "update paquetes_cliente set estado = '1', fecha_activacion = now(), inicia = CURDATE() + INTERVAL 5 day, finaliza = CURDATE() + INTERVAL 5 day + interval 1 year where paquete_cliente_id = ".$codPaquete;
         $result = mysqli_query($conex->getLinkConnect(), $sql);
         if ( !$result ) {
             //echo "<script>parent.sweetal(\"No es posible actualizar tu perfil en este momento.\");</script>";
@@ -478,13 +477,13 @@ class admin {
         $sql = "select *
                 from paquetes_cliente
                 inner join paquetes on paquetes.paquete_id = paquetes_cliente.paquete_id
-                where paquete_cliente_id = ".$dataPost["paquete_id"];
+                where paquete_cliente_id = ".$codPaquete;
         $res = mysqli_query($conex->getLinkConnect(), $sql);
         $paqBuy = mysqli_fetch_array($res);
         
         
         // Por inversion
-        if ( $tipoPago == "1" ){
+        if ( $dataPost["opcionReinvertir"] == "1" ){
             
             $bitcoin = "";
             $banco = "";
@@ -494,16 +493,13 @@ class admin {
             $valorPaquete = $paqBuy["valor"] + $comision[$paqBuy["paquete_id"]];
 
             
-            /*BORRAR*/
-            mysqli_rollback($conex->getLinkConnect());
-            mysqli_autocommit($conex->getLinkConnect(), TRUE); // turn ON auto
-            return;
+            
             
             $cliente->consultarDatosParaRetiro();
             $cliente->consultarRetiros();
             
             $restar = 0;
-            foreach ($this->misRetiros as $ret) {
+            foreach ($cliente->misRetiros as $ret) {
                 if ( $ret["estado"] == 1 ) {
                     $restar += $ret["valor_retiro"];
                 }
@@ -518,7 +514,8 @@ class admin {
                 $vlrRetirar = $cliente->dispoParaRetiro - $vlrComision;
 
                 $sql = "insert into retiros_cliente ( cliente_id, valor_retiro, valor_comision, valor_pagado, bitcoin, banco, cuenta, tipo_cuenta, titular, estado, tipo_retiro ) values "
-                                                    . "( ".$_SESSION["clientId"].", '".$cliente->dispoParaRetiro."', '".$vlrComision."', '".$vlrRetirar."', '".$bitcoin."', '".$banco."', '".$cuenta."', '".$tipo."', '".$titular."', 0, '".$tipoPago."' )";
+                                                    . "( ".$_SESSION["clientId"].", '".$valorPaquete."', '".$comision[$paqBuy["paquete_id"]]."', '".($valorPaquete - $comision[$paqBuy["paquete_id"]])."', '".$bitcoin."', '".$banco."', '".$cuenta."', '".$tipo."', '".$titular."', 1, '3' )";
+                
                 $result = mysqli_query($conex->getLinkConnect(), $sql);
 
                 
@@ -530,9 +527,10 @@ class admin {
                 }
 
 
-                if ( !empty($retId) && $tipoPago == "1" ) {
+                if ( $exito && !empty($retId) ) {
 
-                    foreach ( $cliente->gananciasPorPaquete as $ganPaq ) {
+                    var_export($cliente->gananciasPorPaquete);
+                    /*foreach ( $cliente->gananciasPorPaquete as $ganPaq ) {
 
                         if ( $ganPaq["ganancia"] >= $ganPaq["retiro_minimo"] ) {
 
@@ -545,8 +543,11 @@ class admin {
 
                         }
 
-                    }
-
+                    }*/
+                    /*BORRAR*/
+                    mysqli_rollback($conex->getLinkConnect());
+                    mysqli_autocommit($conex->getLinkConnect(), TRUE); // turn ON auto
+                    return;
                 }
 
                 if ( !$exito ) {
@@ -587,7 +588,8 @@ class admin {
                 mysqli_rollback($conex->getLinkConnect());
                 echo json_encode( ["respuesta" => false, "error" => 2, "msg" => "No es posible registrar tu solicitud en este momento." ] );
             } else {
-                mysqli_commit($conex->getLinkConnect());
+                //mysqli_commit($conex->getLinkConnect());
+                mysqli_rollback($conex->getLinkConnect());
                 echo json_encode( ["respuesta" => true, "msg" => "Tu solicitud se ha registrado, pronto se hara efectivo tu retiro." ] );
             }
             

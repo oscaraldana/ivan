@@ -231,7 +231,12 @@ class cliente {
         if ( !$result ) {
             echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible registrar tu solicitud en este momento." ] );
         } else {
-            echo json_encode( ["respuesta" => true, "msg" => "Tu solicitud se ha registrado, vamos a verificar la veracidad de tu compra." ] );
+            if ( isset($param["opcionReinvertir"]) && $param["opcionReinvertir"] > 0 ) {
+                $admin = new admin();
+                $admin->aprobarReinversion($param, mysqli_insert_id($conex->getLinkConnect()));
+            } else {
+                echo json_encode( ["respuesta" => true, "msg" => "Tu solicitud se ha registrado, vamos a verificar la veracidad de tu compra." ] );
+            }
         }
         
     }
