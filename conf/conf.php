@@ -16,6 +16,8 @@ define("NAME_DB", "wolves");
 
 define("PAGINA_ESTATICA_REDIRECCION_ERROR_BD", "../error_db.php");
 
+define ( "COMISION_RETIRO", 5 );
+define ( "CORREO_ADMIN", 'oealdana@gmail.com' );
 
 
 
