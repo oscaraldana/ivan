@@ -474,38 +474,35 @@ class admin {
         
         /********************************* INTENTAR HACER RETIRO VIRTUAL PARA REINVERTIR EN PAQUETE    *********************/
         // Consultamos el paquete a comprar
-        $sql = "select *
+        $sql = "select paquetes_cliente.*, paquetes.*, cliente.nombre as nombre_cliente
                 from paquetes_cliente
                 inner join paquetes on paquetes.paquete_id = paquetes_cliente.paquete_id
+                inner join cliente on cliente.cliente_id = paquetes_cliente.cliente_id
                 where paquete_cliente_id = ".$codPaquete;
         $res = mysqli_query($conex->getLinkConnect(), $sql);
         $paqBuy = mysqli_fetch_array($res);
         
+        $valorPaquete = $paqBuy["valor"] + $comision[$paqBuy["paquete_id"]];
+        $adescontar = $valorPaquete;
+        $descontado = 0;
         
-        // Por inversion
-        if ( $dataPost["opcionReinvertir"] == "1" ){
+        
+        $bitcoin = "";
+        $banco = "";
+        $tipo = "99999";
+        $cuenta = "1";
+        $titular = "";
+        
+        
+        /********************************* DESCONTAR VALOR DE GANANCIAS PAQUETE    *********************/
+        if ( $dataPost["opcionReinvertir"] == "1" || $dataPost["opcionReinvertir"] == "3" ) {
             
-            $bitcoin = "";
-            $banco = "";
-            $tipo = "99999";
-            $cuenta = "1";
-            $titular = "";
-            $valorPaquete = $paqBuy["valor"] + $comision[$paqBuy["paquete_id"]];
-
             
             
-            
-            $cliente->consultarDatosParaRetiro();
+            $cliente->consultarDatosParaRetiro(false);
             $cliente->consultarRetiros();
             
-            $restar = 0;
-            foreach ($cliente->misRetiros as $ret) {
-                if ( $ret["estado"] == 1 ) {
-                    $restar += $ret["valor_retiro"];
-                }
-            }
-            
-            
+            echo "***". $cliente->dispoParaRetiro."***";
             
             if ( $cliente->dispoParaRetiro > 0 ){
 
@@ -529,25 +526,53 @@ class admin {
 
                 if ( $exito && !empty($retId) ) {
 
-                    var_export($cliente->gananciasPorPaquete);
-                    /*foreach ( $cliente->gananciasPorPaquete as $ganPaq ) {
+                    //var_export($cliente->gananciasPorPaquete); echo "******************************";
+                    //var_export($cliente->misRetiros);
+                    
+                    $adescontar = $valorPaquete;
+                    $descontado = 0;
+                    foreach ( $cliente->gananciasPorPaquete as $ganPaq ) {
 
-                        if ( $ganPaq["ganancia"] >= $ganPaq["retiro_minimo"] ) {
+                        if ( $adescontar > 0 ) {
+                        
+                            $dispoPaquete = $ganPaq["ganancia"];
 
-                            $sql = " insert into retiros_paquetes (retiro_cliente_id, paquete_cliente_id, valor_retiro) values ($retId, ".$ganPaq["paquete_cliente_id"].", '".$ganPaq["ganancia"]."' ) ";
-                            $result = mysqli_query($conex->getLinkConnect(), $sql);
-                            if ( !$result ) {
-                                $exito = false;
-                                break;
+                            foreach ( $cliente->misRetiros as $ret ) {
+                                if ( $ret["estado"] == 1  and is_array($ret["paquetes"]) && count($ret["paquetes"]) > 0 ) {
+                                    foreach ( $ret["paquetes"] as $retx ) {
+                                        if ( $retx["paquete_cliente_id"] == $ganPaq["paquete_cliente_id"] ) {
+                                            $dispoPaquete -= $retx["valor_retiro"];
+                                        }
+                                    }
+                                }
                             }
 
+                            if ( $ganPaq["estado"] == 1 && $dispoPaquete > 1 ) {
+
+                                $valRet = 0;
+                                if ( $dispoPaquete >= $adescontar ) {
+                                    $valRet = $adescontar;
+                                    $adescontar = 0;
+                                    $descontado += $valRet;
+                                } else {
+                                    $valRet = $dispoPaquete;
+                                    $adescontar -= $valRet;
+                                    $descontado += $valRet;
+                                }
+
+                               echo  $sql = " insert into retiros_paquetes (retiro_cliente_id, paquete_cliente_id, valor_retiro) values "
+                                        . " ($retId, ".$ganPaq["paquete_cliente_id"].", '".$valRet."' ) ";
+                                $result = mysqli_query($conex->getLinkConnect(), $sql);
+                                if ( !$result ) {
+                                    $exito = false;
+                                    break;
+                                }
+
+                            }
                         }
 
-                    }*/
-                    /*BORRAR*/
-                    mysqli_rollback($conex->getLinkConnect());
-                    mysqli_autocommit($conex->getLinkConnect(), TRUE); // turn ON auto
-                    return;
+                    } // Foreach
+                    
                 }
 
                 if ( !$exito ) {
@@ -557,43 +582,70 @@ class admin {
                     echo json_encode( ["respuesta" => true, "msg" => "Tu solicitud se ha registrado, pronto se hara efectivo tu retiro." ] );
                 }
             }
-        } else if ( $tipoPago == "2" ) { // Por Referidos
+        } 
             
+        if ( $dataPost["opcionReinvertir"] == "2" || $dataPost["opcionReinvertir"] == "3" ) { // Por Referidos
+            
+            echo "Desde Referidos -> a descontar->$adescontar - YaDescontado->$descontado";
             $exito = true;
-            $this->consultarDatosParaRetiroReferidos();
+            $cliente->consultarDatosParaRetiroReferidos();
             
-            if ( $this->valorPendientePorReferidos > 0 ) {
+            if ( $cliente->valorPendientePorReferidos > 0 ) {
             
-                $vlrComision = $this->valorPendientePorReferidos * ( COMISION_RETIRO / 100 );
-                $vlrRetirar = $this->valorPendientePorReferidos - $vlrComision;
-                
-                $sql = "insert into retiros_cliente ( cliente_id, valor_retiro, valor_comision, valor_pagado, bitcoin, banco, cuenta, tipo_cuenta, titular, estado, tipo_retiro ) values "
-                                                        . "( ".$_SESSION["clientId"].", '".$this->valorPendientePorReferidos."', '".$vlrComision."', '".$vlrRetirar."', '".$bitcoin."', '".$banco."', '".$cuenta."', '".$tipo."', '".$titular."', 0, '".$tipoPago."' )";
-                $result = mysqli_query($conex->getLinkConnect(), $sql);
-                
-                $exito = true;
-                $retId = "";
-                if ( !$result ) {
-                    $exito = false;
-                } else {
-                    $retId = mysqli_insert_id($conex->getLinkConnect());
+                if ( $dataPost["opcionReinvertir"] == "2" ) {
+                    $vlrComision = $comision[$paqBuy["paquete_id"]];
+                    $vlrRetirar = $adescontar - $vlrComision;
+
+                    $sql = "insert into retiros_cliente ( cliente_id, valor_retiro, valor_comision, valor_pagado, bitcoin, banco, cuenta, tipo_cuenta, titular, estado, tipo_retiro ) values "
+                                                            . "( ".$_SESSION["clientId"].", '".$adescontar."', '".$vlrComision."', '".$vlrRetirar."', '".$bitcoin."', '".$banco."', '".$cuenta."', '".$tipo."', '".$titular."', 1, '3' )";
+                    $result = mysqli_query($conex->getLinkConnect(), $sql);
+
+                    $exito = true;
+                    $retId = "";
+                    if ( !$result ) {
+                        $exito = false;
+                    } else {
+                        $retId = mysqli_insert_id($conex->getLinkConnect());
+                    }
                 }
 
             }
             
-            
-            
-            
-            if ( !$exito ) {
-                mysqli_rollback($conex->getLinkConnect());
-                echo json_encode( ["respuesta" => false, "error" => 2, "msg" => "No es posible registrar tu solicitud en este momento." ] );
-            } else {
-                //mysqli_commit($conex->getLinkConnect());
-                mysqli_rollback($conex->getLinkConnect());
-                echo json_encode( ["respuesta" => true, "msg" => "Tu solicitud se ha registrado, pronto se hara efectivo tu retiro." ] );
-            }
-            
         }
+        
+    /*BORRAR*/
+            mysqli_rollback($conex->getLinkConnect());
+            mysqli_autocommit($conex->getLinkConnect(), TRUE); // turn ON auto
+            return;
+                    
+            
+        if ( !$exito ) {
+            mysqli_rollback($conex->getLinkConnect());
+            echo json_encode( ["respuesta" => false, "error" => 2, "msg" => "No es posible registrar tu solicitud en este momento." ] );
+        } else {
+            //$cabeceras .= 'Cc: birthdayarchive@example.com' . "\r\n";
+            //$headers = 'Bcc: '.CORREO_ADMIN . "\r\n";
+            $mail = new mailWTC();
+            $paramsMail = [];
+            $paramsMail["to"] = CORREO_ADMIN;
+            $paramsMail["subject"] = "Compra de paquete por re-inversion";
+            $paramsMail["messageTitle"] = "Compra de paquete por re-inversion (US$ ".$paqBuy["valor"].")";
+            $paramsMail["messageBody"] = "El cliente ".$paqBuy["nombre_cliente"]." ha comprado un paquete ".$paqBuy["nombre"]." por medio de re inversion de ganancias. ";
+            $mail->enviarMail($paramsMail);
+
+            $paramsMail = [];
+            $paramsMail["to"] = $paqBuy["correo"];
+            $paramsMail["subject"] = "Compra de paquete por re-inversion";
+            $paramsMail["messageTitle"] = "Compra de paquete por re-inversion (US$ ".$paqBuy["valor"].")";
+            $paramsMail["messageBody"] = "Hola ".$paqBuy["nombre_cliente"]."! <br><br>Te informamos que la comprta de tu paquete ".$paqBuy["nombre"]." por medio de re inversion de ganancias ha sido exitoso, ademas te informamos que tu nuevo plan empezara su vigencia dentro de los proximos 5 dias. ";
+            $mail->enviarMail($paramsMail);
+
+            //mysqli_commit($conex->getLinkConnect());
+            mysqli_rollback($conex->getLinkConnect());
+            echo json_encode( ["respuesta" => true, "msg" => "Tu solicitud se ha registrado, pronto se hara efectivo tu retiro." ] );
+        }
+            
+        
         
         mysqli_autocommit($conex->getLinkConnect(), TRUE); // turn ON auto
     }

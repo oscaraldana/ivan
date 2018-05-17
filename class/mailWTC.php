@@ -16,11 +16,29 @@ class mailWTC {
     public function enviarMail ( $params ){
         
         
+        $para = $params["to"]; //'oealdana@gmail.com';
+
+        $subject = $params["subject"]; //'Enviando email desde PHP';
+
+        $mensaje = $this->getTemplateHtml($params["messageTitle"], $params["messageBody"]);
+        $cabeceras = 'MIME-Version: 1.0' . "\r\n";
+        $cabeceras .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+        $cabeceras .= 'From:Info - WolvesTradersCompany<info@wolvestraderscompany.com>';
+
+        $enviado = mail($para, $subject, $mensaje, $cabeceras);
+
+        if ($enviado) {
+            return true;
+          //echo 'Email enviado correctamente';
+        } else {
+            return false;
+            //echo 'Error en el envío del email';
+        }
         
     }
     
     
-    private function getTemplateHtml() {
+    private function getTemplateHtml($title, $body) {
         
         $html = '<html xmlns="http://www.w3.org/1999/xhtml">
  
@@ -114,12 +132,12 @@ color:#100;
           <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tr>
               <td class="h2">
-                $titulo
+                '.$title.'
               </td>
             </tr>
             <tr>
               <td class="bodycopy">
-                $contenido
+                '.$body.'
               </td>
             </tr>
           </table>

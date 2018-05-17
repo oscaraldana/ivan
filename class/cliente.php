@@ -424,7 +424,7 @@ class cliente {
     }
     
     
-    public function consultarDatosParaRetiro() {
+    public function consultarDatosParaRetiro($validarMinimo = true) {
         
         $this->consultarGanancias();
         $this->consultarRetiros();
@@ -450,9 +450,14 @@ class cliente {
                 }
                 
                 $valorDispoPaq = $ganPaq["ganancia"] - $retiroRestar;
-                if ( $valorDispoPaq >= $ganPaq["retiro_minimo"] ) {
-                    $this->dispoParaRetiro += $valorDispoPaq;
+                if ( $validarMinimo ) {
+                    if ( $valorDispoPaq >= $ganPaq["retiro_minimo"] ) {
+                        $this->dispoParaRetiro += $valorDispoPaq;
+                    }
+                } else {
+                     $this->dispoParaRetiro += $valorDispoPaq;
                 }
+                
             }
             
         }
@@ -486,6 +491,16 @@ class cliente {
             }
         }
         
+        $sql = "SELECT * from retiros_cliente = ".$_SESSION["clientId"];
+        
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        
+        $res = [];
+        if ( $result && mysqli_num_rows($result) > 0 ) {
+                while ($fila = mysqli_fetch_array($result)) {
+                    $res[] = $fila;
+                }
+        }
         
     }
     
