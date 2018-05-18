@@ -466,6 +466,32 @@ function aceptarCompra(id){
                     }
                 });
 
+            } else {
+                
+                
+                var parametros = {
+                            "aceptarCompra" : true,
+                            "paquete" : id,
+                            "transBit" : $("#transaccionBitCoin").val(),
+                            "transBan" : $("#transaccionBanco").val(),
+                            "opcionReinvertir" : $("#selectforpag").val()
+                        };
+                        $.ajax({
+                                    data:  parametros,
+                                    url:   'controller.php',
+                                    type:  'post',
+                                    success:  function (response) {
+                                            var result = JSON.parse(response);
+                                            if ( result.respuesta ) {
+                                                $("#modalBuy").modal('hide');
+                                                swal(result.msg);
+
+                                            } else {
+                                                swal(result.msg);
+                                            }
+                                    }
+                        });
+                
             }
         
         
@@ -751,8 +777,17 @@ function getTimeRemaining(endtime) {
     'segundos': segundos
   };
 }
+
+function getTimeIni(initime) {
+  var tini = Date.parse(new Date()) - Date.parse(initime);
+  return {
+    'inicio': tini
+  };
+}
+
+  
  
-function initializeReloj(id, endtime, cod) {
+function initializeReloj(id, endtime, cod, iniline) {
   var reloj = document.getElementById(id);
   
   var diaSpan = reloj.querySelector('#dias_'+cod);
@@ -762,8 +797,9 @@ function initializeReloj(id, endtime, cod) {
  
   function updateReloj() {
     var t = getTimeRemaining(endtime);
+    var ini = getTimeIni(iniline);
     
-    if (t.total <= 0) {
+    if (t.total <= 0 || ini.inicio < 0) {
         diaSpan.innerHTML = "0";
         horaSpan.innerHTML = 0;
         minutoSpan.innerHTML = 0;

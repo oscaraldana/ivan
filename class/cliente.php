@@ -12,6 +12,7 @@ class cliente {
     public $misReferidos;
     public $imprimirMisRef;
     public $valorPendientePorReferidos;
+    public $totales;
     
     function __construct(){
         $this->gananciasInversion = 0;
@@ -24,6 +25,7 @@ class cliente {
         $this->misReferidos = [];
         $this->imprimirMisRef = "";
         $this->valorPendientePorReferidos = 0;
+        $this->totales = [];
     }
     
     public function loguearse($data){
@@ -201,6 +203,9 @@ class cliente {
         
         $conex = WolfConex::conex();
         
+        $cliente = $this->consultarCliente();
+        $paq = $this->consultarPaquete($param["paquete"]);
+        
         $referencia = "";
         $tipop = "";
         
@@ -236,6 +241,13 @@ class cliente {
                 $admin->aprobarReinversion($param, mysqli_insert_id($conex->getLinkConnect()));
             } else {
                 echo json_encode( ["respuesta" => true, "msg" => "Tu solicitud se ha registrado, vamos a verificar la veracidad de tu compra." ] );
+                $mail = new mailWTC();
+                $paramsMail = [];
+                $paramsMail["to"] = CORREO_ADMIN;
+                $paramsMail["subject"] = "Compra de paquete";
+                $paramsMail["messageTitle"] = "Compra de paquete ".$paq["nombre"]."";
+                $paramsMail["messageBody"] = "El cliente ".$cliente[0]["nombre"]." genero una transaccion de compra de un paquete ".$paq[0]["nombre"]." por medio de $tipo. ";
+                $mail->enviarMail($paramsMail);
             }
         }
         
@@ -419,6 +431,21 @@ class cliente {
 
         }
         
+        $sql = "SELECT * 
+                FROM retiros_cliente
+                WHERE cliente_id = ".$_SESSION["clientId"]." 
+                 AND estado = 1 and tipo_retiro=2";
+        
+        
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( $result && mysqli_num_rows($result) > 0 ) {
+           
+            while ($fila = mysqli_fetch_array($result)) {
+                $this->gananciasReferidos -= $fila["valor_retiro"];
+            }
+
+        }
+        
         $this->gananciasTotales = $this->gananciasInversion + $this->gananciasReferidos;
         
     }
@@ -437,7 +464,7 @@ class cliente {
         foreach ( $this->gananciasPorPaquete as $ganPaq ) {
             
             $retiroRestar = 0;
-            if ( $ganPaq["ganancia"] >= $ganPaq["retiro_minimo"] ) {
+            if ( !$validarMinimo || ($validarMinimo && $ganPaq["ganancia"] >= $ganPaq["retiro_minimo"]) ) {
                 
                 foreach ( $this->misRetiros as $kRetp => $misRetPaq) {
                     if ( isset($misRetPaq["paquetes"]) && is_array($misRetPaq["paquetes"]) ){
@@ -491,15 +518,19 @@ class cliente {
             }
         }
         
-        $sql = "SELECT * from retiros_cliente = ".$_SESSION["clientId"];
+        $sql = "SELECT * 
+                FROM retiros_cliente
+                WHERE cliente_id = ".$_SESSION["clientId"]." 
+                 AND estado = 1 and tipo_retiro=2";
+        
         
         $result = mysqli_query($conex->getLinkConnect(), $sql);
-        
-        $res = [];
         if ( $result && mysqli_num_rows($result) > 0 ) {
-                while ($fila = mysqli_fetch_array($result)) {
-                    $res[] = $fila;
-                }
+           
+            while ($fila = mysqli_fetch_array($result)) {
+                $this->valorPendientePorReferidos -= $fila["valor_retiro"];
+            }
+
         }
         
     }
@@ -513,6 +544,7 @@ class cliente {
         
         
         $cuentas = $this->consultarMisCuentas();
+        $cliente = $this->consultarCliente();
         
         if ( $formaPago == 1 ) {  // Bitcoin
             $bitcoin = $cuentas[0]["bitcoin"];
@@ -576,6 +608,13 @@ class cliente {
                     echo json_encode( ["respuesta" => false, "error" => 1, "msg" => "No es posible registrar tu solicitud en este momento." ] );
                 } else {
                     echo json_encode( ["respuesta" => true, "msg" => "Tu solicitud se ha registrado, pronto se hara efectivo tu retiro." ] );
+                    $mail = new mailWTC();
+                    $paramsMail = [];
+                    $paramsMail["to"] = CORREO_ADMIN;
+                    $paramsMail["subject"] = "Solicitud de retiro";
+                    $paramsMail["messageTitle"] = "Solicitud de retiro - (US$ ".$ganPaq["ganancia"].")";
+                    $paramsMail["messageBody"] = "El cliente ".$cliente[0]["nombre"]." ha solicitado un retiro de ganancias por inversion de  US$ ".$ganPaq["ganancia"].". ";
+                    $mail->enviarMail($paramsMail);
                 }
             }
         } else if ( $tipoPago == "2" ) { // Por Referidos
@@ -610,6 +649,13 @@ class cliente {
                 echo json_encode( ["respuesta" => false, "error" => 2, "msg" => "No es posible registrar tu solicitud en este momento." ] );
             } else {
                 echo json_encode( ["respuesta" => true, "msg" => "Tu solicitud se ha registrado, pronto se hara efectivo tu retiro." ] );
+                $mail = new mailWTC();
+                $paramsMail = [];
+                $paramsMail["to"] = CORREO_ADMIN;
+                $paramsMail["subject"] = "Solicitud de retiro";
+                $paramsMail["messageTitle"] = "Solicitud de retiro - (US$ ".$this->valorPendientePorReferidos.")";
+                $paramsMail["messageBody"] = "El cliente ".$cliente["nombre"]." ha solicitado un retiro de ganancias por referido de  US$ ".$this->valorPendientePorReferidos.". ";
+                $mail->enviarMail($paramsMail);
             }
             
         }
@@ -640,6 +686,52 @@ class cliente {
     }
 
 
+    public function consultarCliente(){
+        
+        $conex = WolfConex::conex();
+        
+        $res = [];
+        
+        $sql = "select * from cliente where cliente_id = ".$_SESSION["clientId"];
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            return false;
+        } else {
+            if ( !mysqli_num_rows($result) > 0 ){
+                return false;
+            } else {
+                while ($fila = mysqli_fetch_array($result)) {
+                    $res[] = $fila;
+                }
+                return $res;
+            }
+        }
+    }
+    
+    
+    public function consultarPaquete($id){
+        
+        $conex = WolfConex::conex();
+        
+        $res = [];
+        
+        $sql = "select * from paquetes where paquete_id = $id";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( !$result ) {
+            return false;
+        } else {
+            if ( !mysqli_num_rows($result) > 0 ){
+                return false;
+            } else {
+                while ($fila = mysqli_fetch_array($result)) {
+                    $res[] = $fila;
+                }
+                return $res;
+            }
+        }
+    }
+
+    
     public function guardarCuentaBancaria( $dataForm ){
         
         $conex = WolfConex::conex();
@@ -659,13 +751,19 @@ class cliente {
     }
 
     
-    public function consultarRetiros () {
+    public function consultarRetiros ($tipo = null) {
         
         $conex = WolfConex::conex();
         
         $res = [];
         
-        $sql = "select * from retiros_cliente where cliente_id = ".$_SESSION["clientId"];
+        $cond = "";
+        
+        if ( !empty($tipo) ) {
+            $cond .= " AND tipo_retiro = $tipo ";
+        }
+        
+        $sql = "select * from retiros_cliente where cliente_id = ".$_SESSION["clientId"]." $cond ";
         $result = mysqli_query($conex->getLinkConnect(), $sql);
         if ( !$result ) {
             $this->misRetiros = [];
@@ -1227,6 +1325,85 @@ class cliente {
         
     }
 
+    
+    public function consultarTotales() {
+        
+        
+        $conex = WolfConex::conex();
+        
+        $this->totales = [];
+        
+        // Consultar Clientes
+        $sql = "select count(1) as clientes from cliente";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( $result && mysqli_num_rows($result) > 0 ) {
+        
+            $row = mysqli_fetch_array($result);
+            $this->totales["clientes"] = $row["clientes"];
+        }
+        
+        // Consultar Paquetes vigentes
+        $sql = "select count(1) as vigentes 
+                from paquetes_cliente 
+                where estado = 1
+                and inicia <= current_date
+                and finaliza >= current_date";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( $result && mysqli_num_rows($result) > 0 ) {
+        
+            $row = mysqli_fetch_array($result);
+            $this->totales["paq_vigentes"] = $row["vigentes"];
+        }
+        
+        // Consultar Paquetes pendientes
+        $sql = "select count(1) as pendientes 
+                from paquetes_cliente 
+                where estado = 0";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( $result && mysqli_num_rows($result) > 0 ) {
+        
+            $row = mysqli_fetch_array($result);
+            $this->totales["paq_pendientes"] = $row["pendientes"];
+        }
+        
+        // Consultar Retiros pendientes
+        $sql = "select count(1) as pendientes 
+                from retiros_cliente 
+                where estado = 0";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( $result && mysqli_num_rows($result) > 0 ) {
+        
+            $row = mysqli_fetch_array($result);
+            $this->totales["ret_pendientes"] = $row["pendientes"];
+        }
+        
+        // Consultar Total inversiones
+        $sql = "select sum(valor) as inver
+                from paquetes_cliente
+                inner join paquetes on paquetes.paquete_id = paquetes_cliente.paquete_id
+                where estado = 1
+                ";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( $result && mysqli_num_rows($result) > 0 ) {
+        
+            $row = mysqli_fetch_array($result);
+            $this->totales["tot_inversiones"] = $row["inver"];
+        }
+        
+        // Consultar Total Ganancias Cientes
+        $sql = "select sum(valor) as inver
+                from paquetes_cliente
+                inner join paquetes on paquetes.paquete_id = paquetes_cliente.paquete_id
+                where estado = 1
+                ";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( $result && mysqli_num_rows($result) > 0 ) {
+        
+            $row = mysqli_fetch_array($result);
+            $this->totales["tot_inversiones"] = $row["inver"];
+        }
+        
+    }
 
     public function primerDiaMes() {
       $month = date('m');

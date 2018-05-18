@@ -190,9 +190,10 @@
                     $tipo = "Inversion";
                 } else if ( $misRet["tipo_retiro"] == "2" ) {
                     $tipo = "Referidos";
-                }
+                } 
                 
                 $metodo = ( !empty($misRet["bitcoin"]) ) ? "Bitcoin" : $misRet["banco"];
+                if ( $misRet["tipo_cuenta"] == 99999  ) { $metodo = "Reinversion"; }
                 echo '  <tr>
                             <td>'.date("d/m/Y", strtotime($misRet["fecha_solicitud"]) ).'</td>
                             <td>'.date("d/m/Y", strtotime($misRet["fecha_pago"]) ).'</td>

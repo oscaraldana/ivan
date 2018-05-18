@@ -1847,13 +1847,13 @@ div[data-role="editor-toolbar"] {
 
   display: block;
 
-  height: 100px;
+  /*height: 70px;*/
 
-  font-size: 60px;
+  font-size: 40px;
 
   line-height: 100px;
 
-  width: 100px;
+  width: 70px;
 
   float: left;
 

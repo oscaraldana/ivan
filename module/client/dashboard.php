@@ -272,7 +272,7 @@ span.exmple:hover{
         $cliente = new cliente();
         
         $cliente->consultarGanancias();
-        $cliente->consultarRetiros();
+        $cliente->consultarRetiros(1);
         
         $restar = 0;
         foreach ($cliente->misRetiros as $ret) {
@@ -286,9 +286,9 @@ span.exmple:hover{
         <div class="row">
          
           <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-            <div class="info-box dark-bg">
+              <div class="info-box dark-bg" style="font-size: 10px;">
               <i class="fa fa-dollar"></i>
-              <div class="count"><?php echo ($cliente->gananciasInversion - $restar); ?></div>
+              <div class="count" style="white-space: nowrap"><?php echo ($cliente->gananciasInversion - $restar); ?></div>
               <div class="title">Mis Ganancias Por Inversion</div>
             </div>
           </div>
@@ -344,7 +344,8 @@ span.exmple:hover{
                     echo "</tr>";
                     $script .= "
                             var deadline_".$paq["paquete_cliente_id"]." = new Date('".date("m/d/Y", strtotime($paq["finaliza"]))."');
-                            initializeReloj('reloj_".$paq["paquete_cliente_id"]."', deadline_".$paq["paquete_cliente_id"].", ".$paq["paquete_cliente_id"].");
+                            var iniline_".$paq["paquete_cliente_id"]." = new Date('".date("m/d/Y", strtotime($paq["inicia"]))."');
+                            initializeReloj('reloj_".$paq["paquete_cliente_id"]."', deadline_".$paq["paquete_cliente_id"].", ".$paq["paquete_cliente_id"].", iniline_".$paq["paquete_cliente_id"].");
                          
                          ";
                 }

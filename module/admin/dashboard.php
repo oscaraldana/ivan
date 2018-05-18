@@ -239,10 +239,43 @@
         
         $cliente = new cliente();
         
-        $cliente->consultarGanancias();
+        $cliente->consultarTotales();
         
         ?>
           
+          <!-- top tiles -->
+          <div class="row tile_count">
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-user"></i> Total Clientes</span>
+              <div class="count"><?= $cliente->totales["clientes"]?></div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-dollar"></i> Paquetes Vigentes</span>
+              <div class="count"><?= $cliente->totales["paq_vigentes"]?></div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-clock-o"></i> Paquetes Pendientes</span>
+              <div class="count green"><?= $cliente->totales["paq_pendientes"]?></div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-clock-o"></i> Retiros Pendientes</span>
+              <div class="count"><?= $cliente->totales["ret_pendientes"]?></div>
+            </div>
+            
+            <!--
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-user"></i> Total Connections</span>
+              <div class="count">7,325</div>
+              <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+            </div>
+            -->
+            
+          </div>
+          <!-- /top tiles -->
+          
+          
+          
+          <!--
         <div class="row">
          
           <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
@@ -272,10 +305,25 @@
 
 
         </div>
-        <!--/.row-->
+        /.row-->
 
 
-        
+       
+          
+          <div class="row" style="text-align: center;"> 
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Pie Graph Chart <small>Sessions</small></h2>
+                    
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <canvas id="myChart" width="400" height="280"></canvas>
+                  </div>
+                </div>
+              </div>
+          </div>
        
 
 
@@ -372,6 +420,7 @@
     <script src="../client/js/sweetalert.min.js"></script>
     <script src="../client/js/bootstrap-select.js"></script>
     <script src="../../js/datatables.js"></script>
+    <script src="js/Chart.js"></script>
     <script>
       //knob
       $(function() {
@@ -417,6 +466,62 @@
         });
       });
     </script>
+    
+    
+    <?php
+        $cliente->consultarTotalesGanancias();
+    ?>
+    
+    <script>
+var ctx = document.getElementById("myChart").getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ["Total Ganancias", "Ganancias Paquetes", "Ganancias Referidos", "Ganancias Pagadas", "Ganancias Sin Pagar", "Total Inversiones"],
+        datasets: [{
+            label: '# of Votes',
+            data: ['250000', '200000', '50000', '1000', '249000', '1000000'],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        tooltips: {
+            tooltipTemplate: "<%= addCommas(value) %>"
+       }
+    }
+    
+});
+
+
+function addCommas(nStr)
+{
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
+</script>
 
 </body>
 
