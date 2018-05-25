@@ -226,7 +226,7 @@
           <!--overview start-->
         <div class="row">
           <div class="col-lg-12">
-            <h3 class="page-header"><i class="fa fa-laptop"></i> Mi Panel</h3>
+            <h3 class="page-header"><i class="fa fa-laptop"></i> Panel del Administrador</h3>
             <!--<ol class="breadcrumb">
               <li><i class="fa fa-home"></i><a href="index.html">Home</a></li>
               <li><i class="fa fa-laptop"></i>Dashboard</li>
@@ -309,16 +309,16 @@
 
 
        
-          
+          <br>
           <div class="row" style="text-align: center;"> 
               <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Pie Graph Chart <small>Sessions</small></h2>
+                    <!-- <h2>Pie Graph Chart <small>Sessions</small></h2> -->
                     
                     <div class="clearfix"></div>
                   </div>
-                  <div class="x_content">
+                    <div class="x_content" style="float: right">
                     <canvas id="myChart" width="400" height="280"></canvas>
                   </div>
                 </div>
@@ -469,18 +469,34 @@
     
     
     <?php
-        $cliente->consultarTotalesGanancias();
+        //$cliente->consultarTotalesGanancias();
     ?>
     
     <script>
+        
+
+function addCommas(nStr)
+{
+    return nStr;
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
+
 var ctx = document.getElementById("myChart").getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'pie',
     data: {
         labels: ["Total Ganancias", "Ganancias Paquetes", "Ganancias Referidos", "Ganancias Pagadas", "Ganancias Sin Pagar", "Total Inversiones"],
         datasets: [{
-            label: '# of Votes',
-            data: ['250000', '200000', '50000', '1000', '249000', '1000000'],
+            label: 'Valores',
+            data: ['<?= ($cliente->totales["tot_gan_paq"] + $cliente->totales["tot_gan_referidos"])?>', '<?= $cliente->totales["tot_gan_paq"]?>', '<?= $cliente->totales["tot_gan_referidos"]?>', '<?= $cliente->totales["tot_pagado"]?>', '<?= $cliente->totales["tot_pendiente"]?>', '<?= $cliente->totales["tot_invertido"]?>'],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -509,18 +525,6 @@ var myChart = new Chart(ctx, {
 });
 
 
-function addCommas(nStr)
-{
-    nStr += '';
-    x = nStr.split('.');
-    x1 = x[0];
-    x2 = x.length > 1 ? '.' + x[1] : '';
-    var rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2');
-    }
-    return x1 + x2;
-}
 </script>
 
 </body>

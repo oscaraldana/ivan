@@ -1390,19 +1390,96 @@ class cliente {
             $this->totales["tot_inversiones"] = $row["inver"];
         }
         
-        // Consultar Total Ganancias Cientes
-        $sql = "select sum(valor) as inver
-                from paquetes_cliente
-                inner join paquetes on paquetes.paquete_id = paquetes_cliente.paquete_id
+        // Consultar Total Ganancias Cientes por paquetes
+        $sql = "select * 
+                    from paquetes_cliente 
+                    inner join paquetes on paquetes.paquete_id = paquetes_cliente.paquete_id 
+                    where paquetes_cliente.estado = 1"
+                . " order by paquetes_cliente.finaliza desc ";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        $this->totales["tot_gan_paq"] = 0;
+        if ( $result && mysqli_num_rows($result) > 0 ) {
+           
+            while ($fila = mysqli_fetch_array($result)) {
+                $res[] = $fila;
+            }
+
+            //var_export($res);
+            $dias = 0;
+            foreach ($res as $k => $paq){
+                $dias = 0;
+                $actualDate = date('Y-m-d'); // ." -> ".$paq["inicia"]." -> ".$paq["finaliza"];
+                //echo $actualDate." -> ".$paq["inicia"]." -> ".$paq["finaliza"]; // echos today! 
+                $initDate = date('Y-m-d', strtotime($paq["inicia"]));
+                $finishDate = date('Y-m-d', strtotime($paq["finaliza"]));
+
+                if ($actualDate >= $initDate && $actualDate <= $finishDate){
+                    //echo "<hr>";
+                    $fechaInicio=strtotime($paq["inicia"]);
+                    $fechaFin=strtotime(date('Y-m-d'));
+                    $m = ""; $d = 0;
+                    for($i=$fechaInicio; $i<=$fechaFin; $i+=86400){
+                        if( $m != date("m", $i) ){
+                            $m = date("m", $i);
+                            $d=0;
+                        }
+
+                        if( date("N", $i) < 6 ) {
+                            $d++;
+                            if($d<=20){
+                                $dias++;
+                            }
+                        }
+                    }
+
+                  //echo "is between -> $meses -> $diasMeses<br>";
+                }
+
+                $valorDia = ($paq["valor"] * ( $paq["rentabilidad"] / 100 ) ) / 20;
+                $this->totales["tot_gan_paq"] += ($valorDia * $dias);
+
+            }
+                
+            
+        }
+        
+        // Consultar Total Ganancias Cientes por referidos
+        $sql = "select sum(valor) as bon_ref
+                from bonos_referidos
+                ";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( $result && mysqli_num_rows($result) > 0 ) {
+        
+            $row = mysqli_fetch_array($result);
+            $this->totales["tot_gan_referidos"] = $row["bon_ref"];
+        }
+        
+        // Consultar Total Ganancias Pagadas
+        $sql = "select sum(valor_retiro) as pagado
+                from retiros_cliente
                 where estado = 1
                 ";
         $result = mysqli_query($conex->getLinkConnect(), $sql);
         if ( $result && mysqli_num_rows($result) > 0 ) {
         
             $row = mysqli_fetch_array($result);
-            $this->totales["tot_inversiones"] = $row["inver"];
+            $this->totales["tot_pagado"] = $row["pagado"];
         }
+
+        // Consultar Total Ganancias Inversiones
+        $sql = "select sum(valor) as inversion 
+                from paquetes_cliente
+                inner join paquetes on paquetes.paquete_id = paquetes_cliente.paquete_id
+                where paquetes_cliente.estado = 1
+                ";
+        $result = mysqli_query($conex->getLinkConnect(), $sql);
+        if ( $result && mysqli_num_rows($result) > 0 ) {
         
+            $row = mysqli_fetch_array($result);
+            $this->totales["tot_invertido"] = $row["inversion"];
+        }
+
+        $this->totales["tot_pendiente"] = ($this->totales["tot_gan_referidos"] + $this->totales["tot_gan_paq"] ) - $this->totales["tot_pagado"];
     }
 
     public function primerDiaMes() {
