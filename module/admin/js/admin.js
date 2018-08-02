@@ -55,6 +55,7 @@ function buscarListaRetiros(){
                         var result = JSON.parse(response);
                         if ( result.respuesta ) {
                             $("#listaRetiros").html(result.tabla);
+                            $('#tableRetAdmin').DataTable();
                             //swal(result.msg);
 
                         } else {
