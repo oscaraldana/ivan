@@ -56,7 +56,7 @@ p.simple-card {
   .management-hierarchy .person {
     text-align: center; }
     .management-hierarchy .person > img {
-      height: 110px;
+      height: 42px;
       border: 5px solid #FFF;
       border-radius: 50%;
       overflow: hidden;
@@ -65,7 +65,7 @@ p.simple-card {
       background-color: #fff;
       padding: 5px 10px;
       border-radius: 5px;
-      font-size: 12px;
+      font-size: 9px;
       font-weight: normal;
       color: #3BAA9D;
       margin: 0;
@@ -75,7 +75,7 @@ p.simple-card {
       .management-hierarchy .person > p.name:before {
         content: '';
         position: absolute;
-        width: 2px;
+        /*width: 2px;*/
         height: 8px;
         background-color: #fff;
         left: 50%;
