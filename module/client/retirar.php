@@ -194,9 +194,16 @@
                 
                 $metodo = ( !empty($misRet["bitcoin"]) ) ? "Bitcoin" : $misRet["banco"];
                 if ( $misRet["tipo_cuenta"] == 99999  ) { $metodo = "Reinversion"; }
+                
+                if ( isset($misRet["fecha_pago"]) && !empty($misRet["fecha_pago"]) ) {
+                    $fecPagoRet = date("d/m/Y", strtotime($misRet["fecha_pago"]) );
+                } else {
+                    $fecPagoRet = "-";
+                }
+                
                 echo '  <tr>
                             <td>'.date("d/m/Y", strtotime($misRet["fecha_solicitud"]) ).'</td>
-                            <td>'.date("d/m/Y", strtotime($misRet["fecha_pago"]) ).'</td>
+                            <td>'.$fecPagoRet.'</td>
                             <td>'.$metodo.'</td>
                             <td>'.$tipo.'</td>
                             <td align="right">$ '.$misRet["valor_retiro"].'</td>
