@@ -737,7 +737,7 @@ class cliente {
         $conex = WolfConex::conex();
         
         if ( isset($dataForm["idCuenta"]) && !empty($dataForm["idCuenta"]) ){
-            $sql = "update cuenta_cliente set banco = '".$dataForm["banco"]."', cuenta = '".$dataForm["numeroCuenta"]."', titular = '".$dataForm["aNombre"]."', tipo = '".$dataForm["tipoCuenta"]."', bitcoin = '".$dataForm["cuentaBitcoin"]."' where cliente_id = ".$dataForm["idCuenta"]." ";
+            $sql = "update cuenta_cliente set banco = '".$dataForm["banco"]."', cuenta = '".$dataForm["numeroCuenta"]."', titular = '".$dataForm["aNombre"]."', tipo = '".$dataForm["tipoCuenta"]."', bitcoin = '".$dataForm["cuentaBitcoin"]."' where cuenta_cliente_id = ".$dataForm["idCuenta"]." ";
         } else {
             $sql = "insert into cuenta_cliente ( cliente_id, banco, cuenta, titular, tipo, bitcoin ) values ( ".$_SESSION["clientId"].", '".$dataForm["banco"]."', '".$dataForm["numeroCuenta"]."',  '".$dataForm["aNombre"]."',  '".$dataForm["tipoCuenta"]."',  '".$dataForm["cuentaBitcoin"]."' )";
         }
@@ -1065,9 +1065,17 @@ class cliente {
                 $result = mysqli_query($conex->getLinkConnect(), $sql);
                 if ( !$result ) {
                     //echo "<script>parent.sweetal(\"No es posible actualizar tu perfil en este momento.\");</script>";
-                    echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible modificar tu contraseña en este momento.".$sql ] );
+                    echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible modificar tu contraseña en este momento." ] );
                 } else {
-                     mail($row["correo"], "Nueva clave de acceso.", "Su nueva clave de acceso es $new");
+                    // mail($row["correo"], "Nueva clave de acceso.", "Su nueva clave de acceso es $new");
+                     
+                    $mail = new mailWTC();
+                    $paramsMail = [];
+                    $paramsMail["to"] = $row["correo"];
+                    $paramsMail["subject"] = "Reestablecer Clave de Acceso";
+                    $paramsMail["messageTitle"] = "Reestablecer Clave de Acceso";
+                    $paramsMail["messageBody"] = "Hola ".$row["nombre"].", su solicitud de reestablecimiento de contraseña fue exitosa, a continuacion encontrara su nueva clave de acceso: <br><br><b>$new</b>";
+                    $mail->enviarMail($paramsMail);
                      echo json_encode( ["respuesta" => true, "msg" => "Se ha enviado una nueva clave al correo ".substr($row["correo"], 0, 5)."xxx@xxxx" ] );
                 }
                 
