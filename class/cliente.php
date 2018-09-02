@@ -508,7 +508,7 @@ class cliente {
             //}
             
         }
-        echo $this->dispoParaRetiro ;
+        //echo $this->dispoParaRetiro ;
         if ( $validarMinimo ) {
            if ( $this->dispoParaRetiro < self::MINIMORETIRO  ) { 
                $this->dispoParaRetiro = 0;
