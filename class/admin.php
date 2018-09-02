@@ -181,16 +181,20 @@ class admin {
         
             $list = '
                 <br>
-                <table class="table table-hover">
+                <table class="table table-hover" id="tableRetAdmin">
+                <thead>
                 <tr>
                     <th scope="row">Fecha Solicitud</th>
                     <th scope="row">Cliente</th>
-                    <th scope="row">Valor</th>
+                    <th scope="row">Valor Retiro</th>
+                    <th scope="row">Comision</th>
+                    <th scope="row">Valor a Pagar</th>
                     <th scope="row">Forma Pago</th>
                     <th scope="row">Fecha Pago</th>
                     <th scope="row">Estado</th>
                   </tr>
-
+                  </thead>
+                  <tbody>
                   ';
 
                 foreach ( $res as $ret ) {
@@ -212,7 +216,9 @@ class admin {
                     $list .='  <tr>
                           <td>'.date("d/m/Y", strtotime($ret["fecha_solicitud"])).'</td>
                           <td>'.$ret["cliente"].'</td>
-                          <td>$ '.$ret["valor_retiro"].'</td>
+                          <td align="right">$ '.$ret["valor_retiro"].'</td>
+                          <td align="right">$ '.$ret["valor_comision"].'</td>
+                          <td align="right">$ '.$ret["valor_pagado"].'</td>
                           <td>'.$forma.'</td>
                           <td>'.$ret["fecha_pago"].'</td>
                           <td><span class="'. $class.'" style="cursor:pointer;" onclick="editarRetiro('.$ret["retiro_id"].')">'. $estado.'</span></td>
@@ -222,7 +228,7 @@ class admin {
                 
 
 
-            $list .= '</table>';
+            $list .= '</tbody></table>';
         } else {
             $list .= '<br><h4>No hay registros para mostrar.</h4>';
         }

@@ -70,7 +70,7 @@ class cliente {
             return;
         }
         
-        $ref = "null";
+        $ref = 1;
         
         if ( !empty($datosForm["referido"]) ) {
             $sql = "select * from cliente where login = '".$datosForm["referido"]."' ";
@@ -1065,9 +1065,17 @@ class cliente {
                 $result = mysqli_query($conex->getLinkConnect(), $sql);
                 if ( !$result ) {
                     //echo "<script>parent.sweetal(\"No es posible actualizar tu perfil en este momento.\");</script>";
-                    echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible modificar tu contraseña en este momento.".$sql ] );
+                    echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible modificar tu contraseña en este momento." ] );
                 } else {
-                     mail($row["correo"], "Nueva clave de acceso.", "Su nueva clave de acceso es $new");
+                    // mail($row["correo"], "Nueva clave de acceso.", "Su nueva clave de acceso es $new");
+                     
+                    $mail = new mailWTC();
+                    $paramsMail = [];
+                    $paramsMail["to"] = $row["correo"];
+                    $paramsMail["subject"] = "Reestablecer Clave de Acceso";
+                    $paramsMail["messageTitle"] = "Reestablecer Clave de Acceso";
+                    $paramsMail["messageBody"] = "Hola ".$row["nombre"].", su solicitud de reestablecimiento de contraseña fue exitosa, a continuacion encontrara su nueva clave de acceso: <br><br><b>$new</b>";
+                    $mail->enviarMail($paramsMail);
                      echo json_encode( ["respuesta" => true, "msg" => "Se ha enviado una nueva clave al correo ".substr($row["correo"], 0, 5)."xxx@xxxx" ] );
                 }
                 
