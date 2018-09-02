@@ -15,6 +15,8 @@ class cliente {
     public $totales;
     public $vacaciones;
     
+    const MINIMORETIRO = 1500;
+    
     function __construct(){
         $this->gananciasInversion = 0;
         $this->gananciasReferidos = 0;
@@ -482,7 +484,7 @@ class cliente {
         foreach ( $this->gananciasPorPaquete as $ganPaq ) {
             
             $retiroRestar = 0;
-            if ( !$validarMinimo || ($validarMinimo && $ganPaq["ganancia"] >= $ganPaq["retiro_minimo"]) ) {
+            //if ( !$validarMinimo || ($validarMinimo && $ganPaq["ganancia"] >= $ganPaq["retiro_minimo"]) ) {
                 
                 foreach ( $this->misRetiros as $kRetp => $misRetPaq) {
                     if ( isset($misRetPaq["paquetes"]) && is_array($misRetPaq["paquetes"]) ){
@@ -495,17 +497,24 @@ class cliente {
                 }
                 
                 $valorDispoPaq = $ganPaq["ganancia"] - $retiroRestar;
-                if ( $validarMinimo ) {
+                /*if ( $validarMinimo ) {
                     if ( $valorDispoPaq >= $ganPaq["retiro_minimo"] ) {
                         $this->dispoParaRetiro += $valorDispoPaq;
                     }
-                } else {
+                } else {*/
                      $this->dispoParaRetiro += $valorDispoPaq;
-                }
+                //}
                 
-            }
+            //}
             
         }
+        echo $this->dispoParaRetiro ;
+        if ( $validarMinimo ) {
+           if ( $this->dispoParaRetiro < self::MINIMORETIRO  ) { 
+               $this->dispoParaRetiro = 0;
+           }
+        }
+        
         
     }
     

@@ -117,8 +117,14 @@
                     $button .= "<p class='text-danger'>Hasta que no se procese la solicitud de retiro pendiente, no es posible realizar una nueva solicitud de retiro.</p>";
                     $button2 .= "<p class='text-danger'>Hasta que no se procese la solicitud de retiro pendiente, no es posible realizar una nueva solicitud de retiro.</p>";
                 } else {
-                    $button .= '<button class="btn btn-info" style="cursor: pointer;" '.$disabled.' onclick="solicitarRetiro(1);">Solicitar Retiro</button>';
-                    $button2 .= '<button class="btn btn-info" style="cursor: pointer;" '.$disabled2.' onclick="solicitarRetiro(2);">Solicitar Retiro</button>';
+                    if ( $vlrRetirar <= 0 ){
+                        $button .= '<button class="btn btn-info" style="cursor: pointer;" '.$disabled.' >Solicitar Retiro</button>';
+                        $button2 .= '<button class="btn btn-info" style="cursor: pointer;" '.$disabled2.' >Solicitar Retiro</button>';
+                    } else {
+                        $button .= '<button class="btn btn-info" style="cursor: pointer;" '.$disabled.' onclick="solicitarRetiro(1);">Solicitar Retiro</button>';
+                        $button2 .= '<button class="btn btn-info" style="cursor: pointer;" '.$disabled2.' onclick="solicitarRetiro(2);">Solicitar Retiro</button>';
+                    }
+                    
                 }
                 
                 
