@@ -13,7 +13,6 @@ class cliente {
     public $imprimirMisRef;
     public $valorPendientePorReferidos;
     public $totales;
-    public $vacaciones;
     
     function __construct(){
         $this->gananciasInversion = 0;
@@ -27,9 +26,6 @@ class cliente {
         $this->imprimirMisRef = "";
         $this->valorPendientePorReferidos = 0;
         $this->totales = [];
-        $this->vacaciones = [
-            0 => [ strtotime( "2018-07-01" ), strtotime( "2018-07-31" )]
-        ];
     }
     
     public function loguearse($data){
@@ -74,7 +70,7 @@ class cliente {
             return;
         }
         
-        $ref = 1;
+        $ref = "null";
         
         if ( !empty($datosForm["referido"]) ) {
             $sql = "select * from cliente where login = '".$datosForm["referido"]."' ";
@@ -362,8 +358,6 @@ class cliente {
         
         $res = [];
         
-                    
-        
         $sql = "select * 
                     from paquetes_cliente 
                     inner join paquetes on paquetes.paquete_id = paquetes_cliente.paquete_id 
@@ -399,19 +393,7 @@ class cliente {
                         if( date("N", $i) < 6 ) {
                             $d++;
                             if($d<=20){
-                                
-                                if ( count($this->vacaciones) > 0 ) {
-                                    foreach ( $this->vacaciones as $fv ) {
-                                        if ( !($i >= $fv[0] && $i <= $fv[1]) ){
                                 $dias++;
-                                        } else {
-                                            //echo "<br>".date("d/m/Y", $i)." -> $i -> ".$fv[0]." -> ".$fv[1];
-                            }
-                        }
-                                } else {
-                                    $dias++;
-                    }
-
                             }
                         }
                     }
@@ -755,7 +737,7 @@ class cliente {
         $conex = WolfConex::conex();
         
         if ( isset($dataForm["idCuenta"]) && !empty($dataForm["idCuenta"]) ){
-            $sql = "update cuenta_cliente set banco = '".$dataForm["banco"]."', cuenta = '".$dataForm["numeroCuenta"]."', titular = '".$dataForm["aNombre"]."', tipo = '".$dataForm["tipoCuenta"]."', bitcoin = '".$dataForm["cuentaBitcoin"]."' where cuenta_cliente_id = ".$dataForm["idCuenta"]." ";
+            $sql = "update cuenta_cliente set banco = '".$dataForm["banco"]."', cuenta = '".$dataForm["numeroCuenta"]."', titular = '".$dataForm["aNombre"]."', tipo = '".$dataForm["tipoCuenta"]."', bitcoin = '".$dataForm["cuentaBitcoin"]."' where cliente_id = ".$dataForm["idCuenta"]." ";
         } else {
             $sql = "insert into cuenta_cliente ( cliente_id, banco, cuenta, titular, tipo, bitcoin ) values ( ".$_SESSION["clientId"].", '".$dataForm["banco"]."', '".$dataForm["numeroCuenta"]."',  '".$dataForm["aNombre"]."',  '".$dataForm["tipoCuenta"]."',  '".$dataForm["cuentaBitcoin"]."' )";
         }
@@ -1083,17 +1065,9 @@ class cliente {
                 $result = mysqli_query($conex->getLinkConnect(), $sql);
                 if ( !$result ) {
                     //echo "<script>parent.sweetal(\"No es posible actualizar tu perfil en este momento.\");</script>";
-                    echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible modificar tu contraseña en este momento." ] );
+                    echo json_encode( ["respuesta" => false, "error" => 3, "msg" => "No es posible modificar tu contraseña en este momento.".$sql ] );
                 } else {
-                    // mail($row["correo"], "Nueva clave de acceso.", "Su nueva clave de acceso es $new");
-                     
-                    $mail = new mailWTC();
-                    $paramsMail = [];
-                    $paramsMail["to"] = $row["correo"];
-                    $paramsMail["subject"] = "Reestablecer Clave de Acceso";
-                    $paramsMail["messageTitle"] = "Reestablecer Clave de Acceso";
-                    $paramsMail["messageBody"] = "Hola ".$row["nombre"].", su solicitud de reestablecimiento de contraseña fue exitosa, a continuacion encontrara su nueva clave de acceso: <br><br><b>$new</b>";
-                    $mail->enviarMail($paramsMail);
+                     mail($row["correo"], "Nueva clave de acceso.", "Su nueva clave de acceso es $new");
                      echo json_encode( ["respuesta" => true, "msg" => "Se ha enviado una nueva clave al correo ".substr($row["correo"], 0, 5)."xxx@xxxx" ] );
                 }
                 
@@ -1280,15 +1254,7 @@ class cliente {
                             $d++;
                             if($d<=20){
                                 $ganx[] = $i;
-                                if ( count($this->vacaciones) > 0 ) {
-                                    foreach ( $this->vacaciones as $fv ) {
-                                        if ( !($i >= $fv[0] && $i <= $fv[1]) ){
                                 $dias++;
-                            }
-                        }
-                                } else {
-                                    $dias++;
-                    }
                             }
                         }
                     }
@@ -1346,18 +1312,7 @@ class cliente {
                     $month = date("m", $timed);
                 }
                 
-                if ( count($this->vacaciones) > 0 ) {
-                    foreach ( $this->vacaciones as $fv ) {
-                        if ( ($timed >= $fv[0] && $timed <= $fv[1]) ){
-                            $cad .= '<tr><td>'.$diasSemana[intval(date("N", $timed))].' '.date("d", $timed).' de '.$mesesAno[intval(date("m", $timed))].' de '.date("Y", $timed).' <font color="white">(VACACIONES)</font></td><td align="right">USD$ 0</td>';
-                        } else {
                 $cad .= '<tr><td>'.$diasSemana[intval(date("N", $timed))].' '.date("d", $timed).' de '.$mesesAno[intval(date("m", $timed))].' de '.date("Y", $timed).'</td><td align="right">USD$ '.$valorDia.' </td>';
-                        }
-                    }
-                } else {
-                    
-            }
-                
                     
             }
             $cad .= '</div>';
